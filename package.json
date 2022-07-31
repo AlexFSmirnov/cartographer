@@ -1,0 +1,66 @@
+{
+    "name": "dnd-map-helper",
+    "homepage": "https://alexfsmirnov.github.io/dnd-map-helper",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "codecheck": "yarn typescript && yarn prettier && yarn lint",
+        "typescript": "tsc",
+        "prettier": "prettier --check \"./src/**/*.{ts,tsx}\"",
+        "lint": "eslint \"./src/**/*.{ts,tsx}\"",
+        "predeploy": "yarn codecheck && yarn build",
+        "deploy": "yarn predeploy && gh-pages -d build"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-scripts": "5.0.1",
+        "web-vitals": "^2.1.4",
+        "workbox-background-sync": "^6.5.4",
+        "workbox-broadcast-update": "^6.5.4",
+        "workbox-cacheable-response": "^6.5.4",
+        "workbox-core": "^6.5.4",
+        "workbox-expiration": "^6.5.4",
+        "workbox-google-analytics": "^6.5.4",
+        "workbox-navigation-preload": "^6.5.4",
+        "workbox-precaching": "^6.5.4",
+        "workbox-range-requests": "^6.5.4",
+        "workbox-routing": "^6.5.4",
+        "workbox-strategies": "^6.5.4",
+        "workbox-streams": "^6.5.4"
+    },
+    "devDependencies": {
+        "@testing-library/jest-dom": "^5.16.4",
+        "@testing-library/react": "^13.3.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/jest": "^27.5.2",
+        "@types/node": "^17.0.45",
+        "@types/react": "^18.0.15",
+        "@types/react-dom": "^18.0.6",
+        "eslint": "^8.20.0",
+        "eslint-config-prettier": "^8.5.0",
+        "gh-pages": "^4.0.0",
+        "prettier": "^2.7.1",
+        "typescript": "^4.7.4"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "prettier"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}
