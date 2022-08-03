@@ -1,19 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
+import { Region } from '../../types';
 import type { State } from '../store';
-
-export interface Region {
-    id: string;
-    name: string;
-    description: string;
-    notes: string;
-    floorNumber: string | null;
-    references: string[];
-    referencedBy: string[];
-
-    parent: string | null;
-    parentRect: [number, number, number, number] | null;
-}
 
 interface CurrentProjectState {
     id: string | null;
@@ -28,8 +16,8 @@ interface CurrentProjectState {
 // };
 
 const initialState: CurrentProjectState = {
-    id: 'T1',
-    name: 'Test Project',
+    id: 'COS',
+    name: 'Curse of Strahd',
     regions: {},
 };
 
@@ -40,5 +28,7 @@ export const currentProjectSlice = createSlice({
 });
 
 export const getCurrentProjectState = (state: State) => state.currentProject;
+
+export const getCurrentProjectName = createSelector(getCurrentProjectState, (state) => state.name);
 
 export default currentProjectSlice.reducer;

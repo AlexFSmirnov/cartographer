@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Drawer } from '@mui/material';
 import { closeSidebar, getIsSidebarOpen } from '../../state';
+import { ProjectSelect } from '../ProjectSelect';
+import { SidebarItemsContainer } from './style';
 
 interface StateProps {
     isSidebarOpen: boolean;
@@ -15,11 +17,10 @@ type SidebarProps = StateProps & DispatchProps;
 
 const SidebarBase: React.FC<SidebarProps> = ({ isSidebarOpen, closeSidebar }) => {
     return (
-        <Drawer anchor="left" open={isSidebarOpen} onClose={closeSidebar}>
-            <div>test</div>
-            <div>test</div>
-            <div>test</div>
-            <div>test</div>
+        <Drawer anchor="left" open={true} onClose={closeSidebar}>
+            <SidebarItemsContainer>
+                <ProjectSelect />
+            </SidebarItemsContainer>
         </Drawer>
     );
 };
