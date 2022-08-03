@@ -2,10 +2,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, useMediaQuery } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
 import { parseUrl, RouteName } from '../../routing';
-import BottomMenuButton from './BottomMenuButton';
+import { BottomMenuButton } from './BottomMenuButton';
 import { BottomMenuContainer, DesktopBottomMenuPaper } from './style';
 
-const BottomMenu = () => {
+export const BottomMenu = () => {
     const isMobile = useMediaQuery('(max-width: 600px)');
 
     const navigate = useNavigate();
@@ -74,5 +74,3 @@ const BottomMenu = () => {
         </BottomMenuContainer>
     );
 };
-
-export default BottomMenu;

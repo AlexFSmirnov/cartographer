@@ -5,10 +5,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { store } from './state/store';
 import { register as registerServiceWorkers } from './serviceWorkerRegistration';
-import { GlobalStyle } from './style';
-import App from './App';
-import { MapView, NotesView, RegionsView, NotFound } from './views';
 import { RouteName } from './routing';
+import { App } from './App';
+import { GlobalStyle } from './style';
+import { MapView, NotesView, RegionsView, NotFound } from './views';
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

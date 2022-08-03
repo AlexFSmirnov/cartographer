@@ -1,7 +1,7 @@
 const MapView = () => {
     return (
-        <div style={{ backgroundColor: 'red', height: '100%' }}>
-            <p>Map</p>
+        <div style={{ height: '100%', display: 'flex', justifyContent: 'center', width: '100%' }}>
+            Map
         </div>
     );
 };

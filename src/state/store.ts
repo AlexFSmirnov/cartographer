@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import currentProjectReducer from './slices/currentProjectSlice';
 import imagesReducer from './slices/imagesSlice';
+import uiReducer from './slices/uiSlice';
 
 export const store = configureStore({
     reducer: {
         currentProject: currentProjectReducer,
         images: imagesReducer,
+        ui: uiReducer,
     },
 });
 

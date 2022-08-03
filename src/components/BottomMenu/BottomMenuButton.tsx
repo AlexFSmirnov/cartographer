@@ -8,7 +8,12 @@ interface BottomMenuButtonProps {
     onClick: () => void;
 }
 
-const BottomMenuButton: React.FC<BottomMenuButtonProps> = ({ Icon, label, active, onClick }) => {
+export const BottomMenuButton: React.FC<BottomMenuButtonProps> = ({
+    Icon,
+    label,
+    active,
+    onClick,
+}) => {
     return (
         <Tooltip title={label}>
             <IconButton color={active ? 'primary' : 'default'} onClick={onClick}>
@@ -17,5 +22,3 @@ const BottomMenuButton: React.FC<BottomMenuButtonProps> = ({ Icon, label, active
         </Tooltip>
     );
 };
-
-export default BottomMenuButton;

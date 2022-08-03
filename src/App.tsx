@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { createTheme, useTheme } from '@mui/material';
 import { parseUrl, RouteName } from './routing';
-import { BottomMenu } from './components';
+import { BottomMenu, Sidebar, TopMenuButton } from './components';
 import { MapView, NotesView } from './views';
 import { AppContainer, ViewContainer } from './style';
 
-const App = () => {
+export const App = () => {
     const theme = useTheme();
 
     const navigate = useNavigate();
@@ -24,9 +24,9 @@ const App = () => {
             <ViewContainer>
                 <Outlet />
             </ViewContainer>
+            <TopMenuButton />
+            <Sidebar />
             <BottomMenu />
         </AppContainer>
     );
 };
-
-export default App;
