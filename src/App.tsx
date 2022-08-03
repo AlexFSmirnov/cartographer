@@ -1,14 +1,29 @@
+import { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { createTheme, useTheme } from '@mui/material';
+import { parseUrl, RouteName } from './routing';
 import { BottomMenu } from './components';
-import { AppContainer } from './style';
+import { MapView, NotesView } from './views';
+import { AppContainer, ViewContainer } from './style';
 
 const App = () => {
     const theme = useTheme();
-    console.log(theme);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { view, region, subView } = parseUrl(location.pathname);
+
+    useEffect(() => {
+        if (!view) {
+            navigate(`/${RouteName.Map}`, { replace: true });
+        }
+    }, [view, navigate]);
 
     return (
         <AppContainer>
-            <h1>Hello World</h1>
+            <ViewContainer>
+                <Outlet />
+            </ViewContainer>
             <BottomMenu />
         </AppContainer>
     );

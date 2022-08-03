@@ -10,10 +10,7 @@ export const imagesSlice = createSlice({
     name: 'images',
     initialState,
     reducers: {
-        setImage: (
-            state,
-            action: PayloadAction<{ id: string; imageDataUrl: string }>
-        ) => {
+        setImage: (state, action: PayloadAction<{ id: string; imageDataUrl: string }>) => {
             state[action.payload.id] = action.payload.imageDataUrl;
         },
     },

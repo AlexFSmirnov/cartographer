@@ -1,9 +1,9 @@
-const MapView = () => {
+const RegionsView = () => {
     return (
         <div style={{ backgroundColor: 'red', height: '100%' }}>
-            <p>Map</p>
+            <p>Regions</p>
         </div>
     );
 };
 
-export default MapView;
+export default RegionsView;

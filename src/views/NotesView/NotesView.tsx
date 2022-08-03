@@ -1,9 +1,9 @@
-const MapView = () => {
+const NotesView = () => {
     return (
         <div style={{ backgroundColor: 'red', height: '100%' }}>
-            <p>Map</p>
+            <p>Notes</p>
         </div>
     );
 };
 
-export default MapView;
+export default NotesView;

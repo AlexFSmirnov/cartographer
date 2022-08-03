@@ -129,5 +129,13 @@ Quickly look up location descriptions by clicking on a corresponding map region.
 ```
 
 
+- ROUTES:
+  - Top level:
+    - Map
+    - Notes
+    - Regions
+
+
+https://alexfsmirnov.github.io/dnd-map-helper/<VIEW>/<SELECTED_REGION>/<SUBVIEW>
 
   

@@ -12,7 +12,6 @@ export const GlobalStyle = createGlobalStyle`
         height: 100vh;
     }
     body {
-        font-family: 'Montserrat', sans-serif;
         position: absolute;
         top: 0;
         left: 0;
@@ -30,4 +29,12 @@ export const AppContainer = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
+`;
+
+export const ViewContainer = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 64px;
 `;

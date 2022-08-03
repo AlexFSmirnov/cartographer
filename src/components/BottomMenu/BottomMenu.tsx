@@ -1,14 +1,31 @@
-import {
-    BottomNavigation,
-    BottomNavigationAction,
-    useMediaQuery,
-} from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { BottomNavigation, BottomNavigationAction, useMediaQuery } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
+import { parseUrl, RouteName } from '../../routing';
 import BottomMenuButton from './BottomMenuButton';
 import { BottomMenuContainer, DesktopBottomMenuPaper } from './style';
 
 const BottomMenu = () => {
     const isMobile = useMediaQuery('(max-width: 600px)');
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { view } = parseUrl(location.pathname);
+
+    const handleViewChange = (viewIndex: number) => () => {
+        switch (viewIndex) {
+            case 1:
+                navigate(`/${RouteName.Notes}`);
+                break;
+            case 2:
+                navigate(`/${RouteName.Regions}`);
+                break;
+            case 0:
+            default:
+                navigate(`/${RouteName.Map}`);
+                break;
+        }
+    };
 
     const actions = [
         { label: 'Map', Icon: Map },
@@ -16,16 +33,25 @@ const BottomMenu = () => {
         { label: 'Regions', Icon: FormatListBulleted },
     ];
 
+    const activeViewIndex = view
+        ? [RouteName.Map, RouteName.Notes, RouteName.Regions].indexOf(view)
+        : -1;
+
     if (isMobile) {
         return (
             <BottomMenuContainer>
                 <BottomNavigation
                     sx={{ width: '100%', height: '64px', boxShadow: 3 }}
                     showLabels
-                    value={0}
+                    value={activeViewIndex}
                 >
-                    {actions.map(({ label, Icon }) => (
-                        <BottomNavigationAction label={label} icon={<Icon />} />
+                    {actions.map(({ label, Icon }, index) => (
+                        <BottomNavigationAction
+                            key={label}
+                            label={label}
+                            icon={<Icon />}
+                            onClick={handleViewChange(index)}
+                        />
                     ))}
                 </BottomNavigation>
             </BottomMenuContainer>
@@ -35,8 +61,14 @@ const BottomMenu = () => {
     return (
         <BottomMenuContainer>
             <DesktopBottomMenuPaper elevation={3}>
-                {actions.map((props) => (
-                    <BottomMenuButton {...props} onClick={() => {}} />
+                {actions.map(({ label, Icon }, index) => (
+                    <BottomMenuButton
+                        key={label}
+                        label={label}
+                        Icon={Icon}
+                        active={index === activeViewIndex}
+                        onClick={handleViewChange(index)}
+                    />
                 ))}
             </DesktopBottomMenuPaper>
         </BottomMenuContainer>
