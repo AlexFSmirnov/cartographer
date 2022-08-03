@@ -1,0 +1,28 @@
+import { Paper } from '@mui/material';
+import styled from 'styled-components';
+
+export const BottomMenuContainer = styled.div`
+    position: absolute;
+    bottom: 0;
+
+    height: 64px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const DesktopBottomMenuPaper = styled(Paper)`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 4px;
+    height: 48px;
+    border-radius: 24px;
+
+    width: 150px;
+    max-width: 90%;
+`;

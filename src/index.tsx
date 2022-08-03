@@ -1,19 +1,31 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { store } from './state/store';
 import { register as registerServiceWorkers } from './serviceWorkerRegistration';
 import { GlobalStyle } from './style';
 import App from './App';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
+const theme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
+
+root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <GlobalStyle />
-            <App />
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <GlobalStyle />
+                <App />
+            </ThemeProvider>
         </Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
 );
 
 registerServiceWorkers();
