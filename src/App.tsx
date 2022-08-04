@@ -1,12 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { createTheme, useTheme } from '@mui/material';
+import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
 import { parseUrl, RouteName } from './routing';
+import { darkTheme, lightTheme } from './themes';
+import { getIsDarkModeEnabled } from './state';
 import { BottomMenu, Sidebar, TopMenuButton } from './components';
 import { MapView, NotesView } from './views';
-import { AppContainer, ViewContainer } from './style';
+import { AppContainer, GlobalStyle, ViewContainer } from './style';
 
-export const App = () => {
+const AppBase = () => {
     const theme = useTheme();
 
     const navigate = useNavigate();
@@ -30,3 +34,25 @@ export const App = () => {
         </AppContainer>
     );
 };
+
+interface ThemedAppProps {
+    isDarkModeEnabled: boolean;
+}
+
+const ThemedApp: React.FC<ThemedAppProps> = ({ isDarkModeEnabled }) => {
+    const theme = useMemo(() => (isDarkModeEnabled ? darkTheme : lightTheme), [isDarkModeEnabled]);
+
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <GlobalStyle />
+            <AppBase />
+        </ThemeProvider>
+    );
+};
+
+export const App = connect(
+    createStructuredSelector({
+        isDarkModeEnabled: getIsDarkModeEnabled,
+    })
+)(ThemedApp);

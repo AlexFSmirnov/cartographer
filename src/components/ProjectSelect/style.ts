@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 
 export const ProjectSelectContainer = styled(Button)`
-    width: 256px;
+    width: 320px;
     height: 64px;
 
     border-radius: 0;
@@ -20,7 +20,7 @@ export const ProjectSelectIcon = styled(ExpandMore)<{ isOpen: boolean }>`
 `;
 
 export const ProjectSelectItemsContainer = styled.div`
-    width: 256px;
+    width: 320px;
 `;
 
 export const ProjectSelectItemWrapper = styled(Button)`
