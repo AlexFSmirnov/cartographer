@@ -1,12 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BottomNavigation, BottomNavigationAction, useMediaQuery } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, useMediaQuery, useTheme } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
 import { parseUrl, RouteName } from '../../routing';
 import { BottomMenuButton } from './BottomMenuButton';
 import { BottomMenuContainer, DesktopBottomMenuPaper } from './style';
 
 export const BottomMenu = () => {
-    const isMobile = useMediaQuery('(max-width: 600px)');
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const navigate = useNavigate();
     const location = useLocation();

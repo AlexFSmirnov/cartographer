@@ -6,7 +6,7 @@ import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
 import { parseUrl, RouteName } from './routing';
 import { darkTheme, lightTheme } from './themes';
 import { getIsDarkModeEnabled } from './state';
-import { BottomMenu, Sidebar, TopMenuButton } from './components';
+import { BottomMenu, Sidebar, TopMenuButton, UploadMapDialog } from './components';
 import { MapView, NotesView } from './views';
 import { AppContainer, GlobalStyle, ViewContainer } from './style';
 
@@ -31,6 +31,7 @@ const AppBase = () => {
             <TopMenuButton />
             <Sidebar />
             <BottomMenu />
+            <UploadMapDialog />
         </AppContainer>
     );
 };
