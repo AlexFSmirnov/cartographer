@@ -57,7 +57,7 @@ const SidebarBase: React.FC<SidebarProps> = ({
                 {isEditModeEnabled && (
                     <>
                         <SidebarButton divider icon={<Map />} onClick={openUploadMapDialog}>
-                            Upload new map
+                            Upload root map
                         </SidebarButton>
                         <SidebarButton divider icon={<UploadFile />} onClick={() => {}}>
                             Import descriptions

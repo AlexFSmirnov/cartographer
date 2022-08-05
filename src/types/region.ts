@@ -7,6 +7,12 @@ export interface Region {
     references: string[];
     referencedBy: string[];
 
+    root: boolean;
     parent: string | null;
     parentRect: [number, number, number, number] | null;
+}
+
+export interface RootRegion {
+    id: string;
+    name: string;
 }

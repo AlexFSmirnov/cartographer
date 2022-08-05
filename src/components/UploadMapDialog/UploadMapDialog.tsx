@@ -10,26 +10,37 @@ import {
     DialogContentText,
     DialogTitle,
     TextField,
+    Typography,
 } from '@mui/material';
-import { closeUploadMapDialog, getIsUploadMapDialogOpen, saveImage } from '../../state';
+import {
+    addRootRegion,
+    closeUploadMapDialog,
+    getCurrentProjectRegions,
+    getIsUploadMapDialogOpen,
+    saveImage,
+} from '../../state';
 import { Dropzone } from '../Dropzone';
 import { UploadMapDialogImagePreview } from './style';
 
 interface StateProps {
     isUploadMapDialogOpen: boolean;
+    currentProjectRegions: ReturnType<typeof getCurrentProjectRegions>;
 }
 
 interface DispatchProps {
     closeUploadMapDialog: () => void;
     saveImage: typeof saveImage;
+    addRootRegion: typeof addRootRegion;
 }
 
 type UploadMapDialogProps = StateProps & DispatchProps;
 
 const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     isUploadMapDialogOpen,
+    currentProjectRegions,
     closeUploadMapDialog,
     saveImage,
+    addRootRegion,
 }) => {
     const [regionId, setRegionId] = useState('');
     const [regionName, setRegionName] = useState('');
@@ -66,11 +77,11 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     };
 
     const handleConfirmClick = () => {
-        const existingRegion = null;
+        const existingRegion = currentProjectRegions[regionId];
         if (existingRegion) {
             setIsAlertDialogOpen(true);
             setAlertDialogMessage(
-                `Region with code "${regionId}" (${existingRegion}) already exists.`
+                `Region with code "${regionId}" (${existingRegion.name}) already exists.`
             );
             return;
         }
@@ -90,8 +101,8 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                 return;
             }
 
-            // TODO: Save region info to regions
             saveImage({ id, imageDataUrl });
+            addRootRegion({ id, name: regionName });
 
             clearAndCloseDialog();
         };
@@ -109,9 +120,16 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 
     return (
         <Dialog onClose={closeUploadMapDialog} open={isUploadMapDialogOpen}>
-            <DialogTitle>Upload New Map</DialogTitle>
+            <DialogTitle>Upload Root Map</DialogTitle>
             <DialogContent sx={{ width: '600px', maxWidth: '100%' }}>
-                <DialogContentText>Enter the details of the new map.</DialogContentText>
+                <Typography variant="body1">Enter the details of the root map.</Typography>
+                <Typography variant="body2">
+                    <i>
+                        Note: if this map is a sub-region of another map, you should rather upload
+                        is by defining a region on the parent map. A root map doesn't have a parent
+                        and won't have any description or notes.
+                    </i>
+                </Typography>
                 <Box pt={1} pb={2} width="100%" display="flex" justifyContent="space-between">
                     <TextField
                         variant="filled"
@@ -171,9 +189,11 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 export const UploadMapDialog = connect(
     createStructuredSelector({
         isUploadMapDialogOpen: getIsUploadMapDialogOpen,
+        currentProjectRegions: getCurrentProjectRegions,
     }),
     {
         closeUploadMapDialog,
         saveImage,
+        addRootRegion,
     }
 )(UploadMapDialogBase);
