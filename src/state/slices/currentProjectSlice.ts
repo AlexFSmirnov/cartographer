@@ -6,6 +6,7 @@ import type { State } from '../store';
 interface CurrentProjectState {
     id: string | null;
     name: string | null;
+    activeMapRegionId: string | null;
     regions: Record<string, Region>;
 }
 
@@ -18,6 +19,7 @@ interface CurrentProjectState {
 const initialState: CurrentProjectState = {
     id: 'COS',
     name: 'Curse of Strahd',
+    activeMapRegionId: null,
     regions: {},
 };
 
@@ -45,10 +47,13 @@ export const currentProjectSlice = createSlice({
         addRegion: (state, action: PayloadAction<Region>) => {
             state.regions[action.payload.id] = action.payload;
         },
+        setActiveMapRegionId: (state, action) => {
+            state.activeMapRegionId = action.payload;
+        },
     },
 });
 
-export const { addRootRegion, addRegion } = currentProjectSlice.actions;
+export const { addRootRegion, addRegion, setActiveMapRegionId } = currentProjectSlice.actions;
 
 export const getCurrentProjectState = (state: State) => state.currentProject;
 
@@ -60,6 +65,11 @@ export const getCurrentProjectRegions = createSelector(
 );
 export const getCurrentProjectRegionIds = createSelector(getCurrentProjectRegions, (regions) =>
     Object.keys(regions)
+);
+
+export const getActiveMapRegionId = createSelector(
+    getCurrentProjectState,
+    (state) => state.activeMapRegionId
 );
 
 export default currentProjectSlice.reducer;

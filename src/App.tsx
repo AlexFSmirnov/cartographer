@@ -44,6 +44,7 @@ const AppBase: React.FC<AppProps> = ({
             return;
         }
 
+        // TODO: Should use the root region instead
         if (!activeMap && activeMapRegionId) {
             redirectUrl = `${redirectUrl}/${activeMapRegionId}`;
             navigate(redirectUrl, { replace: true });
