@@ -3,19 +3,21 @@ import { createSelector } from 'reselect';
 import type { State } from '../store';
 
 interface UiState {
+    isDarkModeEnabled: boolean;
+
     isSidebarOpen: boolean;
     isEditModeEnabled: boolean;
-    isDarkModeEnabled: boolean;
     isUploadMapDialogOpen: boolean;
 
     activeMapRegionId: string | null;
 }
 
 const initialState: UiState = {
+    isDarkModeEnabled: true,
+
     isSidebarOpen: false,
     isEditModeEnabled: false,
-    isDarkModeEnabled: true,
-    isUploadMapDialogOpen: true,
+    isUploadMapDialogOpen: false,
 
     activeMapRegionId: null,
 };

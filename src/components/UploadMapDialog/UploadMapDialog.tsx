@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Button,
@@ -12,6 +13,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import { RouteName } from '../../routing';
 import {
     addRootRegion,
     closeUploadMapDialog,
@@ -42,6 +44,8 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     saveImage,
     addRootRegion,
 }) => {
+    const navigate = useNavigate();
+
     const [regionId, setRegionId] = useState('');
     const [regionName, setRegionName] = useState('');
 
@@ -104,6 +108,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
             saveImage({ id, imageDataUrl });
             addRootRegion({ id, name: regionName });
 
+            navigate(`/${RouteName.Map}/${id}`);
             clearAndCloseDialog();
         };
         reader.readAsDataURL(uploadedImage);

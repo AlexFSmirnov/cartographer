@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const MapViewContainer = styled.div`
+export const EmptyProjectViewContainer = styled.div`
     width: 100%;
     height: 100%;
 
