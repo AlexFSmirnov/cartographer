@@ -119,7 +119,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     const isConfirmDisabled = !regionName || !uploadedImageUrl;
 
     return (
-        <Dialog onClose={closeUploadMapDialog} open={isUploadMapDialogOpen}>
+        <Dialog onClose={clearAndCloseDialog} open={isUploadMapDialogOpen}>
             <DialogTitle>Upload Root Map</DialogTitle>
             <DialogContent sx={{ width: '600px', maxWidth: '100%' }}>
                 <Typography variant="body1">Enter the details of the root map.</Typography>

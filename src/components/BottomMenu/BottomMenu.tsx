@@ -1,11 +1,20 @@
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, useMediaQuery, useTheme } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
+import { getActiveMapRegionId } from '../../state';
 import { parseUrl, RouteName } from '../../routing';
 import { BottomMenuButton } from './BottomMenuButton';
 import { BottomMenuContainer, DesktopBottomMenuPaper } from './style';
 
-export const BottomMenu = () => {
+interface StateProps {
+    activeMapRegionId: string | null;
+}
+
+type BottomMenuProps = StateProps;
+
+const BottomMenuBase: React.FC<BottomMenuProps> = ({ activeMapRegionId }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -13,7 +22,7 @@ export const BottomMenu = () => {
     const location = useLocation();
     const { view } = parseUrl(location.pathname);
 
-    const handleViewChange = (viewIndex: number) => () => {
+    const handleNavigationActionClick = (viewIndex: number) => () => {
         switch (viewIndex) {
             case 1:
                 navigate(`/${RouteName.Notes}`);
@@ -23,7 +32,11 @@ export const BottomMenu = () => {
                 break;
             case 0:
             default:
-                navigate(`/${RouteName.Map}`);
+                if (activeMapRegionId) {
+                    navigate(`/${RouteName.Map}/${activeMapRegionId}`);
+                } else {
+                    navigate(`/${RouteName.Map}`);
+                }
                 break;
         }
     };
@@ -51,7 +64,7 @@ export const BottomMenu = () => {
                             key={label}
                             label={label}
                             icon={<Icon />}
-                            onClick={handleViewChange(index)}
+                            onClick={handleNavigationActionClick(index)}
                         />
                     ))}
                 </BottomNavigation>
@@ -68,10 +81,16 @@ export const BottomMenu = () => {
                         label={label}
                         Icon={Icon}
                         active={index === activeViewIndex}
-                        onClick={handleViewChange(index)}
+                        onClick={handleNavigationActionClick(index)}
                     />
                 ))}
             </DesktopBottomMenuPaper>
         </BottomMenuContainer>
     );
 };
+
+export const BottomMenu = connect(
+    createStructuredSelector({
+        activeMapRegionId: getActiveMapRegionId,
+    })
+)(BottomMenuBase);

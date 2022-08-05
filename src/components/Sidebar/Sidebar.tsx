@@ -39,8 +39,17 @@ const SidebarBase: React.FC<SidebarProps> = ({
     toggleDarkMode,
     openUploadMapDialog,
 }) => {
+    const handleUploadRootMapButtonClick = () => {
+        openUploadMapDialog();
+        closeSidebar();
+    };
+
+    const handleSidebarClose = () => closeSidebar();
+    const handleEditModeClick = () => toggleEditMode();
+    const handleDarkModeClick = () => toggleDarkMode();
+
     return (
-        <Drawer anchor="left" open={isSidebarOpen} onClose={closeSidebar}>
+        <Drawer anchor="left" open={isSidebarOpen} onClose={handleSidebarClose}>
             <SidebarItemsContainer>
                 <ProjectSelect />
                 <SidebarButton divider icon={<FileDownload />} onClick={() => {}}>
@@ -51,12 +60,21 @@ const SidebarBase: React.FC<SidebarProps> = ({
                 </SidebarButton>
                 <div style={{ height: '64px' }} />
                 <Divider />
-                <SidebarButton divider toggle isActive={isEditModeEnabled} onClick={toggleEditMode}>
+                <SidebarButton
+                    divider
+                    toggle
+                    isActive={isEditModeEnabled}
+                    onClick={handleEditModeClick}
+                >
                     Edit mode
                 </SidebarButton>
                 {isEditModeEnabled && (
                     <>
-                        <SidebarButton divider icon={<Map />} onClick={openUploadMapDialog}>
+                        <SidebarButton
+                            divider
+                            icon={<Map />}
+                            onClick={handleUploadRootMapButtonClick}
+                        >
                             Upload root map
                         </SidebarButton>
                         <SidebarButton divider icon={<UploadFile />} onClick={() => {}}>
@@ -66,10 +84,15 @@ const SidebarBase: React.FC<SidebarProps> = ({
                 )}
                 <div style={{ flexGrow: 1 }} />
                 <Divider />
-                <SidebarButton divider toggle isActive={isDarkModeEnabled} onClick={toggleDarkMode}>
+                <SidebarButton
+                    divider
+                    toggle
+                    isActive={isDarkModeEnabled}
+                    onClick={handleDarkModeClick}
+                >
                     Dark mode
                 </SidebarButton>
-                <SidebarButton icon={<Close />} onClick={closeSidebar}>
+                <SidebarButton icon={<Close />} onClick={handleSidebarClose}>
                     Close
                 </SidebarButton>
             </SidebarItemsContainer>

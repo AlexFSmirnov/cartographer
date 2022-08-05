@@ -7,6 +7,8 @@ interface UiState {
     isEditModeEnabled: boolean;
     isDarkModeEnabled: boolean;
     isUploadMapDialogOpen: boolean;
+
+    activeMapRegionId: string | null;
 }
 
 const initialState: UiState = {
@@ -14,6 +16,8 @@ const initialState: UiState = {
     isEditModeEnabled: false,
     isDarkModeEnabled: true,
     isUploadMapDialogOpen: true,
+
+    activeMapRegionId: null,
 };
 
 export const uiSlice = createSlice({
@@ -38,6 +42,9 @@ export const uiSlice = createSlice({
         closeUploadMapDialog: (state) => {
             state.isUploadMapDialogOpen = false;
         },
+        setActiveMapRegionId: (state, action) => {
+            state.activeMapRegionId = action.payload;
+        },
     },
 });
 
@@ -48,6 +55,7 @@ export const {
     toggleDarkMode,
     openUploadMapDialog,
     closeUploadMapDialog,
+    setActiveMapRegionId,
 } = uiSlice.actions;
 
 export const getUiState = (state: State) => state.ui;
@@ -59,5 +67,7 @@ export const getIsUploadMapDialogOpen = createSelector(
     getUiState,
     (state) => state.isUploadMapDialogOpen
 );
+
+export const getActiveMapRegionId = createSelector(getUiState, (state) => state.activeMapRegionId);
 
 export default uiSlice.reducer;

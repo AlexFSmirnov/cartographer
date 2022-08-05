@@ -5,23 +5,55 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
 import { parseUrl, RouteName } from './routing';
 import { darkTheme, lightTheme } from './themes';
-import { getIsDarkModeEnabled } from './state';
+import {
+    getActiveMapRegionId,
+    getCurrentProjectRegionIds,
+    getIsDarkModeEnabled,
+    setActiveMapRegionId,
+} from './state';
 import { BottomMenu, Sidebar, TopMenuButton, UploadMapDialog } from './components';
 import { MapView, NotesView } from './views';
 import { AppContainer, GlobalStyle, ViewContainer } from './style';
 
-const AppBase = () => {
+interface AppProps {
+    activeMapRegionId: string | null;
+    currentProjectRegionIds: string[];
+    setActiveMapRegionId: (regionId: string) => void;
+}
+
+const AppBase: React.FC<AppProps> = ({
+    activeMapRegionId,
+    currentProjectRegionIds,
+    setActiveMapRegionId,
+}) => {
     const theme = useTheme();
 
     const navigate = useNavigate();
     const location = useLocation();
-    const { view, region, subView } = parseUrl(location.pathname);
+    const { view, activeMap, region, subView } = parseUrl(location.pathname);
 
     useEffect(() => {
-        if (!view) {
-            navigate(`/${RouteName.Map}`, { replace: true });
+        let redirectUrl = `/${RouteName.Map}`;
+
+        if (view !== null && view !== RouteName.Map) {
+            return;
         }
-    }, [view, navigate]);
+
+        if (!activeMap && !activeMapRegionId) {
+            navigate(redirectUrl, { replace: true });
+            return;
+        }
+
+        if (!activeMap && activeMapRegionId) {
+            redirectUrl = `${redirectUrl}/${activeMapRegionId}`;
+            navigate(redirectUrl, { replace: true });
+            return;
+        }
+
+        if (activeMap !== null && activeMap !== activeMapRegionId) {
+            setActiveMapRegionId(activeMap);
+        }
+    }, [view, activeMap, activeMapRegionId, navigate, setActiveMapRegionId]);
 
     return (
         <AppContainer>
@@ -38,16 +70,19 @@ const AppBase = () => {
 
 interface ThemedAppProps {
     isDarkModeEnabled: boolean;
+    activeMapRegionId: string | null;
+    currentProjectRegionIds: string[];
+    setActiveMapRegionId: (regionId: string) => void;
 }
 
-const ThemedApp: React.FC<ThemedAppProps> = ({ isDarkModeEnabled }) => {
+const ThemedApp: React.FC<ThemedAppProps> = ({ isDarkModeEnabled, ...rest }) => {
     const theme = useMemo(() => (isDarkModeEnabled ? darkTheme : lightTheme), [isDarkModeEnabled]);
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <GlobalStyle />
-            <AppBase />
+            <AppBase {...rest} />
         </ThemeProvider>
     );
 };
@@ -55,5 +90,10 @@ const ThemedApp: React.FC<ThemedAppProps> = ({ isDarkModeEnabled }) => {
 export const App = connect(
     createStructuredSelector({
         isDarkModeEnabled: getIsDarkModeEnabled,
-    })
+        activeMapRegionId: getActiveMapRegionId,
+        currentProjectRegionIds: getCurrentProjectRegionIds,
+    }),
+    {
+        setActiveMapRegionId,
+    }
 )(ThemedApp);

@@ -12,7 +12,7 @@ type TopMenuButtonProps = DispatchProps;
 
 const TopMenuButtonBase: React.FC<TopMenuButtonProps> = ({ openSidebar }) => (
     <TopMenuButtonWrapper>
-        <IconButton onClick={openSidebar}>
+        <IconButton onClick={() => openSidebar()}>
             <Menu />
         </IconButton>
     </TopMenuButtonWrapper>

@@ -2,14 +2,13 @@ import { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { ListItem, Popover, Typography } from '@mui/material';
+import { Add, ExpandMore } from '@mui/icons-material';
 import { getCurrentProjectName, getSavedProjectsNamesAndIds } from '../../state';
 import {
     ProjectSelectContainer,
-    ProjectSelectIcon,
+    ProjectSelectIconWrapper,
     ProjectSelectItemsContainer,
-    ProjectSelectItemWrapper,
 } from './style';
-import { Add } from '@mui/icons-material';
 
 interface StateProps {
     currentProjectName: string | null;
@@ -34,7 +33,9 @@ const ProjectSelectBase: React.FC<ProjectSelectProps> = ({
         <>
             <ProjectSelectContainer variant="contained" ref={anchorElementRef} onClick={handleOpen}>
                 <Typography variant="h5">{title}</Typography>
-                <ProjectSelectIcon isOpen={isOpen} />
+                <ProjectSelectIconWrapper isOpen={isOpen}>
+                    <ExpandMore />
+                </ProjectSelectIconWrapper>
             </ProjectSelectContainer>
             <Popover
                 open={isOpen}
@@ -51,8 +52,8 @@ const ProjectSelectBase: React.FC<ProjectSelectProps> = ({
                 marginThreshold={0}
             >
                 <ProjectSelectItemsContainer>
-                    {savedProjectsNamesAndIds.map(({ name }) => (
-                        <ListItem button divider>
+                    {savedProjectsNamesAndIds.map(({ id, name }) => (
+                        <ListItem key={id} button divider>
                             <Typography>{name}</Typography>
                         </ListItem>
                     ))}
