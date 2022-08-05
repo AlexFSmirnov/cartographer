@@ -31,10 +31,25 @@ export const AppContainer = styled.div`
     height: 100%;
 `;
 
-export const ViewContainer = styled.div`
+export const AppContent = styled.div`
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 64px;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+`;
+
+export const ViewContainer = styled.div`
+    width: 100%;
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid red;
 `;

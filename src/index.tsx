@@ -2,12 +2,12 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './state/store';
 import { register as registerServiceWorkers } from './serviceWorkerRegistration';
 import { RouteName } from './routing';
 import { App } from './App';
 import { MapView, NotesView, RegionsView, NotFound } from './views';
-import { PersistGate } from 'redux-persist/integration/react';
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

@@ -17,18 +17,14 @@ const MapViewBase: React.FC<MapViewProps> = ({ currentProjectRegionIds }) => {
     const location = useLocation();
     const { activeMap, region, subView } = parseUrl(location.pathname);
 
-    if (!activeMap) {
-        return <EmptyProjectView />;
-    }
-
-    if (!currentProjectRegionIds.includes(activeMap)) {
-        return <NotFound />;
-    }
+    // if (!currentProjectRegionIds.includes(activeMap)) {
+    //     return <NotFound />;
+    // }
 
     return (
-        <div style={{ height: '100%', display: 'flex', justifyContent: 'center', width: '100%' }}>
-            Map
-        </div>
+        <>
+            <div>Map</div>
+        </>
     );
 };
 

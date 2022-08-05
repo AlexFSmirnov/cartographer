@@ -11,15 +11,15 @@ type EmptyProjectViewProps = DispatchProps;
 
 const EmptyProjectViewBase: React.FC<EmptyProjectViewProps> = ({ openUploadMapDialog }) => (
     <EmptyProjectViewContainer>
-        <Typography variant="h4">The project is empty.</Typography>
-        <Box pb={4} />
-        <Typography variant="body1">You can start working on it by adding a new map</Typography>
+        <Typography variant="body1">
+            You can start working on this project by adding a map
+        </Typography>
         <Box width="200px" display="flex" justifyContent="space-between" alignItems="center">
             <Divider sx={{ width: '35%' }} />
             <Typography variant="body1">or</Typography>
             <Divider sx={{ width: '35%' }} />
         </Box>
-        <Typography variant="body1">by loading an example project</Typography>
+        <Typography variant="body1">load an example project for a tutorial</Typography>
         <Box
             mt={4}
             width="360px"

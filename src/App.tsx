@@ -7,23 +7,27 @@ import { parseUrl, RouteName } from './routing';
 import { darkTheme, lightTheme } from './themes';
 import {
     getActiveMapRegionId,
+    getCurrentProjectFirstRootRegionId,
     getCurrentProjectRegionIds,
     getIsDarkModeEnabled,
     setActiveMapRegionId,
 } from './state';
-import { BottomMenu, Sidebar, TopMenuButton, UploadMapDialog } from './components';
-import { MapView, NotesView } from './views';
-import { AppContainer, GlobalStyle, ViewContainer } from './style';
+import { BottomMenu, Sidebar, Title, TopMenuButton, UploadMapDialog } from './components';
+import { MapView, NotesView, NotFound } from './views';
+import { AppContainer, AppContent, GlobalStyle, ViewContainer } from './style';
+import { EmptyProjectView } from './views/EmptyProjectView';
 
 interface AppProps {
     activeMapRegionId: string | null;
     currentProjectRegionIds: string[];
-    setActiveMapRegionId: (regionId: string) => void;
+    currentProjectRootRegionId: string | null;
+    setActiveMapRegionId: (regionId: string | null) => void;
 }
 
 const AppBase: React.FC<AppProps> = ({
     activeMapRegionId,
     currentProjectRegionIds,
+    currentProjectRootRegionId,
     setActiveMapRegionId,
 }) => {
     const theme = useTheme();
@@ -39,41 +43,63 @@ const AppBase: React.FC<AppProps> = ({
             return;
         }
 
-        if (!activeMap && !activeMapRegionId) {
+        if (view === null && activeMap === null && activeMapRegionId === null) {
             navigate(redirectUrl, { replace: true });
             return;
         }
 
-        // TODO: Should use the root region instead
-        if (!activeMap && activeMapRegionId) {
-            redirectUrl = `${redirectUrl}/${activeMapRegionId}`;
-            navigate(redirectUrl, { replace: true });
-            return;
+        if (activeMap !== null) {
+            if (activeMap !== activeMapRegionId && currentProjectRegionIds.includes(activeMap)) {
+                setActiveMapRegionId(activeMap);
+            }
+        } else {
+            if (activeMapRegionId !== null && currentProjectRegionIds.includes(activeMapRegionId)) {
+                navigate(`${redirectUrl}/${activeMapRegionId}`);
+            } else {
+                if (currentProjectRootRegionId) {
+                    setActiveMapRegionId(currentProjectRootRegionId);
+                    navigate(`${redirectUrl}/${currentProjectRootRegionId}`);
+                }
+            }
         }
+    }, [
+        view,
+        activeMap,
+        activeMapRegionId,
+        currentProjectRegionIds,
+        currentProjectRootRegionId,
+        navigate,
+        setActiveMapRegionId,
+    ]);
 
-        if (activeMap !== null && activeMap !== activeMapRegionId) {
-            setActiveMapRegionId(activeMap);
-        }
-    }, [view, activeMap, activeMapRegionId, navigate, setActiveMapRegionId]);
+    const isNotFound = useMemo(
+        () =>
+            view === RouteName.Map &&
+            activeMap !== null &&
+            !currentProjectRegionIds.includes(activeMap),
+        [activeMap, currentProjectRegionIds, view]
+    );
 
     return (
         <AppContainer>
-            <ViewContainer>
-                <Outlet />
-            </ViewContainer>
+            <AppContent>
+                <Title />
+                <ViewContainer>
+                    {currentProjectRootRegionId === null && <EmptyProjectView />}
+                    {currentProjectRootRegionId !== null && isNotFound && <NotFound />}
+                    {currentProjectRootRegionId !== null && !isNotFound && <Outlet />}
+                </ViewContainer>
+                <BottomMenu />
+            </AppContent>
             <TopMenuButton />
             <Sidebar />
-            <BottomMenu />
             <UploadMapDialog />
         </AppContainer>
     );
 };
 
-interface ThemedAppProps {
+interface ThemedAppProps extends AppProps {
     isDarkModeEnabled: boolean;
-    activeMapRegionId: string | null;
-    currentProjectRegionIds: string[];
-    setActiveMapRegionId: (regionId: string) => void;
 }
 
 const ThemedApp: React.FC<ThemedAppProps> = ({ isDarkModeEnabled, ...rest }) => {
@@ -93,6 +119,7 @@ export const App = connect(
         isDarkModeEnabled: getIsDarkModeEnabled,
         activeMapRegionId: getActiveMapRegionId,
         currentProjectRegionIds: getCurrentProjectRegionIds,
+        currentProjectRootRegionId: getCurrentProjectFirstRootRegionId,
     }),
     {
         setActiveMapRegionId,

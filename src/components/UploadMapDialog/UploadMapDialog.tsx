@@ -20,6 +20,7 @@ import {
     getCurrentProjectRegions,
     getIsUploadMapDialogOpen,
     saveImage,
+    setActiveMapRegionId,
 } from '../../state';
 import { Dropzone } from '../Dropzone';
 import { UploadMapDialogImagePreview } from './style';
@@ -33,6 +34,7 @@ interface DispatchProps {
     closeUploadMapDialog: () => void;
     saveImage: typeof saveImage;
     addRootRegion: typeof addRootRegion;
+    setActiveMapRegionId: typeof setActiveMapRegionId;
 }
 
 type UploadMapDialogProps = StateProps & DispatchProps;
@@ -43,6 +45,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     closeUploadMapDialog,
     saveImage,
     addRootRegion,
+    setActiveMapRegionId,
 }) => {
     const navigate = useNavigate();
 
@@ -107,6 +110,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 
             saveImage({ id, imageDataUrl });
             addRootRegion({ id, name: regionName });
+            setActiveMapRegionId(id);
 
             navigate(`/${RouteName.Map}/${id}`);
             clearAndCloseDialog();
@@ -200,5 +204,6 @@ export const UploadMapDialog = connect(
         closeUploadMapDialog,
         saveImage,
         addRootRegion,
+        setActiveMapRegionId,
     }
 )(UploadMapDialogBase);

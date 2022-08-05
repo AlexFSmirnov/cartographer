@@ -2,9 +2,6 @@ import { Paper } from '@mui/material';
 import styled from 'styled-components';
 
 export const BottomMenuContainer = styled.div`
-    position: absolute;
-    bottom: 0;
-
     height: 64px;
     width: 100%;
 

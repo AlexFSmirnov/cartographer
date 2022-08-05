@@ -47,7 +47,7 @@ export const currentProjectSlice = createSlice({
         addRegion: (state, action: PayloadAction<Region>) => {
             state.regions[action.payload.id] = action.payload;
         },
-        setActiveMapRegionId: (state, action) => {
+        setActiveMapRegionId: (state, action: PayloadAction<string | null>) => {
             state.activeMapRegionId = action.payload;
         },
     },
@@ -65,6 +65,13 @@ export const getCurrentProjectRegions = createSelector(
 );
 export const getCurrentProjectRegionIds = createSelector(getCurrentProjectRegions, (regions) =>
     Object.keys(regions)
+);
+export const getCurrentProjectFirstRootRegionId = createSelector(
+    getCurrentProjectRegions,
+    (regions) => {
+        const rootRegions = Object.values(regions).filter((region) => region.root);
+        return rootRegions.length > 0 ? rootRegions[0].id : null;
+    }
 );
 
 export const getActiveMapRegionId = createSelector(
