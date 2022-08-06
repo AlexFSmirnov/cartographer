@@ -3,6 +3,7 @@ interface GetImageCoverRectArgs {
     imageHeight: number;
     containerWidth: number;
     containerHeight: number;
+    padding: number;
 }
 
 export const getImageCoverRect = ({
@@ -10,22 +11,31 @@ export const getImageCoverRect = ({
     imageHeight,
     containerWidth,
     containerHeight,
+    padding,
 }: GetImageCoverRectArgs) => {
+    const paddedContainerWidth = containerWidth - padding * 2;
+    const paddedContainerHeight = containerHeight - padding * 2;
+
     const imageRatio = imageWidth / imageHeight;
-    const containerRatio = containerWidth / containerHeight;
+    const containerRatio = paddedContainerWidth / paddedContainerHeight;
 
     const scale =
-        containerRatio > imageRatio ? containerHeight / imageHeight : containerWidth / imageWidth;
+        containerRatio > imageRatio
+            ? paddedContainerHeight / imageHeight
+            : paddedContainerWidth / imageWidth;
 
     const scaledImageWidth = imageWidth * scale;
     const scaledImageHeight = imageHeight * scale;
 
-    const scaledImageOffsetX = (containerWidth - scaledImageWidth) / 2;
-    const scaledImageOffsetY = (containerHeight - scaledImageHeight) / 2;
+    const scaledImageOffsetX = (paddedContainerWidth - scaledImageWidth) / 2;
+    const scaledImageOffsetY = (paddedContainerHeight - scaledImageHeight) / 2;
+
+    const x = containerRatio > imageRatio ? scaledImageOffsetX : scaledImageOffsetX + padding;
+    const y = containerRatio > imageRatio ? scaledImageOffsetY + padding : scaledImageOffsetY;
 
     return {
-        x: scaledImageOffsetX,
-        y: scaledImageOffsetY,
+        x,
+        y,
         width: scaledImageWidth,
         height: scaledImageHeight,
     };

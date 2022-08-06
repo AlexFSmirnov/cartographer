@@ -64,6 +64,7 @@ const MapViewBase: React.FC<MapViewProps> = ({
                 imageHeight,
                 containerWidth,
                 containerHeight,
+                padding: 8,
             });
 
             ctx.drawImage(activeMapImage, x, y, width, height);
