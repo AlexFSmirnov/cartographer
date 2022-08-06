@@ -7,6 +7,7 @@ import { EmptyProjectView } from '../EmptyProjectView';
 import { NotFound } from '../NotFound';
 import { MapViewCanvas, MapViewContainer } from './style';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getImageCoverRect } from '../../utils/getImageCoverRect';
 
 interface StateProps {
     currentProjectRegionIds: string[];
@@ -56,12 +57,16 @@ const MapViewBase: React.FC<MapViewProps> = ({
             }
 
             const { width: imageWidth, height: imageHeight } = activeMapImage;
-            const { width: canvasWidth, height: canvasHeight } = canvasSize;
+            const { width: containerWidth, height: containerHeight } = canvasSize;
 
-            console.log({ imageWidth, imageHeight });
-            console.log({ canvasWidth, canvasHeight });
+            const { x, y, width, height } = getImageCoverRect({
+                imageWidth,
+                imageHeight,
+                containerWidth,
+                containerHeight,
+            });
 
-            ctx.drawImage(activeMapImage, 0, 0, 100, 100);
+            ctx.drawImage(activeMapImage, x, y, width, height);
         },
         [activeMapImage, isActiveMapImageLoaded, canvasSize]
     );
