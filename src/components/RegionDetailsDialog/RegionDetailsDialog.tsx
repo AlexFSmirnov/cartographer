@@ -9,8 +9,16 @@ export const RegionDetailsDialog = () => {
 
     const isOpen = region !== null;
 
+    const handleClose = () => {
+        if (activeMap) {
+            navigate(`/${view}/${activeMap}`);
+        } else {
+            navigate(`/${view}`);
+        }
+    };
+
     return (
-        <Dialog open={isOpen}>
+        <Dialog open={isOpen} onClose={handleClose}>
             <DialogTitle>RegionDetails</DialogTitle>
         </Dialog>
     );

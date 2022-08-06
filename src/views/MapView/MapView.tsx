@@ -42,13 +42,33 @@ const MapViewBase: React.FC<MapViewProps> = ({
         return image;
     }, [activeMapImageDataUrl]);
 
-    useEffect(() => {
+    const updateCanvasSize = useCallback(() => {
         const { current: container } = containerRef;
         if (container) {
             const { width, height } = container.getBoundingClientRect();
-            setCanvasSize({ width, height });
+
+            if (
+                Math.abs(width - canvasSize.width) > 0.1 ||
+                Math.abs(height - canvasSize.height) > 0.1
+            ) {
+                setCanvasSize({ width, height });
+            }
         }
-    }, [containerRef]);
+    }, [containerRef, canvasSize]);
+
+    useEffect(updateCanvasSize, [updateCanvasSize]);
+
+    useEffect(() => {
+        const { current: container } = containerRef;
+        if (!container) {
+            return;
+        }
+
+        const resizeObserver = new ResizeObserver(updateCanvasSize);
+        resizeObserver.observe(container);
+
+        return () => resizeObserver.unobserve(container);
+    });
 
     const drawBaseImage = useCallback(
         (ctx: CanvasRenderingContext2D) => {
@@ -90,7 +110,11 @@ const MapViewBase: React.FC<MapViewProps> = ({
 
     return (
         <MapViewContainer ref={containerRef}>
-            <MapViewCanvas ref={canvasRef} {...canvasSize} />
+            <MapViewCanvas
+                ref={canvasRef}
+                {...canvasSize}
+                onClick={() => navigate('/map/ROOT/k15')}
+            />
         </MapViewContainer>
     );
 };
