@@ -13,7 +13,14 @@ import {
     getIsDarkModeEnabled,
     setActiveMapRegionId,
 } from './state';
-import { BottomMenu, Sidebar, Title, TopMenuButton, UploadMapDialog } from './components';
+import {
+    BottomMenu,
+    RegionDetailsDialog,
+    Sidebar,
+    Title,
+    TopMenuButton,
+    UploadMapDialog,
+} from './components';
 import { MapView, NotesView, NotFound } from './views';
 import { AppContainer, AppContent, GlobalStyle, ViewContainer } from './style';
 import { EmptyProjectView } from './views/EmptyProjectView';
@@ -95,6 +102,7 @@ const AppBase: React.FC<AppProps> = ({
             <TopMenuButton />
             <Sidebar />
             <UploadMapDialog />
+            <RegionDetailsDialog />
         </AppContainer>
     );
 };

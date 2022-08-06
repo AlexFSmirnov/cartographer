@@ -4,14 +4,14 @@ interface ParseUrlResult {
     view: RouteName | null;
     activeMap: string | null;
     region: string | null;
-    subView: SubView | null;
+    subView: SubView;
 }
 
 export const parseUrl = (url: string): ParseUrlResult => {
     const parts = url.split('/');
 
     if (parts.length <= 1) {
-        return { view: null, activeMap: null, region: null, subView: null };
+        return { view: null, activeMap: null, region: null, subView: SubView.Description };
     }
 
     const view = (parts[1] as RouteName) || null;
