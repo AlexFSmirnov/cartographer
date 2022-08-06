@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, useMediaQuery, useTheme } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
 import { getActiveMapRegionId } from '../../state';
-import { parseUrl, RouteName } from '../../routing';
+import { RouteName } from '../../enums';
+import { parseUrl } from '../../utils';
 import { BottomMenuButton } from './BottomMenuButton';
 import { BottomMenuContainer, DesktopBottomMenuPaper } from './style';
 

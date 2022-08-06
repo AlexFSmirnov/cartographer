@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
-import { parseUrl, RouteName } from './routing';
+import { RouteName } from './enums';
+import { parseUrl } from './utils';
 import { darkTheme, lightTheme } from './themes';
 import {
     getActiveMapRegionId,
@@ -54,11 +55,11 @@ const AppBase: React.FC<AppProps> = ({
             }
         } else {
             if (activeMapRegionId !== null && currentProjectRegionIds.includes(activeMapRegionId)) {
-                navigate(`${redirectUrl}/${activeMapRegionId}`);
+                navigate(`${redirectUrl}/${activeMapRegionId}`, { replace: true });
             } else {
                 if (currentProjectRootRegionId) {
                     setActiveMapRegionId(currentProjectRootRegionId);
-                    navigate(`${redirectUrl}/${currentProjectRootRegionId}`);
+                    navigate(`${redirectUrl}/${currentProjectRootRegionId}`, { replace: true });
                 }
             }
         }

@@ -13,7 +13,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { RouteName } from '../../routing';
+import { RouteName } from '../../enums';
 import {
     addRootRegion,
     closeUploadMapDialog,

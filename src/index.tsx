@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './state/store';
 import { register as registerServiceWorkers } from './serviceWorkerRegistration';
-import { RouteName } from './routing';
+import { RouteName } from './enums';
 import { App } from './App';
 import { MapView, NotesView, RegionsView, NotFound } from './views';
 

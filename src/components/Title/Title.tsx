@@ -3,7 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Typography } from '@mui/material';
-import { parseUrl, RouteName } from '../../routing';
+import { RouteName } from '../../enums';
+import { parseUrl } from '../../utils';
 import { getCurrentProjectRegions } from '../../state';
 import { Region } from '../../types';
 

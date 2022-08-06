@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { parseUrl } from '../../routing';
+import { parseUrl } from '../../utils';
 import { getActiveMapImageDataUrl, getCurrentProjectRegionIds } from '../../state';
 import { EmptyProjectView } from '../EmptyProjectView';
 import { NotFound } from '../NotFound';
@@ -55,9 +55,15 @@ const MapViewBase: React.FC<MapViewProps> = ({
                 return;
             }
 
+            const { width: imageWidth, height: imageHeight } = activeMapImage;
+            const { width: canvasWidth, height: canvasHeight } = canvasSize;
+
+            console.log({ imageWidth, imageHeight });
+            console.log({ canvasWidth, canvasHeight });
+
             ctx.drawImage(activeMapImage, 0, 0, 100, 100);
         },
-        [activeMapImage, isActiveMapImageLoaded]
+        [activeMapImage, isActiveMapImageLoaded, canvasSize]
     );
 
     useEffect(() => {

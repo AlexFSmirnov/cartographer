@@ -1,4 +1,4 @@
-import { RouteName, SubView } from './enums';
+import { RouteName, SubView } from '../enums';
 
 interface ParseUrlResult {
     view: RouteName | null;
