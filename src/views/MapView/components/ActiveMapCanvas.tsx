@@ -1,45 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { getActiveMapImageDataUrl } from '../../../state';
+import { useEffect, useRef } from 'react';
 import { getImageCoverRect } from '../../../utils';
+import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
 
-interface OwnProps {
+interface ActiveMapCanvasProps {
     canvasSize: { width: number; height: number };
+    activeMapImage: HTMLImageElement | null;
 }
 
-interface StateProps {
-    activeMapImageDataUrl: string | null;
-}
-
-type ActiveMapCanvasProps = OwnProps & StateProps;
-
-const ActiveMapCanvasBase: React.FC<ActiveMapCanvasProps> = ({
-    canvasSize,
-    activeMapImageDataUrl,
-}) => {
+export const ActiveMapCanvas: React.FC<ActiveMapCanvasProps> = ({ canvasSize, activeMapImage }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    const [isActiveMapImageLoaded, setIsActiveMapImageLoaded] = useState(false);
-
-    const activeMapImage = useMemo(() => {
-        if (!activeMapImageDataUrl) {
-            return null;
-        }
-
-        const image = new Image();
-        image.src = activeMapImageDataUrl;
-        image.onload = () => setIsActiveMapImageLoaded(true);
-
-        return image;
-    }, [activeMapImageDataUrl]);
 
     useEffect(() => {
         const { current: canvas } = canvasRef;
         const ctx = canvas?.getContext('2d');
 
-        if (!activeMapImage || !isActiveMapImageLoaded || !canvas || !ctx) {
+        if (!activeMapImage || !canvas || !ctx) {
             return;
         }
 
@@ -51,17 +27,11 @@ const ActiveMapCanvasBase: React.FC<ActiveMapCanvasProps> = ({
             imageHeight,
             containerWidth,
             containerHeight,
-            padding: 8,
+            padding: ACTIVE_MAP_PADDING,
         });
 
         ctx.drawImage(activeMapImage, x, y, width, height);
-    }, [activeMapImage, isActiveMapImageLoaded, canvasSize, canvasRef]);
+    }, [activeMapImage, canvasSize, canvasRef]);
 
     return <MapViewCanvas ref={canvasRef} {...canvasSize} />;
 };
-
-export const ActiveMapCanvas = connect(
-    createStructuredSelector({
-        activeMapImageDataUrl: getActiveMapImageDataUrl,
-    })
-)(ActiveMapCanvasBase);

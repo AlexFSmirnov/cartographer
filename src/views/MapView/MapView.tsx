@@ -10,23 +10,41 @@ import {
 } from '../../state';
 import { MapViewCanvas, MapViewContainer } from './style';
 import { Point } from '../../types';
-import { getCanvasCoords, getRectFromMousePositions } from './utils';
 import { ActiveMapCanvas, NewRegionCanvas, NewRegionDialog } from './components';
 
 interface StateProps {
     isEditModeEnabled: boolean;
     currentProjectRegionIds: string[];
+    activeMapImageDataUrl: string | null;
 }
 
 type MapViewProps = StateProps;
 
-const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled, currentProjectRegionIds }) => {
+const MapViewBase: React.FC<MapViewProps> = ({
+    isEditModeEnabled,
+    currentProjectRegionIds,
+    activeMapImageDataUrl,
+}) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { view, activeMap, region, subView } = parseUrl(location.pathname);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+    const [isActiveMapImageLoaded, setIsActiveMapImageLoaded] = useState(false);
+
+    const activeMapImage = useMemo(() => {
+        if (!activeMapImageDataUrl) {
+            return null;
+        }
+
+        const image = new Image();
+        image.src = activeMapImageDataUrl;
+        setIsActiveMapImageLoaded(false);
+        image.onload = () => setIsActiveMapImageLoaded(true);
+
+        return image;
+    }, [activeMapImageDataUrl]);
 
     const updateCanvasSize = useCallback(() => {
         const { current: container } = containerRef;
@@ -58,13 +76,19 @@ const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled, currentProject
 
     console.log('RENDERED');
 
+    const loadedActiveMapImage = isActiveMapImageLoaded ? activeMapImage : null;
+    const activeMapImageSize = {
+        width: activeMapImage?.width || 0,
+        height: activeMapImage?.height || 0,
+    };
+
     return (
         <>
             <MapViewContainer ref={containerRef}>
-                <ActiveMapCanvas canvasSize={canvasSize} />
-                <NewRegionCanvas canvasSize={canvasSize} />
+                <ActiveMapCanvas canvasSize={canvasSize} activeMapImage={loadedActiveMapImage} />
+                <NewRegionCanvas canvasSize={canvasSize} activeMapImageSize={activeMapImageSize} />
             </MapViewContainer>
-            <NewRegionDialog />
+            <NewRegionDialog activeMapImage={loadedActiveMapImage} />
         </>
     );
 };
@@ -73,5 +97,6 @@ export const MapView = connect(
     createStructuredSelector({
         isEditModeEnabled: getIsEditModeEnabled,
         currentProjectRegionIds: getCurrentProjectRegionIds,
+        activeMapImageDataUrl: getActiveMapImageDataUrl,
     })
 )(MapViewBase);
