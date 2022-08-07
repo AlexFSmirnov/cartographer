@@ -1,1 +1,3 @@
-export * from './region';
+export * from './Region';
+export * from './Point';
+export * from './Rect';

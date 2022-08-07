@@ -1,3 +1,5 @@
+import { Rect } from './Rect';
+
 export interface Region {
     id: string;
     name: string;
@@ -9,7 +11,7 @@ export interface Region {
 
     root: boolean;
     parent: string | null;
-    parentRect: [number, number, number, number] | null;
+    parentRect: Rect | null;
 }
 
 export interface RootRegion {

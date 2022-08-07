@@ -27,29 +27,26 @@ const TitleBase: React.FC<TitleProps> = ({ currentProjectRegions }) => {
         return null;
     }
 
-    if (view !== RouteName.Map) {
-        return (
-            <Box
-                width="100%"
-                height="56px"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-            >
-                <Typography variant="h4" sx={{ fontWeight: 300 }}>
-                    {view === null && 'The project is empty'}
-                    {view === RouteName.Notes && 'Notes'}
-                    {view === RouteName.Regions && 'Regions'}
-                </Typography>
-            </Box>
+    let content;
+    if (view === RouteName.Map) {
+        content = (
+            <Typography variant="h4" sx={{ fontWeight: 300 }}>
+                Bread/Crumbs/Will/Be/Here/{activeMap}
+            </Typography>
+        );
+    } else {
+        content = (
+            <Typography variant="h4" sx={{ fontWeight: 300 }}>
+                {view === null && 'The project is empty'}
+                {view === RouteName.Notes && 'Notes'}
+                {view === RouteName.Regions && 'Regions'}
+            </Typography>
         );
     }
 
     return (
-        <Box width="100%" height="56px" display="flex" justifyContent="center" alignItems="center">
-            <Typography variant="h4" sx={{ fontWeight: 300 }}>
-                Bread/Crumbs/Will/Be/Here/{activeMap}
-            </Typography>
+        <Box width="100%" height="64px" display="flex" justifyContent="center" alignItems="center">
+            {content}
         </Box>
     );
 };
