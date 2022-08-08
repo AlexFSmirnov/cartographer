@@ -6,6 +6,7 @@ import type { State } from '../store';
 interface UiState {
     isSidebarOpen: boolean;
     isUploadMapDialogOpen: boolean;
+    alertDialogMessage: string | null;
 
     newRegionRect: Rect | null;
 }
@@ -14,6 +15,7 @@ const initialState: UiState = {
     isSidebarOpen: false,
     isUploadMapDialogOpen: false,
     newRegionRect: null,
+    alertDialogMessage: null,
 };
 
 export const uiSlice = createSlice({
@@ -38,6 +40,12 @@ export const uiSlice = createSlice({
         closeNewRegionDialog: (state) => {
             state.newRegionRect = null;
         },
+        openAlertDialog: (state, action: PayloadAction<string>) => {
+            state.alertDialogMessage = action.payload;
+        },
+        closeAlertDialog: (state) => {
+            state.alertDialogMessage = null;
+        },
     },
 });
 
@@ -48,6 +56,8 @@ export const {
     closeUploadMapDialog,
     openNewRegionDialog,
     closeNewRegionDialog,
+    openAlertDialog,
+    closeAlertDialog,
 } = uiSlice.actions;
 
 export const getUiState = (state: State) => state.ui;
@@ -59,5 +69,10 @@ export const getIsUploadMapDialogOpen = createSelector(
 );
 
 export const getNewRegionRect = createSelector(getUiState, (state) => state.newRegionRect);
+
+export const getAlertDialogMessage = createSelector(
+    getUiState,
+    (state) => state.alertDialogMessage
+);
 
 export default uiSlice.reducer;

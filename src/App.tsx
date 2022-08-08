@@ -14,6 +14,7 @@ import {
     setActiveMapRegionId,
 } from './state';
 import {
+    AlertDialog,
     BottomMenu,
     RegionDetailsDialog,
     Sidebar,
@@ -104,6 +105,7 @@ const AppBase: React.FC<AppProps> = ({
             <Sidebar />
             <UploadMapDialog />
             <RegionDetailsDialog />
+            <AlertDialog />
         </AppContainer>
     );
 };

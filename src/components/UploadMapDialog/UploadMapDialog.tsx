@@ -19,6 +19,7 @@ import {
     closeUploadMapDialog,
     getCurrentProjectRegions,
     getIsUploadMapDialogOpen,
+    openAlertDialog,
     saveImage,
     setActiveMapRegionId,
 } from '../../state';
@@ -35,6 +36,7 @@ interface DispatchProps {
     saveImage: typeof saveImage;
     addRootRegion: typeof addRootRegion;
     setActiveMapRegionId: typeof setActiveMapRegionId;
+    openAlertDialog: typeof openAlertDialog;
 }
 
 type UploadMapDialogProps = StateProps & DispatchProps;
@@ -46,6 +48,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     saveImage,
     addRootRegion,
     setActiveMapRegionId,
+    openAlertDialog,
 }) => {
     const navigate = useNavigate();
 
@@ -54,11 +57,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 
     const [uploadedImage, setUploadedImage] = useState<File | null>(null);
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-
-    const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
-    const [alertDialogMessage, setAlertDialogMessage] = useState('');
-
-    const closeAlertDialog = () => setIsAlertDialogOpen(false);
 
     const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRegionId(event.target.value);
@@ -86,8 +84,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     const handleConfirmClick = () => {
         const existingRegion = currentProjectRegions[regionId];
         if (existingRegion) {
-            setIsAlertDialogOpen(true);
-            setAlertDialogMessage(
+            openAlertDialog(
                 `Region with code "${regionId}" (${existingRegion.name}) already exists.`
             );
             return;
@@ -103,8 +100,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
             const imageDataUrl = reader.result as string;
 
             if (!imageDataUrl) {
-                setIsAlertDialogOpen(true);
-                setAlertDialogMessage('Unable to upload image.');
+                openAlertDialog('Unable to upload image.');
                 return;
             }
 
@@ -184,15 +180,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                     Confirm
                 </Button>
             </DialogActions>
-            <Dialog open={isAlertDialogOpen} onClose={closeAlertDialog}>
-                <DialogTitle>Error</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>{alertDialogMessage}</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeAlertDialog}>OK</Button>
-                </DialogActions>
-            </Dialog>
         </Dialog>
     );
 };
@@ -203,6 +190,7 @@ export const UploadMapDialog = connect(
         currentProjectRegions: getCurrentProjectRegions,
     }),
     {
+        openAlertDialog,
         closeUploadMapDialog,
         saveImage,
         addRootRegion,

@@ -6,3 +6,4 @@ export * from './Title';
 export * from './RegionDetailsDialog';
 export * from './RegionPreviewCanvas';
 export * from './RegionDescription';
+export * from './AlertDialog';

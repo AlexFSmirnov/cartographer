@@ -13,8 +13,16 @@ import {
     TextField,
     Tooltip,
 } from '@mui/material';
-import { closeNewRegionDialog, getNewRegionRect } from '../../../state';
-import { Rect } from '../../../types';
+import {
+    addRegion,
+    closeNewRegionDialog,
+    getActiveMapRegionId,
+    getCurrentProjectRegionIds,
+    getCurrentProjectRegions,
+    getNewRegionRect,
+    openAlertDialog,
+} from '../../../state';
+import { Rect, Region } from '../../../types';
 import { RegionDescription, RegionPreviewCanvas } from '../../../components';
 import { Info } from '@mui/icons-material';
 
@@ -24,10 +32,14 @@ interface OwnProps {
 
 interface StateProps {
     newRegionRect: Rect | null;
+    currentProjectRegions: Record<string, Region>;
+    activeMapRegionId: string | null;
 }
 
 interface DispatchProps {
     closeNewRegionDialog: typeof closeNewRegionDialog;
+    openAlertDialog: typeof openAlertDialog;
+    addRegion: typeof addRegion;
 }
 
 type NewRegionDialogProps = OwnProps & StateProps & DispatchProps;
@@ -76,10 +88,14 @@ With double: **bold** __italic__ ~~strikethrough~~
 const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     activeMapImage,
     newRegionRect,
+    currentProjectRegions,
+    activeMapRegionId,
     closeNewRegionDialog,
+    openAlertDialog,
+    addRegion,
 }) => {
     const [isDescriptionEnabled, setIsDescriptionEnabled] = useState(false);
-    const [description, setDescription] = useState(TEST_DESCRIPTION);
+    const [description, setDescription] = useState('');
 
     const [regionId, setRegionId] = useState('');
     const [regionName, setRegionName] = useState('');
@@ -89,24 +105,10 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
         if (newRegionRect) {
             setRegionId('');
             setRegionName('');
-            setDescription(TEST_DESCRIPTION);
+            setDescription('');
             setPreviewRect(newRegionRect);
         }
     }, [newRegionRect]);
-
-    const previewCanvasRef = useCallback(
-        (previewCanvas: HTMLCanvasElement | null) => {
-            const ctx = previewCanvas?.getContext('2d');
-            if (!previewCanvas || !ctx || !previewRect || !activeMapImage) {
-                return;
-            }
-
-            const { x, y } = previewRect;
-
-            ctx.drawImage(activeMapImage, -x, -y, activeMapImage.width, activeMapImage.height);
-        },
-        [previewRect, activeMapImage]
-    );
 
     const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRegionId(event.target.value);
@@ -122,10 +124,29 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     };
 
     const handleConfirm = () => {
-        console.log('CONFIRM');
-    };
+        const existingRegion = currentProjectRegions[regionId];
+        if (existingRegion) {
+            openAlertDialog(
+                `Region with code "${regionId}" (${existingRegion.name}) already exists.`
+            );
+            return;
+        }
 
-    const canvasSize = { width: previewRect?.width || 0, height: previewRect?.height || 0 };
+        addRegion({
+            id: regionId,
+            name: regionName,
+            description,
+            notes: '',
+            floorNumber: null,
+            references: [],
+            referencedBy: [],
+            root: false,
+            parent: activeMapRegionId,
+            parentRect: newRegionRect,
+        });
+
+        closeNewRegionDialog();
+    };
 
     return (
         <Dialog open={newRegionRect !== null} onClose={closeNewRegionDialog}>
@@ -193,8 +214,12 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
 export const NewRegionDialog = connect(
     createStructuredSelector({
         newRegionRect: getNewRegionRect,
+        currentProjectRegions: getCurrentProjectRegions,
+        activeMapRegionId: getActiveMapRegionId,
     }),
     {
         closeNewRegionDialog,
+        openAlertDialog,
+        addRegion,
     }
 )(NewRegionDialogBase);
