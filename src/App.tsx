@@ -39,6 +39,7 @@ const AppBase: React.FC<AppProps> = ({
     setActiveMapRegionId,
 }) => {
     const theme = useTheme();
+    console.log(theme);
 
     const navigate = useNavigate();
     const location = useLocation();

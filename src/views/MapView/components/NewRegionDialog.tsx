@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { closeNewRegionDialog, getNewRegionRect } from '../../../state';
 import { Rect } from '../../../types';
+import { RegionPreviewCanvas } from '../../../components';
 
 interface OwnProps {
     activeMapImage: HTMLImageElement | null;
@@ -58,9 +59,15 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     return (
         <Dialog open={newRegionRect !== null} onClose={closeNewRegionDialog}>
             <DialogTitle>New region</DialogTitle>
-            <DialogContent>
-                <Box width="512px" maxWidth="90%">
-                    <canvas {...canvasSize} ref={previewCanvasRef} />
+            <DialogContent sx={{ width: '600px', maxWidth: '100%' }}>
+                <Box
+                    width="100%"
+                    height="128px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                    <RegionPreviewCanvas parentMapImage={activeMapImage} regionRect={previewRect} />
                 </Box>
             </DialogContent>
             <DialogActions>
