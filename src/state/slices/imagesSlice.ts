@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import type { State } from '../store';
-import { getActiveMapRegionId } from './currentProjectSlice';
+import { getActiveMapId } from './currentProjectSlice';
 
 type ImagesSlice = Record<string, string>;
 
@@ -23,8 +23,8 @@ export const getImagesSlice = (state: State) => state.images;
 
 export const getActiveMapImageDataUrl = createSelector(
     getImagesSlice,
-    getActiveMapRegionId,
-    (images, activeMapRegionId) => (activeMapRegionId ? images[activeMapRegionId] : null) || null
+    getActiveMapId,
+    (images, activeMapId) => (activeMapId ? images[activeMapId] : null) || null
 );
 
 export default imagesSlice.reducer;

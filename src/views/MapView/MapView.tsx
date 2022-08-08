@@ -1,34 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { parseUrl, getImageCoverRect } from '../../utils';
-import {
-    getActiveMapImageDataUrl,
-    getCurrentProjectRegionIds,
-    getIsEditModeEnabled,
-} from '../../state';
-import { MapViewCanvas, MapViewContainer } from './style';
-import { Point } from '../../types';
+import { getActiveMapImageDataUrl } from '../../state';
 import { ActiveMapCanvas, NewRegionCanvas, NewRegionDialog } from './components';
+import { MapViewContainer } from './style';
 
 interface StateProps {
-    isEditModeEnabled: boolean;
-    currentProjectRegionIds: string[];
     activeMapImageDataUrl: string | null;
 }
 
 type MapViewProps = StateProps;
 
-const MapViewBase: React.FC<MapViewProps> = ({
-    isEditModeEnabled,
-    currentProjectRegionIds,
-    activeMapImageDataUrl,
-}) => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { view, activeMap, region, subView } = parseUrl(location.pathname);
-
+const MapViewBase: React.FC<MapViewProps> = ({ activeMapImageDataUrl }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
     const [isActiveMapImageLoaded, setIsActiveMapImageLoaded] = useState(false);
@@ -74,8 +57,6 @@ const MapViewBase: React.FC<MapViewProps> = ({
         return () => resizeObserver.unobserve(container);
     });
 
-    console.log('RENDERED');
-
     const loadedActiveMapImage = isActiveMapImageLoaded ? activeMapImage : null;
     const activeMapImageSize = {
         width: activeMapImage?.width || 0,
@@ -95,8 +76,6 @@ const MapViewBase: React.FC<MapViewProps> = ({
 
 export const MapView = connect(
     createStructuredSelector({
-        isEditModeEnabled: getIsEditModeEnabled,
-        currentProjectRegionIds: getCurrentProjectRegionIds,
         activeMapImageDataUrl: getActiveMapImageDataUrl,
     })
 )(MapViewBase);

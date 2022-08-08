@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Point } from '../../../types';
 import {
     drawRichRect,
@@ -18,13 +17,11 @@ interface OwnProps {
     activeMapImageSize: { width: number; height: number };
 }
 
-interface StateProps {}
-
 interface DispatchProps {
     openNewRegionDialog: typeof openNewRegionDialog;
 }
 
-type NewRegionCanvasProps = OwnProps & StateProps & DispatchProps;
+type NewRegionCanvasProps = OwnProps & DispatchProps;
 
 const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     canvasSize,

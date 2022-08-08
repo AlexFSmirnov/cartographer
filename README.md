@@ -94,6 +94,16 @@ Quickly look up location descriptions by clicking on a corresponding map region.
       - Notes
 
   - UI stuff
+
+
+- REDUX v2
+  - Regions with maps
+    - Can be root, can have no parent
+    - Always tied to map image
+  - Regions without maps
+    - Keyed by id of parent
+      - Keyed by id of region
+        - Might be connected to a region with map
       
 
 - REDUX STATE STRUCTURE
@@ -109,15 +119,22 @@ Quickly look up location descriptions by clicking on a corresponding map region.
 
   currentProject: {
     name: 'Current Project',
-    regions: {
-      K61: {
-        name: 'Some room',
-        parent: 'K',
+    maps: {
+      K: {
+        name: 'Some submap of root',
+        parent: 'ROOT',
         floorNumber: null,
-        references: ['K62', 'K60'],
-        referencedBy: ['K62', 'K63'],
-        description: 'Blah blah #some markdown',
-        notes: 'Some notes in simple text',
+      }
+    }
+    regions: {
+      K: {
+        K61: {
+          name: 'Some room',
+          references: ['K62', 'K60'],
+          referencedBy: ['K62', 'K63'],
+          description: 'Blah blah #some markdown',
+          notes: 'Some notes in simple text',
+        }
       }
     }
   },

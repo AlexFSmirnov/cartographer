@@ -30,6 +30,7 @@ export const ActiveMapCanvas: React.FC<ActiveMapCanvasProps> = ({ canvasSize, ac
             padding: ACTIVE_MAP_PADDING,
         });
 
+        ctx.clearRect(0, 0, containerWidth, containerHeight);
         ctx.drawImage(activeMapImage, x, y, width, height);
     }, [activeMapImage, canvasSize, canvasRef]);
 

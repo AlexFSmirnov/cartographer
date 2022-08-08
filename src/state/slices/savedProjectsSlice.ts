@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { Region } from '../../types';
 import type { State } from '../store';

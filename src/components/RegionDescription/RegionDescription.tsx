@@ -37,7 +37,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     );
 
     const preview = (
-        <Box p={1} width="100%" maxHeight="378px" overflow="auto">
+        <Box p={1} width="100%" height="378px" maxHeight="378px" overflow="auto">
             <ReactMarkdown
                 components={{
                     h1: ({ children }) => <Typography variant="h2">{children}</Typography>,

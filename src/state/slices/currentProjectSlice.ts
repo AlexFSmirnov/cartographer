@@ -1,25 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
-import { Region, RootRegion } from '../../types';
+import { Region, Map } from '../../types';
 import type { State } from '../store';
 
 interface CurrentProjectState {
     id: string | null;
     name: string | null;
-    activeMapRegionId: string | null;
-    regions: Record<string, Region>;
+    activeMapId: string | null;
+    maps: Record<string, Map>;
+    regions: Record<string, Record<string, Region>>;
 }
-
-// const initialState: CurrentProjectState = {
-//     id: null,
-//     name: null,
-//     regions: {},
-// };
 
 const initialState: CurrentProjectState = {
     id: 'COS',
     name: 'Curse of Strahd',
-    activeMapRegionId: null,
+    activeMapId: null,
+    maps: {},
     regions: {},
 };
 
@@ -27,56 +23,51 @@ export const currentProjectSlice = createSlice({
     name: 'currentProject',
     initialState,
     reducers: {
-        addRootRegion: (state, action: PayloadAction<RootRegion>) => {
-            const { id, name } = action.payload;
-            state.regions[id] = {
-                id,
-                name,
-                root: true,
-
-                floorNumber: null,
-                description: '',
-                notes: '',
-                references: [],
-                referencedBy: [],
-
-                parent: null,
-                parentRect: null,
-            };
+        addMap(state, action: PayloadAction<Map>) {
+            const { id } = action.payload;
+            state.maps[id] = action.payload;
+            state.regions[id] = {};
         },
         addRegion: (state, action: PayloadAction<Region>) => {
-            state.regions[action.payload.id] = action.payload;
+            const { activeMapId } = state;
+            if (activeMapId) {
+                if (!state.regions[activeMapId]) {
+                    state.regions[activeMapId] = {};
+                }
+
+                state.regions[activeMapId][action.payload.id] = action.payload;
+            }
         },
-        setActiveMapRegionId: (state, action: PayloadAction<string | null>) => {
-            state.activeMapRegionId = action.payload;
+        setActiveMapId: (state, action: PayloadAction<string | null>) => {
+            state.activeMapId = action.payload;
         },
     },
 });
 
-export const { addRootRegion, addRegion, setActiveMapRegionId } = currentProjectSlice.actions;
+export const { addMap, addRegion, setActiveMapId } = currentProjectSlice.actions;
 
 export const getCurrentProjectState = (state: State) => state.currentProject;
 
 export const getCurrentProjectName = createSelector(getCurrentProjectState, (state) => state.name);
 
-export const getCurrentProjectRegions = createSelector(
-    getCurrentProjectState,
-    (state) => state.regions
+export const getCurrentProjectMaps = createSelector(getCurrentProjectState, (state) => state.maps);
+export const getCurrentProjectMapIds = createSelector(getCurrentProjectMaps, (maps) =>
+    Object.keys(maps)
 );
-export const getCurrentProjectRegionIds = createSelector(getCurrentProjectRegions, (regions) =>
-    Object.keys(regions)
+export const getCurrentProjectRootMap = createSelector(getCurrentProjectMaps, (maps) =>
+    Object.values(maps).find((map) => map.parent === null)
 );
-export const getCurrentProjectFirstRootRegionId = createSelector(
-    getCurrentProjectRegions,
-    (regions) => {
-        const rootRegions = Object.values(regions).filter((region) => region.root);
-        return rootRegions.length > 0 ? rootRegions[0].id : null;
-    }
+export const getCurrentProjectRootMapId = createSelector(
+    getCurrentProjectRootMap,
+    (map) => map?.id || null
 );
 
-export const getActiveMapRegionId = createSelector(
+export const getActiveMapId = createSelector(getCurrentProjectState, (state) => state.activeMapId);
+
+export const getActiveMapRegions = createSelector(
     getCurrentProjectState,
-    (state) => state.activeMapRegionId
+    getActiveMapId,
+    (state, activeMapId) => (activeMapId ? state.regions[activeMapId] : {})
 );
 
 export default currentProjectSlice.reducer;

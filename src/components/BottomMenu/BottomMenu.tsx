@@ -3,19 +3,19 @@ import { createStructuredSelector } from 'reselect';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, useMediaQuery, useTheme } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
-import { getActiveMapRegionId } from '../../state';
+import { getActiveMapId } from '../../state';
 import { RouteName } from '../../enums';
 import { parseUrl } from '../../utils';
 import { BottomMenuButton } from './BottomMenuButton';
 import { BottomMenuContainer, DesktopBottomMenuPaper } from './style';
 
 interface StateProps {
-    activeMapRegionId: string | null;
+    activeMapId: string | null;
 }
 
 type BottomMenuProps = StateProps;
 
-const BottomMenuBase: React.FC<BottomMenuProps> = ({ activeMapRegionId }) => {
+const BottomMenuBase: React.FC<BottomMenuProps> = ({ activeMapId }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -33,8 +33,8 @@ const BottomMenuBase: React.FC<BottomMenuProps> = ({ activeMapRegionId }) => {
                 break;
             case 0:
             default:
-                if (activeMapRegionId) {
-                    navigate(`/${RouteName.Map}/${activeMapRegionId}`);
+                if (activeMapId) {
+                    navigate(`/${RouteName.Map}/${activeMapId}`);
                 } else {
                     navigate(`/${RouteName.Map}`);
                 }
@@ -92,6 +92,6 @@ const BottomMenuBase: React.FC<BottomMenuProps> = ({ activeMapRegionId }) => {
 
 export const BottomMenu = connect(
     createStructuredSelector({
-        activeMapRegionId: getActiveMapRegionId,
+        activeMapId: getActiveMapId,
     })
 )(BottomMenuBase);

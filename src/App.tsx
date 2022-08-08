@@ -7,11 +7,11 @@ import { RouteName } from './enums';
 import { parseUrl } from './utils';
 import { darkTheme, lightTheme } from './themes';
 import {
-    getActiveMapRegionId,
-    getCurrentProjectFirstRootRegionId,
-    getCurrentProjectRegionIds,
+    getActiveMapId,
+    getCurrentProjectMapIds,
+    getCurrentProjectRootMapId,
     getIsDarkModeEnabled,
-    setActiveMapRegionId,
+    setActiveMapId,
 } from './state';
 import {
     AlertDialog,
@@ -22,29 +22,28 @@ import {
     TopMenuButton,
     UploadMapDialog,
 } from './components';
-import { MapView, NotesView, NotFound } from './views';
+import { NotFound, EmptyProjectView } from './views';
 import { AppContainer, AppContent, GlobalStyle, ViewContainer } from './style';
-import { EmptyProjectView } from './views/EmptyProjectView';
 
 interface AppProps {
-    activeMapRegionId: string | null;
-    currentProjectRegionIds: string[];
-    currentProjectRootRegionId: string | null;
-    setActiveMapRegionId: (regionId: string | null) => void;
+    stateActiveMapId: string | null;
+    currentProjectMapIds: string[];
+    currentProjectRootMapId: string | null;
+    setActiveMapId: (regionId: string | null) => void;
 }
 
 const AppBase: React.FC<AppProps> = ({
-    activeMapRegionId,
-    currentProjectRegionIds,
-    currentProjectRootRegionId,
-    setActiveMapRegionId,
+    stateActiveMapId,
+    currentProjectMapIds,
+    currentProjectRootMapId,
+    setActiveMapId,
 }) => {
     const theme = useTheme();
     console.log(theme);
 
     const navigate = useNavigate();
     const location = useLocation();
-    const { view, activeMap, region, subView } = parseUrl(location.pathname);
+    const { view, activeMap: urlActiveMapId } = parseUrl(location.pathname);
 
     useEffect(() => {
         let redirectUrl = `/${RouteName.Map}`;
@@ -53,41 +52,44 @@ const AppBase: React.FC<AppProps> = ({
             return;
         }
 
-        if (view === null && activeMap === null && activeMapRegionId === null) {
+        if (view === null && urlActiveMapId === null && stateActiveMapId === null) {
             navigate(redirectUrl, { replace: true });
             return;
         }
 
-        if (activeMap !== null) {
-            if (activeMap !== activeMapRegionId && currentProjectRegionIds.includes(activeMap)) {
-                setActiveMapRegionId(activeMap);
+        if (urlActiveMapId !== null) {
+            if (
+                urlActiveMapId !== stateActiveMapId &&
+                currentProjectMapIds.includes(urlActiveMapId)
+            ) {
+                setActiveMapId(urlActiveMapId);
             }
         } else {
-            if (activeMapRegionId !== null && currentProjectRegionIds.includes(activeMapRegionId)) {
-                navigate(`${redirectUrl}/${activeMapRegionId}`, { replace: true });
+            if (stateActiveMapId !== null && currentProjectMapIds.includes(stateActiveMapId)) {
+                navigate(`${redirectUrl}/${stateActiveMapId}`, { replace: true });
             } else {
-                if (currentProjectRootRegionId) {
-                    setActiveMapRegionId(currentProjectRootRegionId);
-                    navigate(`${redirectUrl}/${currentProjectRootRegionId}`, { replace: true });
+                if (currentProjectRootMapId) {
+                    setActiveMapId(currentProjectRootMapId);
+                    navigate(`${redirectUrl}/${currentProjectRootMapId}`, { replace: true });
                 }
             }
         }
     }, [
         view,
-        activeMap,
-        activeMapRegionId,
-        currentProjectRegionIds,
-        currentProjectRootRegionId,
+        urlActiveMapId,
+        stateActiveMapId,
+        currentProjectMapIds,
+        currentProjectRootMapId,
         navigate,
-        setActiveMapRegionId,
+        setActiveMapId,
     ]);
 
     const isNotFound = useMemo(
         () =>
             view === RouteName.Map &&
-            activeMap !== null &&
-            !currentProjectRegionIds.includes(activeMap),
-        [activeMap, currentProjectRegionIds, view]
+            urlActiveMapId !== null &&
+            !currentProjectMapIds.includes(urlActiveMapId),
+        [urlActiveMapId, currentProjectMapIds, view]
     );
 
     return (
@@ -95,9 +97,9 @@ const AppBase: React.FC<AppProps> = ({
             <AppContent>
                 <Title />
                 <ViewContainer>
-                    {currentProjectRootRegionId === null && <EmptyProjectView />}
-                    {currentProjectRootRegionId !== null && isNotFound && <NotFound />}
-                    {currentProjectRootRegionId !== null && !isNotFound && <Outlet />}
+                    {currentProjectRootMapId === null && <EmptyProjectView />}
+                    {currentProjectRootMapId !== null && isNotFound && <NotFound />}
+                    {currentProjectRootMapId !== null && !isNotFound && <Outlet />}
                 </ViewContainer>
                 <BottomMenu />
             </AppContent>
@@ -129,11 +131,11 @@ const ThemedApp: React.FC<ThemedAppProps> = ({ isDarkModeEnabled, ...rest }) => 
 export const App = connect(
     createStructuredSelector({
         isDarkModeEnabled: getIsDarkModeEnabled,
-        activeMapRegionId: getActiveMapRegionId,
-        currentProjectRegionIds: getCurrentProjectRegionIds,
-        currentProjectRootRegionId: getCurrentProjectFirstRootRegionId,
+        stateActiveMapId: getActiveMapId,
+        currentProjectMapIds: getCurrentProjectMapIds,
+        currentProjectRootMapId: getCurrentProjectRootMapId,
     }),
     {
-        setActiveMapRegionId,
+        setActiveMapId,
     }
 )(ThemedApp);

@@ -8,34 +8,36 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
+    InputAdornment,
     TextField,
+    Tooltip,
     Typography,
 } from '@mui/material';
+import { Info } from '@mui/icons-material';
 import { RouteName } from '../../enums';
 import {
-    addRootRegion,
+    addMap,
     closeUploadMapDialog,
-    getCurrentProjectRegions,
+    getCurrentProjectMaps,
     getIsUploadMapDialogOpen,
     openAlertDialog,
     saveImage,
-    setActiveMapRegionId,
+    setActiveMapId,
 } from '../../state';
 import { Dropzone } from '../Dropzone';
 import { UploadMapDialogImagePreview } from './style';
 
 interface StateProps {
     isUploadMapDialogOpen: boolean;
-    currentProjectRegions: ReturnType<typeof getCurrentProjectRegions>;
+    currentProjectMaps: ReturnType<typeof getCurrentProjectMaps>;
 }
 
 interface DispatchProps {
     closeUploadMapDialog: () => void;
     saveImage: typeof saveImage;
-    addRootRegion: typeof addRootRegion;
-    setActiveMapRegionId: typeof setActiveMapRegionId;
+    addMap: typeof addMap;
+    setActiveMapId: typeof setActiveMapId;
     openAlertDialog: typeof openAlertDialog;
 }
 
@@ -43,31 +45,31 @@ type UploadMapDialogProps = StateProps & DispatchProps;
 
 const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     isUploadMapDialogOpen,
-    currentProjectRegions,
+    currentProjectMaps,
     closeUploadMapDialog,
     saveImage,
-    addRootRegion,
-    setActiveMapRegionId,
+    addMap,
+    setActiveMapId,
     openAlertDialog,
 }) => {
     const navigate = useNavigate();
 
-    const [regionId, setRegionId] = useState('');
-    const [regionName, setRegionName] = useState('');
+    const [mapId, setMapId] = useState('');
+    const [mapName, setMapName] = useState('');
 
     const [uploadedImage, setUploadedImage] = useState<File | null>(null);
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
     const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRegionId(event.target.value);
+        setMapId(event.target.value);
     };
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRegionName(event.target.value);
+        setMapName(event.target.value);
     };
 
     const clearFields = () => {
-        setRegionId('');
-        setRegionName('');
+        setMapId('');
+        setMapName('');
         setUploadedImage(null);
         setUploadedImageUrl(null);
     };
@@ -82,11 +84,9 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     };
 
     const handleConfirmClick = () => {
-        const existingRegion = currentProjectRegions[regionId];
+        const existingRegion = currentProjectMaps[mapId];
         if (existingRegion) {
-            openAlertDialog(
-                `Region with code "${regionId}" (${existingRegion.name}) already exists.`
-            );
+            openAlertDialog(`Region with code "${mapId}" (${existingRegion.name}) already exists.`);
             return;
         }
 
@@ -96,7 +96,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 
         const reader = new FileReader();
         reader.onload = () => {
-            const id = regionId || regionName.toLowerCase().replaceAll(' ', '-');
+            const id = mapId || mapName.toLowerCase().replaceAll(' ', '-');
             const imageDataUrl = reader.result as string;
 
             if (!imageDataUrl) {
@@ -105,8 +105,8 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
             }
 
             saveImage({ id, imageDataUrl });
-            addRootRegion({ id, name: regionName });
-            setActiveMapRegionId(id);
+            addMap({ id, name: mapName, floorNumber: null, parent: null });
+            setActiveMapId(id);
 
             navigate(`/${RouteName.Map}/${id}`);
             clearAndCloseDialog();
@@ -121,7 +121,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
         }
     };
 
-    const isConfirmDisabled = !regionName || !uploadedImageUrl;
+    const isConfirmDisabled = !mapName || !uploadedImageUrl;
 
     return (
         <Dialog onClose={clearAndCloseDialog} open={isUploadMapDialogOpen}>
@@ -131,8 +131,8 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                 <Typography variant="body2">
                     <i>
                         Note: if this map is a sub-region of another map, you should rather upload
-                        is by defining a region on the parent map. A root map doesn't have a parent
-                        and won't have any description or notes.
+                        is by defining a region on the parent map. A root map is a map of the
+                        highest order - for example, a map of the contry/continent/planet.
                     </i>
                 </Typography>
                 <Box pt={1} pb={2} width="100%" display="flex" justifyContent="space-between">
@@ -141,8 +141,17 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                         size="small"
                         sx={{ width: '23%' }}
                         label="Code"
-                        value={regionId}
+                        value={mapId}
                         onChange={handleCodeChange}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <Tooltip title="A unique short identifier of the map">
+                                        <Info fontSize="small" />
+                                    </Tooltip>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <TextField
                         variant="filled"
@@ -150,7 +159,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                         sx={{ width: '73%' }}
                         label="Title"
                         required
-                        value={regionName}
+                        value={mapName}
                         onChange={handleTitleChange}
                     />
                 </Box>
@@ -187,13 +196,13 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 export const UploadMapDialog = connect(
     createStructuredSelector({
         isUploadMapDialogOpen: getIsUploadMapDialogOpen,
-        currentProjectRegions: getCurrentProjectRegions,
+        currentProjectMaps: getCurrentProjectMaps,
     }),
     {
         openAlertDialog,
         closeUploadMapDialog,
         saveImage,
-        addRootRegion,
-        setActiveMapRegionId,
+        addMap,
+        setActiveMapId,
     }
 )(UploadMapDialogBase);

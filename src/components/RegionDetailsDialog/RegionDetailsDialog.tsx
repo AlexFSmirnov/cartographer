@@ -19,7 +19,7 @@ export const RegionDetailsDialog = () => {
 
     return (
         <Dialog open={isOpen} onClose={handleClose}>
-            <DialogTitle>RegionDetails</DialogTitle>
+            <DialogTitle>RegionDetails, {subView}</DialogTitle>
         </Dialog>
     );
 };

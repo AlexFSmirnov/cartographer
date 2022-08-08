@@ -5,22 +5,22 @@ import { createStructuredSelector } from 'reselect';
 import { Box, Typography } from '@mui/material';
 import { RouteName } from '../../enums';
 import { parseUrl } from '../../utils';
-import { getCurrentProjectRegions } from '../../state';
-import { Region } from '../../types';
+import { getCurrentProjectMaps } from '../../state';
+import { Map } from '../../types';
 
 interface StateProps {
-    currentProjectRegions: Record<string, Region>;
+    currentProjectMaps: Record<string, Map>;
 }
 
 type TitleProps = StateProps;
 
-const TitleBase: React.FC<TitleProps> = ({ currentProjectRegions }) => {
+const TitleBase: React.FC<TitleProps> = ({ currentProjectMaps }) => {
     const location = useLocation();
     const { view, activeMap } = parseUrl(location.pathname);
 
     const isMapNotFound = useMemo(
-        () => view === RouteName.Map && activeMap !== null && !currentProjectRegions[activeMap],
-        [activeMap, currentProjectRegions, view]
+        () => view === RouteName.Map && activeMap !== null && !currentProjectMaps[activeMap],
+        [activeMap, currentProjectMaps, view]
     );
 
     if (isMapNotFound) {
@@ -53,6 +53,6 @@ const TitleBase: React.FC<TitleProps> = ({ currentProjectRegions }) => {
 
 export const Title = connect(
     createStructuredSelector({
-        currentProjectRegions: getCurrentProjectRegions,
+        currentProjectMaps: getCurrentProjectMaps,
     })
 )(TitleBase);

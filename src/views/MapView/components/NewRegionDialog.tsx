@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -7,24 +7,19 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
-    InputAdornment,
     TextField,
-    Tooltip,
 } from '@mui/material';
 import {
     addRegion,
     closeNewRegionDialog,
-    getActiveMapRegionId,
-    getCurrentProjectRegionIds,
-    getCurrentProjectRegions,
+    getActiveMapId,
+    getActiveMapRegions,
     getNewRegionRect,
     openAlertDialog,
 } from '../../../state';
 import { Rect, Region } from '../../../types';
 import { RegionDescription, RegionPreviewCanvas } from '../../../components';
-import { Info } from '@mui/icons-material';
 
 interface OwnProps {
     activeMapImage: HTMLImageElement | null;
@@ -32,8 +27,8 @@ interface OwnProps {
 
 interface StateProps {
     newRegionRect: Rect | null;
-    currentProjectRegions: Record<string, Region>;
-    activeMapRegionId: string | null;
+    activeMapRegions: Record<string, Region>;
+    activeMapId: string | null;
 }
 
 interface DispatchProps {
@@ -44,52 +39,11 @@ interface DispatchProps {
 
 type NewRegionDialogProps = OwnProps & StateProps & DispatchProps;
 
-const TEST_DESCRIPTION = `
-This is a test description.
-
-# Header 1
-This is a header 1.
-
-## Header 2
-This is a header 2.
-
-### Header 3
-This is a header 3.
-
-### Header 4
-This is a header 4.
-
-### Header 5
-This is a header 5.
-
-### Header 6
-This is a header 6.
-
-- List item 1
-- List item 2
-- List item 3
-
-1. List item 2
-2. List item 2
-3. List item 2
-
-> This is a quote
-is it multiline?
-
-> This is another quote
-> is it multiline?
-
-This is a link to [K95].
-
-With single: *bold* _italic_ ~strikethrough~
-With double: **bold** __italic__ ~~strikethrough~~
-`;
-
 const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     activeMapImage,
     newRegionRect,
-    currentProjectRegions,
-    activeMapRegionId,
+    activeMapRegions,
+    activeMapId,
     closeNewRegionDialog,
     openAlertDialog,
     addRegion,
@@ -124,7 +78,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     };
 
     const handleConfirm = () => {
-        const existingRegion = currentProjectRegions[regionId];
+        const existingRegion = activeMapRegions[regionId];
         if (existingRegion) {
             openAlertDialog(
                 `Region with code "${regionId}" (${existingRegion.name}) already exists.`
@@ -137,11 +91,8 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
             name: regionName,
             description,
             notes: '',
-            floorNumber: null,
             references: [],
             referencedBy: [],
-            root: false,
-            parent: activeMapRegionId,
             parentRect: newRegionRect,
         });
 
@@ -214,8 +165,8 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
 export const NewRegionDialog = connect(
     createStructuredSelector({
         newRegionRect: getNewRegionRect,
-        currentProjectRegions: getCurrentProjectRegions,
-        activeMapRegionId: getActiveMapRegionId,
+        activeMapRegions: getActiveMapRegions,
+        activeMapId: getActiveMapId,
     }),
     {
         closeNewRegionDialog,
