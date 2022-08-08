@@ -32,13 +32,54 @@ interface DispatchProps {
 
 type NewRegionDialogProps = OwnProps & StateProps & DispatchProps;
 
+const TEST_DESCRIPTION = `
+This is a test description.
+
+# Header 1
+This is a header 1.
+
+## Header 2
+This is a header 2.
+
+### Header 3
+This is a header 3.
+
+### Header 4
+This is a header 4.
+
+### Header 5
+This is a header 5.
+
+### Header 6
+This is a header 6.
+
+- List item 1
+- List item 2
+- List item 3
+
+1. List item 2
+2. List item 2
+3. List item 2
+
+> This is a quote
+is it multiline?
+
+> This is another quote
+> is it multiline?
+
+This is a link to [K95].
+
+With single: *bold* _italic_ ~strikethrough~
+With double: **bold** __italic__ ~~strikethrough~~
+`;
+
 const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     activeMapImage,
     newRegionRect,
     closeNewRegionDialog,
 }) => {
     const [isDescriptionEnabled, setIsDescriptionEnabled] = useState(false);
-    const [description, setDescription] = useState('');
+    const [description, setDescription] = useState(TEST_DESCRIPTION);
 
     const [regionId, setRegionId] = useState('');
     const [regionName, setRegionName] = useState('');
@@ -48,7 +89,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
         if (newRegionRect) {
             setRegionId('');
             setRegionName('');
-            setDescription('');
+            setDescription(TEST_DESCRIPTION);
             setPreviewRect(newRegionRect);
         }
     }, [newRegionRect]);
