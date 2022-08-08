@@ -142,6 +142,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                 <Box pt={1} pb={2} width="100%" display="flex" justifyContent="space-between">
                     <TextField
                         variant="filled"
+                        size="small"
                         sx={{ width: '23%' }}
                         label="Code"
                         value={regionId}
@@ -149,6 +150,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                     />
                     <TextField
                         variant="filled"
+                        size="small"
                         sx={{ width: '73%' }}
                         label="Title"
                         required

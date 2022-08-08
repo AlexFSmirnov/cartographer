@@ -5,3 +5,4 @@ export * from './UploadMapDialog';
 export * from './Title';
 export * from './RegionDetailsDialog';
 export * from './RegionPreviewCanvas';
+export * from './RegionDescription';
