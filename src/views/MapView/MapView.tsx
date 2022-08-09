@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { useImageFromDataUrl } from '../../hooks';
 import { getActiveMapImageDataUrl } from '../../state';
 import { ActiveMapCanvas, NewRegionCanvas, NewRegionDialog } from './components';
 import { MapViewContainer } from './style';
@@ -14,20 +15,8 @@ type MapViewProps = StateProps;
 const MapViewBase: React.FC<MapViewProps> = ({ activeMapImageDataUrl }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-    const [isActiveMapImageLoaded, setIsActiveMapImageLoaded] = useState(false);
 
-    const activeMapImage = useMemo(() => {
-        if (!activeMapImageDataUrl) {
-            return null;
-        }
-
-        const image = new Image();
-        image.src = activeMapImageDataUrl;
-        setIsActiveMapImageLoaded(false);
-        image.onload = () => setIsActiveMapImageLoaded(true);
-
-        return image;
-    }, [activeMapImageDataUrl]);
+    const activeMapImage = useImageFromDataUrl(activeMapImageDataUrl);
 
     const updateCanvasSize = useCallback(() => {
         const { current: container } = containerRef;
@@ -57,7 +46,6 @@ const MapViewBase: React.FC<MapViewProps> = ({ activeMapImageDataUrl }) => {
         return () => resizeObserver.unobserve(container);
     });
 
-    const loadedActiveMapImage = isActiveMapImageLoaded ? activeMapImage : null;
     const activeMapImageSize = {
         width: activeMapImage?.width || 0,
         height: activeMapImage?.height || 0,
@@ -66,10 +54,10 @@ const MapViewBase: React.FC<MapViewProps> = ({ activeMapImageDataUrl }) => {
     return (
         <>
             <MapViewContainer ref={containerRef}>
-                <ActiveMapCanvas canvasSize={canvasSize} activeMapImage={loadedActiveMapImage} />
+                <ActiveMapCanvas canvasSize={canvasSize} activeMapImage={activeMapImage} />
                 <NewRegionCanvas canvasSize={canvasSize} activeMapImageSize={activeMapImageSize} />
             </MapViewContainer>
-            <NewRegionDialog activeMapImage={loadedActiveMapImage} />
+            <NewRegionDialog activeMapImage={activeMapImage} />
         </>
     );
 };

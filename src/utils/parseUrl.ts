@@ -15,16 +15,9 @@ export const parseUrl = (url: string): ParseUrlResult => {
     }
 
     const view = (parts[1] as RouteName) || null;
-
-    let activeMap = null;
-    let region = parts[2] || null;
-    let subView = (parts[3] as SubView) || SubView.Description;
-
-    if (view === RouteName.Map) {
-        activeMap = parts[2] || null;
-        region = parts[3] || null;
-        subView = (parts[4] as SubView) || SubView.Description;
-    }
+    const activeMap = parts[2] || null;
+    const region = parts[3] || null;
+    const subView = (parts[4] as SubView) || SubView.Description;
 
     return { view, activeMap, region, subView };
 };

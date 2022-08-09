@@ -19,7 +19,7 @@ import {
     openAlertDialog,
 } from '../../../state';
 import { Rect } from '../../../types';
-import { RegionDescription, RegionPreviewCanvas } from '../../../components';
+import { RegionDescription, RegionPreview } from '../../../components';
 
 interface OwnProps {
     activeMapImage: HTMLImageElement | null;
@@ -122,7 +122,11 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <RegionPreviewCanvas parentMapImage={activeMapImage} regionRect={previewRect} />
+                    <RegionPreview
+                        doesRegionExist={false}
+                        mapImage={activeMapImage}
+                        regionRect={previewRect}
+                    />
                 </Box>
                 <Box pt={3} pb={2} width="100%" display="flex" justifyContent="space-between">
                     <TextField

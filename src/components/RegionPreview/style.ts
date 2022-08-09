@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const RegionPreviewCanvasContainer = styled.div<{ shadow: string }>`
+export const RegionPreviewContainer = styled.div<{ shadow: string }>`
     width: 100%;
     height: 100%;
     display: flex;

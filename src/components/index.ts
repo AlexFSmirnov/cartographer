@@ -4,6 +4,6 @@ export * from './Sidebar';
 export * from './UploadMapDialog';
 export * from './Title';
 export * from './RegionDetailsDialog';
-export * from './RegionPreviewCanvas';
+export * from './RegionPreview';
 export * from './RegionDescription';
 export * from './AlertDialog';
