@@ -62,12 +62,27 @@ export const getCurrentProjectRootMapId = createSelector(
     (map) => map?.id || null
 );
 
+export const getCurrentProjectRegionsByMap = createSelector(
+    getCurrentProjectState,
+    (state) => state.regions
+);
+
+export const getCurrentProjectAllRegions = createSelector(
+    getCurrentProjectRegionsByMap,
+    (regionsByMap) => Object.values(regionsByMap).map(Object.values).flat()
+);
+
+export const getCurrentProjectRegionIds = createSelector(
+    getCurrentProjectRegionsByMap,
+    (regionsByMap) => Object.values(regionsByMap).map(Object.keys).flat()
+);
+
 export const getActiveMapId = createSelector(getCurrentProjectState, (state) => state.activeMapId);
 
 export const getActiveMapRegions = createSelector(
-    getCurrentProjectState,
+    getCurrentProjectRegionsByMap,
     getActiveMapId,
-    (state, activeMapId) => (activeMapId ? state.regions[activeMapId] : {})
+    (regionsByMap, activeMapId) => (activeMapId ? regionsByMap[activeMapId] : {})
 );
 
 export default currentProjectSlice.reducer;

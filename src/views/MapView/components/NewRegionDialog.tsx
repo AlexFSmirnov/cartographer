@@ -13,12 +13,12 @@ import {
 import {
     addRegion,
     closeNewRegionDialog,
-    getActiveMapId,
-    getActiveMapRegions,
+    getCurrentProjectAllRegions,
+    getCurrentProjectMaps,
     getNewRegionRect,
     openAlertDialog,
 } from '../../../state';
-import { Rect, Region } from '../../../types';
+import { Rect } from '../../../types';
 import { RegionDescription, RegionPreviewCanvas } from '../../../components';
 
 interface OwnProps {
@@ -27,8 +27,8 @@ interface OwnProps {
 
 interface StateProps {
     newRegionRect: Rect | null;
-    activeMapRegions: Record<string, Region>;
-    activeMapId: string | null;
+    currentProjectMaps: ReturnType<typeof getCurrentProjectMaps>;
+    currentProjectAllRegions: ReturnType<typeof getCurrentProjectAllRegions>;
 }
 
 interface DispatchProps {
@@ -42,8 +42,8 @@ type NewRegionDialogProps = OwnProps & StateProps & DispatchProps;
 const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     activeMapImage,
     newRegionRect,
-    activeMapRegions,
-    activeMapId,
+    currentProjectMaps,
+    currentProjectAllRegions,
     closeNewRegionDialog,
     openAlertDialog,
     addRegion,
@@ -60,6 +60,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
             setRegionId('');
             setRegionName('');
             setDescription('');
+            setIsDescriptionEnabled(false);
             setPreviewRect(newRegionRect);
         }
     }, [newRegionRect]);
@@ -78,7 +79,10 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     };
 
     const handleConfirm = () => {
-        const existingRegion = activeMapRegions[regionId];
+        const existingRegion =
+            currentProjectMaps[regionId] ||
+            currentProjectAllRegions.find((region) => region.id === regionId);
+
         if (existingRegion) {
             openAlertDialog(
                 `Region with code "${regionId}" (${existingRegion.name}) already exists.`
@@ -165,8 +169,8 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
 export const NewRegionDialog = connect(
     createStructuredSelector({
         newRegionRect: getNewRegionRect,
-        activeMapRegions: getActiveMapRegions,
-        activeMapId: getActiveMapId,
+        currentProjectMaps: getCurrentProjectMaps,
+        currentProjectAllRegions: getCurrentProjectAllRegions,
     }),
     {
         closeNewRegionDialog,

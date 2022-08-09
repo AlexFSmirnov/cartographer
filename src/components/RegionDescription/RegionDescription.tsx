@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Box, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { DescriptionBlockquote } from '../DescriptionBlockquote';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { getCurrentProjectMapIds, getCurrentProjectRegionsByMap } from '../../state';
+import { RegionLink } from '../RegionLink';
 
 interface OwnProps {
     description: string;
@@ -9,13 +13,18 @@ interface OwnProps {
     onChange: (description: string) => void;
 }
 
-interface StateProps {}
+interface StateProps {
+    currentProjectMapIds: string[];
+    currentProjectRegionsByMap: ReturnType<typeof getCurrentProjectRegionsByMap>;
+}
 
 type RegionDescriptionProps = OwnProps & StateProps;
 
 const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     description,
     isEditing,
+    currentProjectMapIds,
+    currentProjectRegionsByMap,
     onChange,
 }) => {
     const [isPreviewing, setIsPreviewing] = useState(false);
@@ -24,12 +33,37 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
         onChange(e.target.value);
     };
 
+    const getDescriptionWithLinks = useCallback(
+        (description: string) => {
+            return description.replaceAll(/\[(.+?)\]/g, (match: string, regionId: string) => {
+                for (const [mapId, regions] of Object.entries(currentProjectRegionsByMap)) {
+                    if (regions[regionId]) {
+                        return `[${regionId}](/${mapId}/${regionId})`;
+                    }
+                }
+
+                if (currentProjectMapIds.includes(regionId)) {
+                    return `[${regionId}](/${regionId})`;
+                }
+
+                return match;
+            });
+        },
+        [currentProjectMapIds, currentProjectRegionsByMap]
+    );
+
+    const descriptionWithLinks = useMemo(
+        () => getDescriptionWithLinks(description),
+        [description, getDescriptionWithLinks]
+    );
+
     const inputField = (
         <TextField
             label="Description"
             variant="filled"
             multiline
             fullWidth
+            autoFocus
             rows={15}
             value={description}
             onChange={handleDescriptionChange}
@@ -47,9 +81,14 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
                     blockquote: ({ children }) => (
                         <DescriptionBlockquote>{children}</DescriptionBlockquote>
                     ),
+                    a: ({ children, href }) => (
+                        <RegionLink relativeHref={href} isClickable={!isEditing}>
+                            {children}
+                        </RegionLink>
+                    ),
                 }}
             >
-                {description}
+                {descriptionWithLinks}
             </ReactMarkdown>
         </Box>
     );
@@ -69,4 +108,9 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     );
 };
 
-export const RegionDescription = RegionDescriptionBase;
+export const RegionDescription = connect(
+    createStructuredSelector({
+        currentProjectMapIds: getCurrentProjectMapIds,
+        currentProjectRegionsByMap: getCurrentProjectRegionsByMap,
+    })
+)(RegionDescriptionBase);

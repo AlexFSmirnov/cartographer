@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './state/store';
 import { register as registerServiceWorkers } from './serviceWorkerRegistration';
 import { RouteName } from './enums';
+import { URL_BASENAME } from './constants';
 import { App } from './App';
 import { MapView, NotesView, RegionsView, NotFound } from './views';
 
@@ -16,7 +17,7 @@ root.render(
     <React.StrictMode>
         <Provider store={store}>
             <PersistGate loading={<p>TODO LOADING</p>} persistor={persistor}>
-                <BrowserRouter basename="/dnd-map-helper">
+                <BrowserRouter basename={URL_BASENAME}>
                     <Routes>
                         <Route path="/" element={<App />}>
                             <Route path={`${RouteName.Map}/*`} element={<MapView />} />

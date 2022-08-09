@@ -19,6 +19,7 @@ import { RouteName } from '../../enums';
 import {
     addMap,
     closeUploadMapDialog,
+    getCurrentProjectAllRegions,
     getCurrentProjectMaps,
     getIsUploadMapDialogOpen,
     openAlertDialog,
@@ -31,6 +32,7 @@ import { UploadMapDialogImagePreview } from './style';
 interface StateProps {
     isUploadMapDialogOpen: boolean;
     currentProjectMaps: ReturnType<typeof getCurrentProjectMaps>;
+    currentProjectAllRegions: ReturnType<typeof getCurrentProjectAllRegions>;
 }
 
 interface DispatchProps {
@@ -46,6 +48,7 @@ type UploadMapDialogProps = StateProps & DispatchProps;
 const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     isUploadMapDialogOpen,
     currentProjectMaps,
+    currentProjectAllRegions,
     closeUploadMapDialog,
     saveImage,
     addMap,
@@ -84,7 +87,10 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     };
 
     const handleConfirmClick = () => {
-        const existingRegion = currentProjectMaps[mapId];
+        const existingRegion =
+            currentProjectMaps[mapId] ||
+            currentProjectAllRegions.find((region) => region.id === mapId);
+
         if (existingRegion) {
             openAlertDialog(`Region with code "${mapId}" (${existingRegion.name}) already exists.`);
             return;
@@ -197,6 +203,7 @@ export const UploadMapDialog = connect(
     createStructuredSelector({
         isUploadMapDialogOpen: getIsUploadMapDialogOpen,
         currentProjectMaps: getCurrentProjectMaps,
+        currentProjectAllRegions: getCurrentProjectAllRegions,
     }),
     {
         openAlertDialog,
