@@ -7,16 +7,20 @@ interface DrawRichRectArgs {
     centerTitle?: string;
     subtitle?: string;
 
-    strokeColor: string;
+    strokeColor?: string;
+    contrastColor?: string;
     lineWidth?: number;
 }
+
+const SUBTITLE_PADDING = 2;
 
 export const drawRichRect = ({
     ctx,
     rect,
     centerTitle,
     subtitle,
-    strokeColor,
+    strokeColor = '#f00',
+    contrastColor = '#fff',
     lineWidth = 3,
 }: DrawRichRectArgs) => {
     ctx.strokeStyle = strokeColor;
@@ -30,7 +34,7 @@ export const drawRichRect = ({
         ctx.font = `${fontWeight} ${fontSize}px sans-serif`;
 
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = fontSize > 15 ? 1.5 : 0.5;
+        ctx.lineWidth = fontSize > 15 ? 1.2 : 0.5;
         ctx.fillStyle = strokeColor;
 
         ctx.textAlign = 'center';
@@ -38,5 +42,38 @@ export const drawRichRect = ({
 
         ctx.fillText(centerTitle, rect.x + rect.width / 2, rect.y + rect.height / 2, rect.width);
         ctx.strokeText(centerTitle, rect.x + rect.width / 2, rect.y + rect.height / 2, rect.width);
+    }
+
+    if (subtitle) {
+        const textHeight = 20;
+
+        ctx.font = `${textHeight}px sans-serif`;
+
+        ctx.textAlign = 'start';
+        ctx.textBaseline = 'top';
+
+        const textMetrics = ctx.measureText(subtitle);
+        const subtitleBackgroundWidth = Math.max(
+            rect.width + lineWidth,
+            0,
+            textMetrics.width + SUBTITLE_PADDING * 2 + lineWidth * 2
+        );
+        const subtitleBackgroundHeight = textHeight + SUBTITLE_PADDING * 2 + lineWidth;
+
+        ctx.fillStyle = strokeColor;
+        ctx.fillRect(
+            rect.x - lineWidth / 2,
+            rect.y + rect.height,
+            subtitleBackgroundWidth,
+            subtitleBackgroundHeight
+        );
+
+        ctx.fillStyle = contrastColor;
+        ctx.fillText(
+            subtitle,
+            rect.x + SUBTITLE_PADDING + lineWidth / 2,
+            rect.y + rect.height + SUBTITLE_PADDING + lineWidth / 2,
+            subtitleBackgroundWidth
+        );
     }
 };
