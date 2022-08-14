@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useImageFromDataUrl } from '../../hooks';
 
+const REGION_PADDING = 8;
+
 interface BaseOwnProps {
     doesRegionExist: boolean;
     mapId?: string;
@@ -49,7 +51,6 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     const theme = useTheme();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
     const ownMapImageDataUrl = useMemo(
         () => (doesRegionExist ? images[mapId] : null),
@@ -63,32 +64,28 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     );
 
     const regionRect = useMemo(() => {
+        let rect = null;
         if (doesRegionExist) {
-            return regionId ? regions[mapId][regionId].parentRect : null;
+            rect = regionId ? regions[mapId][regionId].parentRect : null;
+        } else {
+            rect = regionRectProp;
         }
 
-        return regionRectProp;
+        if (!rect) return null;
+
+        return {
+            x: rect.x - REGION_PADDING,
+            y: rect.y - REGION_PADDING,
+            width: rect.width + REGION_PADDING * 2,
+            height: rect.height + REGION_PADDING * 2,
+        };
     }, [doesRegionExist, regionId, regions, mapId, regionRectProp]);
 
-    const containerRef = useCallback(
-        (container: HTMLDivElement | null) => {
-            if (!container || !regionRect) {
-                return;
-            }
-
-            const containerRect = container.getBoundingClientRect();
-
-            const { width, height } = getImageCoverRect({
-                imageWidth: regionRect.width,
-                imageHeight: regionRect.height,
-                containerWidth: containerRect.width,
-                containerHeight: containerRect.height,
-                padding: 0,
-            });
-            console.log({ regionRect, containerRect, width, height });
-
-            setCanvasSize({ width, height });
-        },
+    const canvasSize = useMemo(
+        () => ({
+            width: regionRect?.width || 0,
+            height: regionRect?.height || 0,
+        }),
         [regionRect]
     );
 
@@ -112,19 +109,10 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
         );
     }, [canvasSize, regionRect, mapImage]);
 
-    const containerProps = {
-        shadow: theme.shadows[2],
-        ref: containerRef,
-    };
-
     return (
-        <RegionPreviewContainer {...containerProps}>
+        <RegionPreviewContainer shadow={theme.shadows[2]}>
             {!regionId && ownMapImageDataUrl ? (
-                <img
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                    src={ownMapImageDataUrl}
-                    alt="Region preview"
-                />
+                <img src={ownMapImageDataUrl} alt="Region preview" />
             ) : (
                 <canvas {...canvasSize} ref={canvasRef} />
             )}

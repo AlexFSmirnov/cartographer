@@ -1,19 +1,19 @@
 import { Rect } from '../types';
 import { getImageCoverRect } from './getImageCoverRect';
 
-interface GetImageRectFromCanvasRectArgs {
-    canvasRect: Rect;
+interface GetCanvasRectFromImageRectArgs {
+    imageRect: Rect;
     canvasSize: { width: number; height: number };
     imageSize: { width: number; height: number };
     imagePadding: number;
 }
 
-export const getImageRectFromCanvasRect = ({
-    canvasRect,
+export const getCanvasRectFromImageRect = ({
+    imageRect,
     canvasSize,
     imageSize,
     imagePadding,
-}: GetImageRectFromCanvasRectArgs) => {
+}: GetCanvasRectFromImageRectArgs) => {
     const imageCoverRect = getImageCoverRect({
         imageWidth: imageSize.width,
         imageHeight: imageSize.height,
@@ -22,12 +22,12 @@ export const getImageRectFromCanvasRect = ({
         padding: imagePadding,
     });
 
-    const scale = imageSize.width / imageCoverRect.width;
+    const scale = imageCoverRect.width / imageSize.width;
 
-    const x = (canvasRect.x - imageCoverRect.x) * scale;
-    const y = (canvasRect.y - imageCoverRect.y) * scale;
-    const width = canvasRect.width * scale;
-    const height = canvasRect.height * scale;
+    const x = imageRect.x * scale + imageCoverRect.x;
+    const y = imageRect.y * scale + imageCoverRect.y;
+    const width = imageRect.width * scale;
+    const height = imageRect.height * scale;
 
     return { x, y, width, height };
 };

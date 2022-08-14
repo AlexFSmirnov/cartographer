@@ -10,5 +10,8 @@ export const RegionPreviewContainer = styled.div<{ shadow: string }>`
     & > * {
         box-shadow: ${(props) => props.shadow};
         border-radius: 8px;
+
+        max-width: 100%;
+        max-height: 100%;
     }
 `;

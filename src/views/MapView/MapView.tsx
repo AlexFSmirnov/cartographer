@@ -2,17 +2,18 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useImageFromDataUrl } from '../../hooks';
-import { getActiveMapImageDataUrl } from '../../state';
-import { ActiveMapCanvas, NewRegionCanvas, NewRegionDialog } from './components';
+import { getActiveMapImageDataUrl, getIsEditModeEnabled } from '../../state';
+import { ActiveMapCanvas, AllRegionsCanvas, NewRegionCanvas, NewRegionDialog } from './components';
 import { MapViewContainer } from './style';
 
 interface StateProps {
+    isEditModeEnabled: boolean;
     activeMapImageDataUrl: string | null;
 }
 
 type MapViewProps = StateProps;
 
-const MapViewBase: React.FC<MapViewProps> = ({ activeMapImageDataUrl }) => {
+const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled, activeMapImageDataUrl }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
@@ -55,7 +56,18 @@ const MapViewBase: React.FC<MapViewProps> = ({ activeMapImageDataUrl }) => {
         <>
             <MapViewContainer ref={containerRef}>
                 <ActiveMapCanvas canvasSize={canvasSize} activeMapImage={activeMapImage} />
-                <NewRegionCanvas canvasSize={canvasSize} activeMapImageSize={activeMapImageSize} />
+                {isEditModeEnabled && (
+                    <AllRegionsCanvas
+                        canvasSize={canvasSize}
+                        activeMapImageSize={activeMapImageSize}
+                    />
+                )}
+                {isEditModeEnabled && (
+                    <NewRegionCanvas
+                        canvasSize={canvasSize}
+                        activeMapImageSize={activeMapImageSize}
+                    />
+                )}
             </MapViewContainer>
             <NewRegionDialog activeMapImage={activeMapImage} />
         </>
@@ -64,6 +76,7 @@ const MapViewBase: React.FC<MapViewProps> = ({ activeMapImageDataUrl }) => {
 
 export const MapView = connect(
     createStructuredSelector({
+        isEditModeEnabled: getIsEditModeEnabled,
         activeMapImageDataUrl: getActiveMapImageDataUrl,
     })
 )(MapViewBase);
