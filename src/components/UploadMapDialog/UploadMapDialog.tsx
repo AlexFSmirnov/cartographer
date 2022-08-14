@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Button,
@@ -15,6 +14,7 @@ import {
     Typography,
 } from '@mui/material';
 import { Info } from '@mui/icons-material';
+import { useUrlNavigation } from '../../hooks';
 import { RouteName } from '../../enums';
 import {
     addMap,
@@ -55,7 +55,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     setActiveMapId,
     openAlertDialog,
 }) => {
-    const navigate = useNavigate();
+    const { navigate } = useUrlNavigation();
 
     const [mapId, setMapId] = useState('');
     const [mapName, setMapName] = useState('');

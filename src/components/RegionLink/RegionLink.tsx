@@ -1,8 +1,8 @@
 import { Box, Link, Tooltip, Typography } from '@mui/material';
 import { connect } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { URL_BASENAME } from '../../constants';
+import { useUrlNavigation } from '../../hooks';
 import { getCurrentProjectMaps, getCurrentProjectRegionsByMap } from '../../state';
 import { parseUrl } from '../../utils';
 import { RegionPreview } from '../RegionPreview';
@@ -27,9 +27,8 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
     regions,
     maps,
 }) => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { view } = parseUrl(location.pathname);
+    const { getUrlParts, navigate } = useUrlNavigation();
+    const { view } = getUrlParts();
     const { activeMap, region } = parseUrl(`/view_placeholder${relativeHref}`);
 
     const handleClick = (e: React.MouseEvent) => {

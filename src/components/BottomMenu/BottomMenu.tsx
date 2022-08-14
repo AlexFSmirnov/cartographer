@@ -1,43 +1,28 @@
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, useMediaQuery, useTheme } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
-import { getActiveMapId } from '../../state';
 import { RouteName } from '../../enums';
-import { parseUrl } from '../../utils';
+import { useUrlNavigation } from '../../hooks';
 import { BottomMenuButton } from './BottomMenuButton';
 import { BottomMenuContainer, DesktopBottomMenuPaper } from './style';
 
-interface StateProps {
-    activeMapId: string | null;
-}
-
-type BottomMenuProps = StateProps;
-
-const BottomMenuBase: React.FC<BottomMenuProps> = ({ activeMapId }) => {
+export const BottomMenu = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { view } = parseUrl(location.pathname);
+    const { getUrlParts, setView } = useUrlNavigation();
+    const { view } = getUrlParts();
 
     const handleNavigationActionClick = (viewIndex: number) => () => {
         switch (viewIndex) {
             case 1:
-                navigate(`/${RouteName.Notes}`);
+                setView(RouteName.Notes);
                 break;
             case 2:
-                navigate(`/${RouteName.Regions}`);
+                setView(RouteName.Regions);
                 break;
             case 0:
             default:
-                if (activeMapId) {
-                    navigate(`/${RouteName.Map}/${activeMapId}`);
-                } else {
-                    navigate(`/${RouteName.Map}`);
-                }
+                setView(RouteName.Map);
                 break;
         }
     };
@@ -89,9 +74,3 @@ const BottomMenuBase: React.FC<BottomMenuProps> = ({ activeMapId }) => {
         </BottomMenuContainer>
     );
 };
-
-export const BottomMenu = connect(
-    createStructuredSelector({
-        activeMapId: getActiveMapId,
-    })
-)(BottomMenuBase);

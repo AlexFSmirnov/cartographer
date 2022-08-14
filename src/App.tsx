@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
 import { RouteName } from './enums';
-import { parseUrl } from './utils';
+import { useUrlNavigation } from './hooks';
 import { darkTheme, lightTheme } from './themes';
 import {
     getActiveMapId,
@@ -41,9 +41,8 @@ const AppBase: React.FC<AppProps> = ({
     const theme = useTheme();
     console.log(theme);
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { view, activeMap: urlActiveMapId } = parseUrl(location.pathname);
+    const { getUrlParts, navigate } = useUrlNavigation();
+    const { view, activeMap: urlActiveMapId } = getUrlParts();
 
     useEffect(() => {
         let redirectUrl = `/${RouteName.Map}`;

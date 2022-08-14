@@ -1,20 +1,14 @@
-import { useLocation, useNavigate } from 'react-router-dom';
 import { Dialog, DialogTitle } from '@mui/material';
-import { parseUrl } from '../../utils';
+import { useUrlNavigation } from '../../hooks';
 
 export const RegionDetailsDialog = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { view, activeMap, region, subView } = parseUrl(location.pathname);
+    const { setView, getUrlParts } = useUrlNavigation();
+    const { view, activeMap, region, subView } = getUrlParts();
 
     const isOpen = region !== null;
 
     const handleClose = () => {
-        if (activeMap) {
-            navigate(`/${view}/${activeMap}`);
-        } else {
-            navigate(`/${view}`);
-        }
+        setView(view);
     };
 
     return (
