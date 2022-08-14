@@ -51,7 +51,13 @@ const AllRegionsCanvasBase: React.FC<AllRegionsCanvasProps> = ({
                 imagePadding: ACTIVE_MAP_PADDING,
             });
 
-            drawRichRect({ ctx, rect: canvasRect, centerTitle: id, strokeColor, lineWidth: 2 });
+            drawRichRect({
+                ctx,
+                rect: canvasRect,
+                centerTitle: id,
+                strokeColor,
+                lineWidth: 2,
+            });
         });
     }, [canvasSize, canvasRef, strokeColor, activeMapRegions, activeMapImageSize]);
 

@@ -8,24 +8,32 @@ import {
     getRectFromMousePositions,
 } from '../../../utils';
 import { useTheme } from '@mui/material';
-import { openNewRegionDialog } from '../../../state';
+import { getActiveMapRegions, openNewRegionDialog } from '../../../state';
 import { MapViewCanvas } from '../style';
 import { ACTIVE_MAP_PADDING } from '../constants';
+import { createStructuredSelector } from 'reselect';
+import { getRegionIdFromImagePoint } from '../../../utils/getRegionIdFromImagePoint';
+import { getRegionIdFromCanvasPoint } from '../../../utils/getRegionIdFromCanvasPoint';
 
 interface OwnProps {
     canvasSize: { width: number; height: number };
     activeMapImageSize: { width: number; height: number };
 }
 
+interface StateProps {
+    activeMapRegions: ReturnType<typeof getActiveMapRegions>;
+}
+
 interface DispatchProps {
     openNewRegionDialog: typeof openNewRegionDialog;
 }
 
-type NewRegionCanvasProps = OwnProps & DispatchProps;
+type NewRegionCanvasProps = OwnProps & StateProps & DispatchProps;
 
 const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     canvasSize,
     activeMapImageSize,
+    activeMapRegions,
     openNewRegionDialog,
 }) => {
     const theme = useTheme();
@@ -48,15 +56,29 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
         }
 
         const rect = getRectFromMousePositions(mouseDownPos, mousePos);
-        const imageRect = getImageRectFromCanvasRect({
-            canvasRect: rect,
-            canvasSize,
-            imageSize: activeMapImageSize,
-            imagePadding: ACTIVE_MAP_PADDING,
-        });
 
-        openNewRegionDialog(imageRect);
-        setMouseDownPos(null);
+        if (rect.width > 2 && rect.height > 2) {
+            const imageRect = getImageRectFromCanvasRect({
+                canvasRect: rect,
+                canvasSize,
+                imageSize: activeMapImageSize,
+                imagePadding: ACTIVE_MAP_PADDING,
+            });
+
+            openNewRegionDialog(imageRect);
+            setMouseDownPos(null);
+        } else {
+            const clickedRegionId = getRegionIdFromCanvasPoint({
+                canvasPoint: mousePos,
+                regions: activeMapRegions,
+                canvasSize,
+                imageSize: activeMapImageSize,
+                imagePadding: ACTIVE_MAP_PADDING,
+            });
+            console.log({ clickedRegionId });
+
+            setMouseDownPos(null);
+        }
 
         const { current: canvas } = canvasRef;
         const ctx = canvas?.getContext('2d');
@@ -91,6 +113,11 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     return <MapViewCanvas {...canvasProps} />;
 };
 
-export const NewRegionCanvas = connect(null, {
-    openNewRegionDialog,
-})(NewRegionCanvasBase);
+export const NewRegionCanvas = connect(
+    createStructuredSelector({
+        activeMapRegions: getActiveMapRegions,
+    }),
+    {
+        openNewRegionDialog,
+    }
+)(NewRegionCanvasBase);

@@ -7,5 +7,5 @@ export interface Region {
     notes: string;
     references: string[];
     referencedBy: string[];
-    parentRect: Rect | null;
+    parentRect: Rect;
 }

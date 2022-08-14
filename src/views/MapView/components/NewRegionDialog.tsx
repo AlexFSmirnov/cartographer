@@ -79,6 +79,11 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     };
 
     const handleConfirm = () => {
+        if (!newRegionRect) {
+            openAlertDialog('Please select a region on the map first.');
+            return;
+        }
+
         const existingRegion =
             currentProjectMaps[regionId] ||
             currentProjectAllRegions.find((region) => region.id === regionId);
