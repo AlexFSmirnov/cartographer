@@ -21,16 +21,25 @@ export const useUrlNavigation = () => {
     const setView = (view: RouteName | null) => {
         const finalView = view === null ? RouteName.Map : view;
 
-        if (activeMapId && finalView === RouteName.Map) {
+        if (activeMapId) {
             navigate(`/${finalView}/${activeMapId}`);
         } else {
             navigate(`/${finalView}`);
         }
     };
 
+    const setRegion = (region: string | null) => {
+        if (!region) {
+            return;
+        }
+
+        navigate(`/${view}/${activeMap}/${region}`);
+    };
+
     return {
         getUrlParts,
         setView,
+        setRegion,
         navigate,
         location,
     };

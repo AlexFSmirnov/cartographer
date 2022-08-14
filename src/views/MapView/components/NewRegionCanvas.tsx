@@ -1,5 +1,7 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { useTheme } from '@mui/material';
 import { Point } from '../../../types';
 import {
     drawRichRect,
@@ -7,13 +9,11 @@ import {
     getImageRectFromCanvasRect,
     getRectFromMousePositions,
 } from '../../../utils';
-import { useTheme } from '@mui/material';
+import { useUrlNavigation } from '../../../hooks';
 import { getActiveMapRegions, openNewRegionDialog } from '../../../state';
-import { MapViewCanvas } from '../style';
+import { getRegionIdFromCanvasPoint } from '../../../utils';
 import { ACTIVE_MAP_PADDING } from '../constants';
-import { createStructuredSelector } from 'reselect';
-import { getRegionIdFromImagePoint } from '../../../utils/getRegionIdFromImagePoint';
-import { getRegionIdFromCanvasPoint } from '../../../utils/getRegionIdFromCanvasPoint';
+import { MapViewCanvas } from '../style';
 
 interface OwnProps {
     canvasSize: { width: number; height: number };
@@ -38,6 +38,8 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
 }) => {
     const theme = useTheme();
     const strokeColor = theme.palette.primary.main;
+
+    const { setRegion } = useUrlNavigation();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasRect = canvasRef.current ? canvasRef.current.getBoundingClientRect() : null;
@@ -75,8 +77,8 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
                 imageSize: activeMapImageSize,
                 imagePadding: ACTIVE_MAP_PADDING,
             });
-            console.log({ clickedRegionId });
 
+            setRegion(clickedRegionId);
             setMouseDownPos(null);
         }
 
