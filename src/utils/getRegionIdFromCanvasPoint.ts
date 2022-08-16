@@ -23,16 +23,24 @@ export const getRegionIdFromCanvasPoint = ({
         imagePadding,
     });
 
-    for (const { id, parentRect } of Object.values(regions)) {
-        if (
+    const matchingRegions = Object.values(regions).filter(
+        ({ parentRect }) =>
             imagePoint.x >= parentRect.x &&
             imagePoint.x <= parentRect.x + parentRect.width &&
             imagePoint.y >= parentRect.y &&
             imagePoint.y <= parentRect.y + parentRect.height
-        ) {
-            return id;
-        }
+    );
+
+    if (matchingRegions.length === 0) {
+        return null;
     }
 
-    return null;
+    const smallestRegion = matchingRegions.reduce((prev, curr) => {
+        const prevArea = prev.parentRect.width * prev.parentRect.height;
+        const currentArea = curr.parentRect.width * curr.parentRect.height;
+
+        return currentArea < prevArea ? curr : prev;
+    }, matchingRegions[0]);
+
+    return smallestRegion.id;
 };

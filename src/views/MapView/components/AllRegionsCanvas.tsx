@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
@@ -26,10 +26,10 @@ const AllRegionsCanvasBase: React.FC<AllRegionsCanvasProps> = ({
     const theme = useTheme();
     const strokeColor = theme.palette.primary.dark;
 
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
+    const canvasRef = (ref: HTMLCanvasElement | null) => setCanvas(ref);
 
     useEffect(() => {
-        const { current: canvas } = canvasRef;
         const ctx = canvas?.getContext('2d');
 
         if (!canvas || !ctx) {
@@ -59,7 +59,7 @@ const AllRegionsCanvasBase: React.FC<AllRegionsCanvasProps> = ({
                 lineWidth: 2,
             });
         });
-    }, [canvasSize, canvasRef, strokeColor, activeMapRegions, activeMapImageSize]);
+    }, [canvasSize, canvas, strokeColor, activeMapRegions, activeMapImageSize]);
 
     return <MapViewCanvas ref={canvasRef} {...canvasSize} />;
 };

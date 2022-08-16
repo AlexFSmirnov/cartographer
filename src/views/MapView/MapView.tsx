@@ -3,7 +3,13 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useImageFromDataUrl } from '../../hooks';
 import { getActiveMapImageDataUrl, getIsEditModeEnabled } from '../../state';
-import { ActiveMapCanvas, AllRegionsCanvas, NewRegionCanvas, NewRegionDialog } from './components';
+import {
+    ActiveMapCanvas,
+    AllRegionsCanvas,
+    NewRegionCanvas,
+    NewRegionDialog,
+    RegionSelectCanvas,
+} from './components';
 import { MapViewContainer } from './style';
 
 interface StateProps {
@@ -52,22 +58,15 @@ const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled, activeMapImage
         height: activeMapImage?.height || 0,
     };
 
+    const regionCanvasBaseProps = { canvasSize, activeMapImageSize };
+
     return (
         <>
             <MapViewContainer ref={containerRef}>
                 <ActiveMapCanvas canvasSize={canvasSize} activeMapImage={activeMapImage} />
-                {isEditModeEnabled && (
-                    <AllRegionsCanvas
-                        canvasSize={canvasSize}
-                        activeMapImageSize={activeMapImageSize}
-                    />
-                )}
-                {isEditModeEnabled && (
-                    <NewRegionCanvas
-                        canvasSize={canvasSize}
-                        activeMapImageSize={activeMapImageSize}
-                    />
-                )}
+                {isEditModeEnabled && <AllRegionsCanvas {...regionCanvasBaseProps} />}
+                {isEditModeEnabled && <NewRegionCanvas {...regionCanvasBaseProps} />}
+                {!isEditModeEnabled && <RegionSelectCanvas {...regionCanvasBaseProps} />}
             </MapViewContainer>
             <NewRegionDialog activeMapImage={activeMapImage} />
         </>

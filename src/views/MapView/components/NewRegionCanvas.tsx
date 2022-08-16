@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
@@ -41,8 +41,10 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
 
     const { setRegion } = useUrlNavigation();
 
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const canvasRect = canvasRef.current ? canvasRef.current.getBoundingClientRect() : null;
+    const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
+    const canvasRect = useMemo(() => (canvas ? canvas.getBoundingClientRect() : null), [canvas]);
+
+    const canvasRef = (ref: HTMLCanvasElement | null) => setCanvas(ref);
 
     const [mouseDownPos, setMouseDownPos] = useState<Point | null>(null);
 
@@ -82,7 +84,6 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
             setMouseDownPos(null);
         }
 
-        const { current: canvas } = canvasRef;
         const ctx = canvas?.getContext('2d');
         if (canvas && ctx) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -91,7 +92,6 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
 
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const mousePos = getCanvasPointFromMouseEvent(e, canvasRect);
-        const { current: canvas } = canvasRef;
         const ctx = canvas?.getContext('2d');
 
         if (!mouseDownPos || !mousePos || !canvas || !ctx) {
