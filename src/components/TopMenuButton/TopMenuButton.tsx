@@ -1,14 +1,13 @@
 import { connect } from 'react-redux';
 import { IconButton } from '@mui/material';
 import { Menu } from '@mui/icons-material';
+import { StoreProps } from '../../types';
 import { openSidebar } from '../../state';
 import { TopMenuButtonWrapper } from './style';
 
-interface DispatchProps {
-    openSidebar: () => void;
-}
+const connectTopMenuButton = connect(null, { openSidebar });
 
-type TopMenuButtonProps = DispatchProps;
+type TopMenuButtonProps = StoreProps<typeof connectTopMenuButton>;
 
 const TopMenuButtonBase: React.FC<TopMenuButtonProps> = ({ openSidebar }) => (
     <TopMenuButtonWrapper>
@@ -18,6 +17,4 @@ const TopMenuButtonBase: React.FC<TopMenuButtonProps> = ({ openSidebar }) => (
     </TopMenuButtonWrapper>
 );
 
-export const TopMenuButton = connect(null, {
-    openSidebar,
-})(TopMenuButtonBase);
+export const TopMenuButton = connectTopMenuButton(TopMenuButtonBase);

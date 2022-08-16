@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Outlet } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
+import { StoreProps } from './types';
 import { RouteName } from './enums';
 import { useUrlNavigation } from './hooks';
 import { darkTheme, lightTheme } from './themes';
@@ -25,12 +26,19 @@ import {
 import { NotFound, EmptyProjectView } from './views';
 import { AppContainer, AppContent, GlobalStyle, ViewContainer } from './style';
 
-interface AppProps {
-    stateActiveMapId: string | null;
-    currentProjectMapIds: string[];
-    currentProjectRootMapId: string | null;
-    setActiveMapId: (regionId: string | null) => void;
-}
+const connectApp = connect(
+    createStructuredSelector({
+        isDarkModeEnabled: getIsDarkModeEnabled,
+        stateActiveMapId: getActiveMapId,
+        currentProjectMapIds: getCurrentProjectMapIds,
+        currentProjectRootMapId: getCurrentProjectRootMapId,
+    }),
+    {
+        setActiveMapId,
+    }
+);
+
+type AppProps = StoreProps<typeof connectApp>;
 
 const AppBase: React.FC<AppProps> = ({
     stateActiveMapId,
@@ -111,30 +119,18 @@ const AppBase: React.FC<AppProps> = ({
     );
 };
 
-interface ThemedAppProps extends AppProps {
-    isDarkModeEnabled: boolean;
-}
+const ThemedApp: React.FC<AppProps> = (props) => {
+    const { isDarkModeEnabled } = props;
 
-const ThemedApp: React.FC<ThemedAppProps> = ({ isDarkModeEnabled, ...rest }) => {
     const theme = useMemo(() => (isDarkModeEnabled ? darkTheme : lightTheme), [isDarkModeEnabled]);
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <GlobalStyle />
-            <AppBase {...rest} />
+            <AppBase {...props} />
         </ThemeProvider>
     );
 };
 
-export const App = connect(
-    createStructuredSelector({
-        isDarkModeEnabled: getIsDarkModeEnabled,
-        stateActiveMapId: getActiveMapId,
-        currentProjectMapIds: getCurrentProjectMapIds,
-        currentProjectRootMapId: getCurrentProjectRootMapId,
-    }),
-    {
-        setActiveMapId,
-    }
-)(ThemedApp);
+export const App = connectApp(ThemedApp);

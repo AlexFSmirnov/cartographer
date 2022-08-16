@@ -2,12 +2,19 @@ import { useEffect, useMemo, useRef } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
-import { Rect } from '../../types';
+import { Rect, StoreProps } from '../../types';
 import { getCurrentProjectRegionsByMap, getImagesSlice } from '../../state';
 import { useImageFromDataUrl } from '../../hooks';
 import { RegionPreviewContainer } from './style';
 
 const REGION_PADDING = 8;
+
+const connectRegionPreview = connect(
+    createStructuredSelector({
+        images: getImagesSlice,
+        regions: getCurrentProjectRegionsByMap,
+    })
+);
 
 interface BaseOwnProps {
     doesRegionExist: boolean;
@@ -31,12 +38,7 @@ interface OwnProps2 extends BaseOwnProps {
 
 type OwnProps = OwnProps1 | OwnProps2;
 
-interface StateProps {
-    images: ReturnType<typeof getImagesSlice>;
-    regions: ReturnType<typeof getCurrentProjectRegionsByMap>;
-}
-
-type RegionPreviewProps = OwnProps & StateProps;
+type RegionPreviewProps = OwnProps & StoreProps<typeof connectRegionPreview>;
 
 const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     doesRegionExist,
@@ -119,9 +121,4 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     );
 };
 
-export const RegionPreview = connect(
-    createStructuredSelector({
-        images: getImagesSlice,
-        regions: getCurrentProjectRegionsByMap,
-    })
-)(RegionPreviewBase);
+export const RegionPreview = connectRegionPreview(RegionPreviewBase);

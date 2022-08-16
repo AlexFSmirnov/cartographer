@@ -10,6 +10,7 @@ import {
     DialogTitle,
     TextField,
 } from '@mui/material';
+import { Rect, StoreProps } from '../../../types';
 import {
     addRegion,
     closeNewRegionDialog,
@@ -18,26 +19,24 @@ import {
     getNewRegionRect,
     openAlertDialog,
 } from '../../../state';
-import { Rect } from '../../../types';
 import { RegionDescription, RegionPreview } from '../../../components';
 
-interface OwnProps {
+const connectNewRegionDialog = connect(
+    createStructuredSelector({
+        newRegionRect: getNewRegionRect,
+        currentProjectMaps: getCurrentProjectMaps,
+        currentProjectAllRegions: getCurrentProjectAllRegions,
+    }),
+    {
+        closeNewRegionDialog,
+        openAlertDialog,
+        addRegion,
+    }
+);
+
+interface NewRegionDialogProps extends StoreProps<typeof connectNewRegionDialog> {
     activeMapImage: HTMLImageElement | null;
 }
-
-interface StateProps {
-    newRegionRect: Rect | null;
-    currentProjectMaps: ReturnType<typeof getCurrentProjectMaps>;
-    currentProjectAllRegions: ReturnType<typeof getCurrentProjectAllRegions>;
-}
-
-interface DispatchProps {
-    closeNewRegionDialog: typeof closeNewRegionDialog;
-    openAlertDialog: typeof openAlertDialog;
-    addRegion: typeof addRegion;
-}
-
-type NewRegionDialogProps = OwnProps & StateProps & DispatchProps;
 
 const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     activeMapImage,
@@ -177,15 +176,4 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     );
 };
 
-export const NewRegionDialog = connect(
-    createStructuredSelector({
-        newRegionRect: getNewRegionRect,
-        currentProjectMaps: getCurrentProjectMaps,
-        currentProjectAllRegions: getCurrentProjectAllRegions,
-    }),
-    {
-        closeNewRegionDialog,
-        openAlertDialog,
-        addRegion,
-    }
-)(NewRegionDialogBase);
+export const NewRegionDialog = connectNewRegionDialog(NewRegionDialogBase);

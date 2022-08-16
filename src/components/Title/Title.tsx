@@ -3,16 +3,18 @@ import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Typography } from '@mui/material';
+import { Map, StoreProps } from '../../types';
 import { RouteName } from '../../enums';
 import { parseUrl } from '../../utils';
 import { getCurrentProjectMaps } from '../../state';
-import { Map } from '../../types';
 
-interface StateProps {
-    currentProjectMaps: Record<string, Map>;
-}
+const connectTitle = connect(
+    createStructuredSelector({
+        currentProjectMaps: getCurrentProjectMaps,
+    })
+);
 
-type TitleProps = StateProps;
+type TitleProps = StoreProps<typeof connectTitle>;
 
 const TitleBase: React.FC<TitleProps> = ({ currentProjectMaps }) => {
     const location = useLocation();
@@ -51,8 +53,4 @@ const TitleBase: React.FC<TitleProps> = ({ currentProjectMaps }) => {
     );
 };
 
-export const Title = connect(
-    createStructuredSelector({
-        currentProjectMaps: getCurrentProjectMaps,
-    })
-)(TitleBase);
+export const Title = connectTitle(TitleBase);

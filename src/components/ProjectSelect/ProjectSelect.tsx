@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { ListItem, Popover, Typography } from '@mui/material';
 import { Add, ExpandMore } from '@mui/icons-material';
+import { StoreProps } from '../../types';
 import { getCurrentProjectName, getSavedProjectsNamesAndIds } from '../../state';
 import {
     ProjectSelectContainer,
@@ -10,12 +11,14 @@ import {
     ProjectSelectItemsContainer,
 } from './style';
 
-interface StateProps {
-    currentProjectName: string | null;
-    savedProjectsNamesAndIds: Array<{ id: string; name: string }>;
-}
+const connectProjectSelect = connect(
+    createStructuredSelector({
+        currentProjectName: getCurrentProjectName,
+        savedProjectsNamesAndIds: getSavedProjectsNamesAndIds,
+    })
+);
 
-type ProjectSelectProps = StateProps;
+type ProjectSelectProps = StoreProps<typeof connectProjectSelect>;
 
 const ProjectSelectBase: React.FC<ProjectSelectProps> = ({
     currentProjectName,
@@ -67,9 +70,4 @@ const ProjectSelectBase: React.FC<ProjectSelectProps> = ({
     );
 };
 
-export const ProjectSelect = connect(
-    createStructuredSelector({
-        currentProjectName: getCurrentProjectName,
-        savedProjectsNamesAndIds: getSavedProjectsNamesAndIds,
-    })
-)(ProjectSelectBase);
+export const ProjectSelect = connectProjectSelect(ProjectSelectBase);

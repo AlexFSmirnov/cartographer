@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ReactMarkdown from 'react-markdown';
 import { Box, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { StoreProps } from '../../types';
 import {
     getCurrentProjectMapIds,
     getCurrentProjectRegionsByMap,
@@ -10,6 +11,16 @@ import {
 } from '../../state';
 import { DescriptionBlockquote } from '../DescriptionBlockquote';
 import { RegionLink } from '../RegionLink';
+
+const connectRegionDescription = connect(
+    createStructuredSelector({
+        currentProjectMapIds: getCurrentProjectMapIds,
+        currentProjectRegionsByMap: getCurrentProjectRegionsByMap,
+    }),
+    {
+        setRegionDescription,
+    }
+);
 
 interface OwnPropsBase {
     isEditing?: boolean;
@@ -44,16 +55,7 @@ interface OwnProps2 extends OwnPropsBase {
 
 type OwnProps = OwnProps1 | OwnProps2;
 
-interface StateProps {
-    currentProjectMapIds: string[];
-    currentProjectRegionsByMap: ReturnType<typeof getCurrentProjectRegionsByMap>;
-}
-
-interface DispatchProps {
-    setRegionDescription: typeof setRegionDescription;
-}
-
-type RegionDescriptionProps = OwnProps & StateProps & DispatchProps;
+type RegionDescriptionProps = OwnProps & StoreProps<typeof connectRegionDescription>;
 
 const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     doesRegionExist,
@@ -168,12 +170,4 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     );
 };
 
-export const RegionDescription = connect(
-    createStructuredSelector({
-        currentProjectMapIds: getCurrentProjectMapIds,
-        currentProjectRegionsByMap: getCurrentProjectRegionsByMap,
-    }),
-    {
-        setRegionDescription,
-    }
-)(RegionDescriptionBase);
+export const RegionDescription = connectRegionDescription(RegionDescriptionBase);

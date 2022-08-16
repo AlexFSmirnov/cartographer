@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { StoreProps } from '../../types';
 import { useImageFromDataUrl } from '../../hooks';
 import { getActiveMapImageDataUrl, getIsEditModeEnabled } from '../../state';
 import {
@@ -12,12 +13,14 @@ import {
 } from './components';
 import { MapViewContainer } from './style';
 
-interface StateProps {
-    isEditModeEnabled: boolean;
-    activeMapImageDataUrl: string | null;
-}
+const connectMapView = connect(
+    createStructuredSelector({
+        isEditModeEnabled: getIsEditModeEnabled,
+        activeMapImageDataUrl: getActiveMapImageDataUrl,
+    })
+);
 
-type MapViewProps = StateProps;
+type MapViewProps = StoreProps<typeof connectMapView>;
 
 const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled, activeMapImageDataUrl }) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -73,9 +76,4 @@ const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled, activeMapImage
     );
 };
 
-export const MapView = connect(
-    createStructuredSelector({
-        isEditModeEnabled: getIsEditModeEnabled,
-        activeMapImageDataUrl: getActiveMapImageDataUrl,
-    })
-)(MapViewBase);
+export const MapView = connectMapView(MapViewBase);

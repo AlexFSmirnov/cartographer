@@ -1,34 +1,33 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
-import { Point } from '../../../types';
+import { Point, StoreProps } from '../../../types';
 import {
     drawRichRect,
     getCanvasPointFromMouseEvent,
     getImageRectFromCanvasRect,
     getRectFromMousePositions,
+    getRegionIdFromCanvasPoint,
 } from '../../../utils';
 import { useUrlNavigation } from '../../../hooks';
 import { getActiveMapRegions, openNewRegionDialog } from '../../../state';
-import { getRegionIdFromCanvasPoint } from '../../../utils';
 import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
 
-interface OwnProps {
+const connectNewRegionCanvas = connect(
+    createStructuredSelector({
+        activeMapRegions: getActiveMapRegions,
+    }),
+    {
+        openNewRegionDialog,
+    }
+);
+
+interface NewRegionCanvasProps extends StoreProps<typeof connectNewRegionCanvas> {
     canvasSize: { width: number; height: number };
     activeMapImageSize: { width: number; height: number };
 }
-
-interface StateProps {
-    activeMapRegions: ReturnType<typeof getActiveMapRegions>;
-}
-
-interface DispatchProps {
-    openNewRegionDialog: typeof openNewRegionDialog;
-}
-
-type NewRegionCanvasProps = OwnProps & StateProps & DispatchProps;
 
 const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     canvasSize,
@@ -115,11 +114,4 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     return <MapViewCanvas {...canvasProps} />;
 };
 
-export const NewRegionCanvas = connect(
-    createStructuredSelector({
-        activeMapRegions: getActiveMapRegions,
-    }),
-    {
-        openNewRegionDialog,
-    }
-)(NewRegionCanvasBase);
+export const NewRegionCanvas = connectNewRegionCanvas(NewRegionCanvasBase);

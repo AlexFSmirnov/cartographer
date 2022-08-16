@@ -15,9 +15,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { SubView } from '../../enums';
+import { Region, StoreProps } from '../../types';
 import { useUrlNavigation } from '../../hooks';
-import { deleteRegion, getCurrentProjectAllRegions, getIsEditModeEnabled } from '../../state';
-import { Region } from '../../types';
+import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
 import { NotFoundPage } from './pages';
@@ -27,22 +27,23 @@ import {
     RegionDetailsDialogTitle,
 } from './style';
 
-interface StateProps {
-    isEditModeEnabled: boolean;
-    regions: Region[];
-}
+const connectRegionDetailsDialog = connect(
+    createStructuredSelector({
+        isEditModeEnabled: getIsEditModeEnabled,
+        regionsByMap: getCurrentProjectRegionsByMap,
+    }),
+    {
+        deleteRegion,
+    }
+);
 
-interface DispatchProps {
-    deleteRegion: typeof deleteRegion;
-}
-
-type RegionDetailsDialogProps = StateProps & DispatchProps;
+type RegionDetailsDialogProps = StoreProps<typeof connectRegionDetailsDialog>;
 
 const SUB_VIEW_ORDER = [SubView.Description, SubView.Maps, SubView.Notes, SubView.References];
 
 const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     isEditModeEnabled,
-    regions,
+    regionsByMap,
     deleteRegion,
 }) => {
     const { setView, setSubView, getUrlParts } = useUrlNavigation();
@@ -55,11 +56,11 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
 
     const [region, setRegion] = useState<Region | null>(null);
     useEffect(() => {
-        const region = regions.find((r) => r.id === regionId);
+        const region = activeMapId && regionId ? regionsByMap[activeMapId][regionId] : null;
         if (regionId && region) {
             setRegion(region);
         }
-    }, [regions, regionId, setRegion]);
+    }, [regionsByMap, activeMapId, regionId, setRegion]);
 
     const tabValue = useMemo(() => SUB_VIEW_ORDER.indexOf(subView), [subView]);
 
@@ -164,12 +165,4 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     );
 };
 
-export const RegionDetailsDialog = connect(
-    createStructuredSelector({
-        isEditModeEnabled: getIsEditModeEnabled,
-        regions: getCurrentProjectAllRegions,
-    }),
-    {
-        deleteRegion,
-    }
-)(RegionDetailsDialogBase);
+export const RegionDetailsDialog = connectRegionDetailsDialog(RegionDetailsDialogBase);

@@ -10,16 +10,18 @@ import {
 } from '@mui/material';
 import { closeAlertDialog, getAlertDialogMessage } from '../../state';
 import { useEffect, useState } from 'react';
+import { StoreProps } from '../../types';
 
-interface StateProps {
-    alertDialogMessage: string | null;
-}
+const connectAlertDialog = connect(
+    createStructuredSelector({
+        alertDialogMessage: getAlertDialogMessage,
+    }),
+    {
+        closeAlertDialog,
+    }
+);
 
-interface DispatchProps {
-    closeAlertDialog: () => void;
-}
-
-type AlertDialogProps = StateProps & DispatchProps;
+type AlertDialogProps = StoreProps<typeof connectAlertDialog>;
 
 const AlertDialogBase: React.FC<AlertDialogProps> = ({ alertDialogMessage, closeAlertDialog }) => {
     const [message, setMessage] = useState<string | null>(alertDialogMessage);
@@ -42,11 +44,4 @@ const AlertDialogBase: React.FC<AlertDialogProps> = ({ alertDialogMessage, close
     );
 };
 
-export const AlertDialog = connect(
-    createStructuredSelector({
-        alertDialogMessage: getAlertDialogMessage,
-    }),
-    {
-        closeAlertDialog,
-    }
-)(AlertDialogBase);
+export const AlertDialog = connectAlertDialog(AlertDialogBase);

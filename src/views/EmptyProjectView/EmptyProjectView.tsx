@@ -1,13 +1,12 @@
 import { connect } from 'react-redux';
 import { Box, Button, Divider, Typography } from '@mui/material';
+import { StoreProps } from '../../types';
 import { openUploadMapDialog } from '../../state';
 import { EmptyProjectViewContainer } from './style';
 
-interface DispatchProps {
-    openUploadMapDialog: typeof openUploadMapDialog;
-}
+const connectEmptyProjectView = connect(null, { openUploadMapDialog });
 
-type EmptyProjectViewProps = DispatchProps;
+type EmptyProjectViewProps = StoreProps<typeof connectEmptyProjectView>;
 
 const EmptyProjectViewBase: React.FC<EmptyProjectViewProps> = ({ openUploadMapDialog }) => (
     <EmptyProjectViewContainer>
@@ -39,6 +38,4 @@ const EmptyProjectViewBase: React.FC<EmptyProjectViewProps> = ({ openUploadMapDi
     </EmptyProjectViewContainer>
 );
 
-export const EmptyProjectView = connect(null, {
-    openUploadMapDialog,
-})(EmptyProjectViewBase);
+export const EmptyProjectView = connectEmptyProjectView(EmptyProjectViewBase);

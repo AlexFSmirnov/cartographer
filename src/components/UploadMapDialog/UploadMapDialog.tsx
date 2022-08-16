@@ -14,8 +14,9 @@ import {
     Typography,
 } from '@mui/material';
 import { Info } from '@mui/icons-material';
-import { useUrlNavigation } from '../../hooks';
+import { StoreProps } from '../../types';
 import { RouteName } from '../../enums';
+import { useUrlNavigation } from '../../hooks';
 import {
     addMap,
     closeUploadMapDialog,
@@ -29,21 +30,22 @@ import {
 import { Dropzone } from '../Dropzone';
 import { UploadMapDialogImagePreview } from './style';
 
-interface StateProps {
-    isUploadMapDialogOpen: boolean;
-    currentProjectMaps: ReturnType<typeof getCurrentProjectMaps>;
-    currentProjectAllRegions: ReturnType<typeof getCurrentProjectAllRegions>;
-}
+const connectUploadMapDialog = connect(
+    createStructuredSelector({
+        isUploadMapDialogOpen: getIsUploadMapDialogOpen,
+        currentProjectMaps: getCurrentProjectMaps,
+        currentProjectAllRegions: getCurrentProjectAllRegions,
+    }),
+    {
+        openAlertDialog,
+        closeUploadMapDialog,
+        saveImage,
+        addMap,
+        setActiveMapId,
+    }
+);
 
-interface DispatchProps {
-    closeUploadMapDialog: () => void;
-    saveImage: typeof saveImage;
-    addMap: typeof addMap;
-    setActiveMapId: typeof setActiveMapId;
-    openAlertDialog: typeof openAlertDialog;
-}
-
-type UploadMapDialogProps = StateProps & DispatchProps;
+type UploadMapDialogProps = StoreProps<typeof connectUploadMapDialog>;
 
 const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     isUploadMapDialogOpen,
@@ -199,17 +201,4 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     );
 };
 
-export const UploadMapDialog = connect(
-    createStructuredSelector({
-        isUploadMapDialogOpen: getIsUploadMapDialogOpen,
-        currentProjectMaps: getCurrentProjectMaps,
-        currentProjectAllRegions: getCurrentProjectAllRegions,
-    }),
-    {
-        openAlertDialog,
-        closeUploadMapDialog,
-        saveImage,
-        addMap,
-        setActiveMapId,
-    }
-)(UploadMapDialogBase);
+export const UploadMapDialog = connectUploadMapDialog(UploadMapDialogBase);

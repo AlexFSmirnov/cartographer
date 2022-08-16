@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Divider, Drawer } from '@mui/material';
 import { Close, FileDownload, FileUpload, Map, UploadFile } from '@mui/icons-material';
+import { StoreProps } from '../../types';
 import {
     closeSidebar,
     getIsDarkModeEnabled,
@@ -15,20 +16,21 @@ import { SidebarButton } from '../SidebarButton';
 import { ProjectSelect } from '../ProjectSelect';
 import { SidebarItemsContainer } from './style';
 
-interface StateProps {
-    isSidebarOpen: boolean;
-    isEditModeEnabled: boolean;
-    isDarkModeEnabled: boolean;
-}
+const connectSidebar = connect(
+    createStructuredSelector({
+        isSidebarOpen: getIsSidebarOpen,
+        isEditModeEnabled: getIsEditModeEnabled,
+        isDarkModeEnabled: getIsDarkModeEnabled,
+    }),
+    {
+        closeSidebar,
+        toggleEditMode,
+        toggleDarkMode,
+        openUploadMapDialog,
+    }
+);
 
-interface DispatchProps {
-    closeSidebar: () => void;
-    toggleEditMode: () => void;
-    toggleDarkMode: () => void;
-    openUploadMapDialog: () => void;
-}
-
-type SidebarProps = StateProps & DispatchProps;
+type SidebarProps = StoreProps<typeof connectSidebar>;
 
 const SidebarBase: React.FC<SidebarProps> = ({
     isSidebarOpen,
@@ -100,16 +102,4 @@ const SidebarBase: React.FC<SidebarProps> = ({
     );
 };
 
-export const Sidebar = connect(
-    createStructuredSelector({
-        isSidebarOpen: getIsSidebarOpen,
-        isEditModeEnabled: getIsEditModeEnabled,
-        isDarkModeEnabled: getIsDarkModeEnabled,
-    }),
-    {
-        closeSidebar,
-        toggleEditMode,
-        toggleDarkMode,
-        openUploadMapDialog,
-    }
-)(SidebarBase);
+export const Sidebar = connectSidebar(SidebarBase);

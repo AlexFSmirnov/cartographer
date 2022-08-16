@@ -2,21 +2,22 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
+import { StoreProps } from '../../../types';
 import { getActiveMapRegions } from '../../../state';
 import { drawRichRect, getCanvasRectFromImageRect } from '../../../utils';
 import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
 
-interface OwnProps {
+const connectAllRegionsCanvas = connect(
+    createStructuredSelector({
+        activeMapRegions: getActiveMapRegions,
+    })
+);
+
+interface AllRegionsCanvasProps extends StoreProps<typeof connectAllRegionsCanvas> {
     canvasSize: { width: number; height: number };
     activeMapImageSize: { width: number; height: number };
 }
-
-interface StateProps {
-    activeMapRegions: ReturnType<typeof getActiveMapRegions>;
-}
-
-type AllRegionsCanvasProps = OwnProps & StateProps;
 
 const AllRegionsCanvasBase: React.FC<AllRegionsCanvasProps> = ({
     canvasSize,
@@ -64,8 +65,4 @@ const AllRegionsCanvasBase: React.FC<AllRegionsCanvasProps> = ({
     return <MapViewCanvas ref={canvasRef} {...canvasSize} />;
 };
 
-export const AllRegionsCanvas = connect(
-    createStructuredSelector({
-        activeMapRegions: getActiveMapRegions,
-    })
-)(AllRegionsCanvasBase);
+export const AllRegionsCanvas = connectAllRegionsCanvas(AllRegionsCanvasBase);

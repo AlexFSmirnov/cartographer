@@ -1,24 +1,25 @@
 import { Box, Link, Tooltip, Typography } from '@mui/material';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { StoreProps } from '../../types';
 import { URL_BASENAME } from '../../constants';
 import { useUrlNavigation } from '../../hooks';
 import { getCurrentProjectMaps, getCurrentProjectRegionsByMap } from '../../state';
 import { parseUrl } from '../../utils';
 import { RegionPreview } from '../RegionPreview';
 
-interface OwnProps {
+const connectRegionLink = connect(
+    createStructuredSelector({
+        regions: getCurrentProjectRegionsByMap,
+        maps: getCurrentProjectMaps,
+    })
+);
+
+interface RegionLinkProps extends StoreProps<typeof connectRegionLink> {
     relativeHref?: string;
     isClickable?: boolean;
     children: React.ReactNode;
 }
-
-interface StateProps {
-    maps: ReturnType<typeof getCurrentProjectMaps>;
-    regions: ReturnType<typeof getCurrentProjectRegionsByMap>;
-}
-
-type RegionLinkProps = OwnProps & StateProps;
 
 const RegionLinkBase: React.FC<RegionLinkProps> = ({
     relativeHref,
@@ -77,9 +78,4 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
     );
 };
 
-export const RegionLink = connect(
-    createStructuredSelector({
-        regions: getCurrentProjectRegionsByMap,
-        maps: getCurrentProjectMaps,
-    })
-)(RegionLinkBase);
+export const RegionLink = connectRegionLink(RegionLinkBase);
