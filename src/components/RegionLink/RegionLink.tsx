@@ -30,11 +30,11 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
 }) => {
     const { getUrlParts, navigate } = useUrlNavigation();
     const { view, subView } = getUrlParts();
-    const { activeMap, region } = parseUrl(`/view_placeholder${relativeHref}`);
+    const { activeMapId, regionId } = parseUrl(`/view_placeholder${relativeHref}`);
 
     const handleClick = (e: React.MouseEvent) => {
         if (isClickable && relativeHref) {
-            navigate(`/${view}${region ? `${relativeHref}/${subView}` : relativeHref}`);
+            navigate(`/${view}${regionId ? `${relativeHref}/${subView}` : relativeHref}`);
         }
 
         e.preventDefault();
@@ -44,9 +44,9 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
 
     let tooltipTitleElement: React.ReactNode = '';
 
-    if (activeMap) {
-        const regionId = region || activeMap;
-        const { name: regionName } = region ? regions[activeMap][region] : maps[activeMap];
+    if (activeMapId) {
+        const regionOrMapId = regionId || activeMapId;
+        const { name: regionName } = regionId ? regions[activeMapId][regionId] : maps[activeMapId];
 
         tooltipTitleElement = (
             <Box
@@ -58,10 +58,10 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
                 justifyContent="space-around"
             >
                 <Typography noWrap fontWeight={500}>
-                    {regionId}. {regionName}
+                    {regionOrMapId}. {regionName}
                 </Typography>
                 <Box width="250px" height="100px">
-                    <RegionPreview doesRegionExist mapId={activeMap} regionId={region} />
+                    <RegionPreview doesRegionExist mapId={activeMapId} regionId={regionId} />
                 </Box>
             </Box>
         );

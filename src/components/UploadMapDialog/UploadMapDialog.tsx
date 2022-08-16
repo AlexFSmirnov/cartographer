@@ -69,7 +69,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     openAlertDialog,
 }) => {
     const { setMap, getUrlParts } = useUrlNavigation();
-    const { region: regionId, activeMap: activeMapId } = getUrlParts();
+    const { regionId, activeMapId } = getUrlParts();
 
     const [newMapId, setNewMapId] = useState('');
     const [newMapName, setNewMapName] = useState('');

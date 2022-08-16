@@ -19,7 +19,7 @@ type NotesPageProps = StoreProps<typeof connectNotesPage>;
 
 const NotesPageBase: React.FC<NotesPageProps> = ({ regionsByMap, setRegionNotes }) => {
     const { getUrlParts } = useUrlNavigation();
-    const { region: regionId, activeMap: activeMapId } = getUrlParts();
+    const { regionId, activeMapId } = getUrlParts();
 
     const notes = useMemo(() => {
         if (regionId && activeMapId) {

@@ -50,7 +50,7 @@ const AppBase: React.FC<AppProps> = ({
     console.log(theme);
 
     const { getUrlParts, navigate } = useUrlNavigation();
-    const { view, activeMap: urlActiveMapId } = getUrlParts();
+    const { view, activeMapId: urlActiveMapId } = getUrlParts();
 
     useEffect(() => {
         let redirectUrl = `/${RouteName.Map}`;

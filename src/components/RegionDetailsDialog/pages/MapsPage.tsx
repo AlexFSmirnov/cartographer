@@ -19,7 +19,7 @@ type MapsPageProps = StoreProps<typeof connectMapsPage>;
 
 const MapsPageBase: React.FC<MapsPageProps> = ({ maps, openUploadMapDialog }) => {
     const { getUrlParts } = useUrlNavigation();
-    const { region: regionId, activeMap: activeMapId } = getUrlParts();
+    const { regionId, activeMapId } = getUrlParts();
 
     const childMaps = useMemo(
         () => Object.values(maps).filter((map) => map.parent && map.parent === regionId),

@@ -62,7 +62,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     setRegionDescription,
 }) => {
     const { getUrlParts } = useUrlNavigation();
-    const { region: regionId, activeMap: activeMapId } = getUrlParts();
+    const { regionId, activeMapId } = getUrlParts();
 
     const [isPreviewing, setIsPreviewing] = useState(false);
 

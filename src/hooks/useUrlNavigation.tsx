@@ -9,21 +9,20 @@ export const useUrlNavigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const activeMapId = useSelector(getActiveMapId);
+    const stateActiveMapId = useSelector(getActiveMapId);
 
-    // TODO: Change to view, activeMapId, regionId and subView
-    const { view, activeMap, region, subView } = useMemo(
+    const { view, activeMapId, regionId, subView } = useMemo(
         () => parseUrl(location.pathname),
         [location.pathname]
     );
 
-    const getUrlParts = () => ({ view, activeMap, region, subView });
+    const getUrlParts = () => ({ view, activeMapId, regionId, subView });
 
     const setView = (newView: RouteName | null) => {
         const finalView = newView === null ? RouteName.Map : newView;
 
-        if (activeMapId) {
-            navigate(`/${finalView}/${activeMapId}`);
+        if (stateActiveMapId) {
+            navigate(`/${finalView}/${stateActiveMapId}`);
         } else {
             navigate(`/${finalView}`);
         }
@@ -35,16 +34,16 @@ export const useUrlNavigation = () => {
         }
     };
 
-    const setRegion = (newRegion: string | null) => {
-        if (!newRegion) {
+    const setRegion = (newRegionId: string | null) => {
+        if (!newRegionId) {
             return;
         }
 
-        navigate(`/${view}/${activeMap}/${newRegion}/${subView || SubView.Description}`);
+        navigate(`/${view}/${activeMapId}/${newRegionId}/${subView || SubView.Description}`);
     };
 
     const setSubView = (newSubView?: SubView | null) => {
-        navigate(`/${view}/${activeMap}/${region}/${newSubView || SubView.Description}`);
+        navigate(`/${view}/${activeMapId}/${regionId}/${newSubView || SubView.Description}`);
     };
 
     return {

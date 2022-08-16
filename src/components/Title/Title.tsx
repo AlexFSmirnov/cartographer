@@ -1,11 +1,10 @@
 import { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Typography } from '@mui/material';
-import { Map, StoreProps } from '../../types';
+import { StoreProps } from '../../types';
 import { RouteName } from '../../enums';
-import { parseUrl } from '../../utils';
+import { useUrlNavigation } from '../../hooks';
 import { getCurrentProjectMaps } from '../../state';
 
 const connectTitle = connect(
@@ -17,12 +16,12 @@ const connectTitle = connect(
 type TitleProps = StoreProps<typeof connectTitle>;
 
 const TitleBase: React.FC<TitleProps> = ({ currentProjectMaps }) => {
-    const location = useLocation();
-    const { view, activeMap } = parseUrl(location.pathname);
+    const { getUrlParts } = useUrlNavigation();
+    const { view, activeMapId } = getUrlParts();
 
     const isMapNotFound = useMemo(
-        () => view === RouteName.Map && activeMap !== null && !currentProjectMaps[activeMap],
-        [activeMap, currentProjectMaps, view]
+        () => view === RouteName.Map && activeMapId !== null && !currentProjectMaps[activeMapId],
+        [activeMapId, currentProjectMaps, view]
     );
 
     if (isMapNotFound) {
@@ -33,7 +32,7 @@ const TitleBase: React.FC<TitleProps> = ({ currentProjectMaps }) => {
     if (view === RouteName.Map) {
         content = (
             <Typography variant="h4" sx={{ fontWeight: 300 }}>
-                Bread/Crumbs/Will/Be/Here/{activeMap}
+                Bread/Crumbs/Will/Be/Here/{activeMapId}
             </Typography>
         );
     } else {

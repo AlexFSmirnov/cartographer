@@ -47,7 +47,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     deleteRegion,
 }) => {
     const { setView, setSubView, getUrlParts } = useUrlNavigation();
-    const { view, activeMap: activeMapId, region: regionId, subView } = getUrlParts();
+    const { view, activeMapId, regionId, subView } = getUrlParts();
 
     const [isEditingDescription, setIsEditingDescription] = useState(false);
     useEffect(() => setIsEditingDescription(isEditModeEnabled), [isEditModeEnabled, regionId]);
