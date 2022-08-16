@@ -112,8 +112,8 @@ const AppBase: React.FC<AppProps> = ({
             </AppContent>
             <TopMenuButton />
             <Sidebar />
-            <UploadMapDialog />
             <RegionDetailsDialog />
+            <UploadMapDialog />
             <AlertDialog />
         </AppContainer>
     );

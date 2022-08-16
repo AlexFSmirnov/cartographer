@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -22,7 +22,9 @@ import {
     closeUploadMapDialog,
     getCurrentProjectAllRegions,
     getCurrentProjectMaps,
+    getCurrentProjectRegionsByMap,
     getIsUploadMapDialogOpen,
+    getUploadMapDialogType,
     openAlertDialog,
     saveImage,
     setActiveMapId,
@@ -33,8 +35,10 @@ import { UploadMapDialogDropzoneContainer } from './style';
 const connectUploadMapDialog = connect(
     createStructuredSelector({
         isUploadMapDialogOpen: getIsUploadMapDialogOpen,
-        currentProjectMaps: getCurrentProjectMaps,
-        currentProjectAllRegions: getCurrentProjectAllRegions,
+        uploadMapDialogType: getUploadMapDialogType,
+        maps: getCurrentProjectMaps,
+        allRegions: getCurrentProjectAllRegions,
+        regionsByMap: getCurrentProjectRegionsByMap,
     }),
     {
         openAlertDialog,
@@ -47,104 +51,144 @@ const connectUploadMapDialog = connect(
 
 type UploadMapDialogProps = StoreProps<typeof connectUploadMapDialog>;
 
+const ROOT_MAP_DESCRIPTION =
+    'A root map is a map of the highest order - for example, a map of the contry/continent/planet. If this map is a sub-region of another map, you should rather upload is by defining a region on the parent map.';
+const CHILD_MAP_DESCRIPTION =
+    'Child maps should be used for regions that have their own maps provided. For example, a region representing a house on a city map can have one or several child maps for its floor plan.';
+
 const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     isUploadMapDialogOpen,
-    currentProjectMaps,
-    currentProjectAllRegions,
+    uploadMapDialogType,
+    maps,
+    allRegions,
+    regionsByMap,
     closeUploadMapDialog,
     saveImage,
     addMap,
     setActiveMapId,
     openAlertDialog,
 }) => {
-    const { navigate } = useUrlNavigation();
+    const { setMap, getUrlParts } = useUrlNavigation();
+    const { region: regionId, activeMap: activeMapId } = getUrlParts();
 
-    const [mapId, setMapId] = useState('');
-    const [mapName, setMapName] = useState('');
+    const [newMapId, setNewMapId] = useState('');
+    const [newMapName, setNewMapName] = useState('');
+    const [newMapFloor, setNewMapFloor] = useState('');
 
     const [uploadedImage, setUploadedImage] = useState<File | null>(null);
 
+    useEffect(() => {
+        if (!isUploadMapDialogOpen) {
+            return;
+        }
+
+        let computedMapId = '';
+        let computedMapName = '';
+
+        if (regionId) {
+            computedMapId = regionId;
+        }
+
+        const region = activeMapId && regionId ? regionsByMap[activeMapId][regionId] : null;
+        if (region) {
+            computedMapId = region.id;
+            computedMapName = region.name;
+        }
+
+        setNewMapId(uploadMapDialogType === 'child' ? computedMapId : '');
+        setNewMapName(uploadMapDialogType === 'child' ? computedMapName : '');
+        setNewMapFloor('');
+        setUploadedImage(null);
+    }, [isUploadMapDialogOpen, uploadMapDialogType, activeMapId, regionId, regionsByMap]);
+
     const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setMapId(event.target.value);
+        setNewMapId(event.target.value);
     };
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setMapName(event.target.value);
+        setNewMapName(event.target.value);
     };
-
-    const clearFields = () => {
-        setMapId('');
-        setMapName('');
-        setUploadedImage(null);
-    };
-
-    const clearAndCloseDialog = () => {
-        closeUploadMapDialog();
-        window.setTimeout(clearFields, 300);
-    };
-
-    const handleCancelClick = () => {
-        clearAndCloseDialog();
+    const handleFloorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewMapFloor(event.target.value);
     };
 
     const handleConfirmClick = () => {
-        const existingRegion =
-            currentProjectMaps[mapId] ||
-            currentProjectAllRegions.find((region) => region.id === mapId);
+        const existingMap = maps[newMapId];
+        const existingRegion = allRegions.find((region) => region.id === newMapId);
 
-        if (existingRegion) {
-            openAlertDialog(`Region with code "${mapId}" (${existingRegion.name}) already exists.`);
+        if (existingMap) {
+            openAlertDialog(`Map with code "${newMapId}" (${existingMap.name}) already exists.`);
+            return;
+        }
+
+        if (existingRegion && uploadMapDialogType === 'root') {
+            openAlertDialog(
+                `Region with code "${newMapId}" (${existingRegion.name}) already exists.`
+            );
             return;
         }
 
         if (!uploadedImage) {
+            openAlertDialog('Error while reading uploaded image.');
             return;
         }
 
         const reader = new FileReader();
         reader.onload = () => {
-            const id = mapId || mapName.toLowerCase().replaceAll(' ', '-');
+            const id = newMapId || newMapName.toLowerCase().replaceAll(' ', '-');
             const imageDataUrl = reader.result as string;
 
             if (!imageDataUrl) {
-                openAlertDialog('Unable to upload image.');
+                openAlertDialog('Error while reading uploaded image.');
                 return;
             }
 
+            addMap({
+                id,
+                name: newMapName,
+                floorNumber: newMapFloor || null,
+                parent: uploadMapDialogType === 'child' ? regionId : null,
+            });
+
             saveImage({ id, imageDataUrl });
-            addMap({ id, name: mapName, floorNumber: null, parent: null });
             setActiveMapId(id);
 
-            navigate(`/${RouteName.Map}/${id}`);
-            clearAndCloseDialog();
+            setMap(id);
+            closeUploadMapDialog();
         };
         reader.readAsDataURL(uploadedImage);
     };
 
     const handleFileDrop = (file: File) => setUploadedImage(file);
 
-    const isConfirmDisabled = !mapName || !uploadedImage;
+    const isConfirmDisabled = !newMapName || !uploadedImage;
+
+    const title = uploadMapDialogType === 'root' ? 'Upload root map' : 'Upload child map';
+    const description =
+        uploadMapDialogType === 'root' ? ROOT_MAP_DESCRIPTION : CHILD_MAP_DESCRIPTION;
 
     return (
-        <Dialog onClose={clearAndCloseDialog} open={isUploadMapDialogOpen}>
-            <DialogTitle>Upload root map</DialogTitle>
-            <DialogContent sx={{ width: '600px', maxWidth: '100%' }}>
-                <DialogContentText>
-                    A root map is a map of the highest order - for example, a map of the
-                    contry/continent/planet. If this map is a sub-region of another map, you should
-                    rather upload is by defining a region on the parent map.
-                </DialogContentText>
+        <Dialog onClose={closeUploadMapDialog} open={isUploadMapDialogOpen}>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogContent sx={{ width: '575px', maxWidth: '100%' }}>
+                <DialogContentText>{description}</DialogContentText>
                 <Box pt={1} pb={2} width="100%" display="flex" justifyContent="space-between">
                     <TextField
                         variant="filled"
                         size="small"
-                        sx={{ width: '23%' }}
+                        sx={{ width: uploadMapDialogType === 'root' ? '23%' : '22%' }}
                         label="Code"
-                        value={mapId}
+                        value={newMapId}
                         onChange={handleCodeChange}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <Tooltip title="A unique short identifier of the map">
+                                    <Tooltip
+                                        title={
+                                            uploadMapDialogType === 'root'
+                                                ? 'A unique short identifier of the map'
+                                                : 'A short identifier of the map, usually the same as the code of its parent region.'
+                                        }
+                                    >
                                         <Info fontSize="small" />
                                     </Tooltip>
                                 </InputAdornment>
@@ -154,19 +198,38 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                     <TextField
                         variant="filled"
                         size="small"
-                        sx={{ width: '73%' }}
+                        sx={{ width: uploadMapDialogType === 'root' ? '73%' : '52%' }}
                         label="Title"
                         required
-                        value={mapName}
+                        value={newMapName}
                         onChange={handleTitleChange}
                     />
+                    {uploadMapDialogType === 'child' && (
+                        <TextField
+                            variant="filled"
+                            size="small"
+                            sx={{ width: '22%' }}
+                            label="Floor"
+                            value={newMapFloor}
+                            onChange={handleFloorChange}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <Tooltip title="One region can have multiple maps, usually distinguished by their floor number.">
+                                            <Info fontSize="small" />
+                                        </Tooltip>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    )}
                 </Box>
                 <UploadMapDialogDropzoneContainer>
                     <DropzoneWithPreview onDrop={handleFileDrop} />
                 </UploadMapDialogDropzoneContainer>
             </DialogContent>
             <DialogActions>
-                <Button color="inherit" onClick={handleCancelClick}>
+                <Button color="inherit" onClick={closeUploadMapDialog}>
                     Cancel
                 </Button>
                 <Button

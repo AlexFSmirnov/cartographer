@@ -4,35 +4,34 @@ import { createStructuredSelector } from 'reselect';
 import { Box, Button, Typography } from '@mui/material';
 import { StoreProps } from '../../../types';
 import { useUrlNavigation } from '../../../hooks';
-import { getCurrentProjectMaps } from '../../../state';
-import { UploadChildMapDialog } from '../../UploadChildMapDialog';
+import { getCurrentProjectMaps, openUploadMapDialog } from '../../../state';
 
 const connectMapsPage = connect(
     createStructuredSelector({
         maps: getCurrentProjectMaps,
-    })
+    }),
+    {
+        openUploadMapDialog,
+    }
 );
 
 type MapsPageProps = StoreProps<typeof connectMapsPage>;
 
-const MapsPageBase: React.FC<MapsPageProps> = ({ maps }) => {
+const MapsPageBase: React.FC<MapsPageProps> = ({ maps, openUploadMapDialog }) => {
     const { getUrlParts } = useUrlNavigation();
     const { region: regionId, activeMap: activeMapId } = getUrlParts();
-
-    const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
     const childMaps = useMemo(
         () => Object.values(maps).filter((map) => map.parent && map.parent === regionId),
         [regionId, maps]
     );
 
-    const handleUploadClick = () => setIsUploadDialogOpen(true);
-    const handleUploadDialogClose = () => setIsUploadDialogOpen(false);
+    const handleUploadClick = () => openUploadMapDialog({ type: 'child' });
 
     let content: React.ReactNode = null;
 
     if (childMaps.length === 0) {
-        content = (
+        return (
             <Box
                 width="100%"
                 height="100%"
@@ -52,12 +51,7 @@ const MapsPageBase: React.FC<MapsPageProps> = ({ maps }) => {
         );
     }
 
-    return (
-        <>
-            {content}
-            <UploadChildMapDialog isOpen={isUploadDialogOpen} onClose={handleUploadDialogClose} />
-        </>
-    );
+    return <>{content}</>;
 };
 
 export const MapsPage = connectMapsPage(MapsPageBase);

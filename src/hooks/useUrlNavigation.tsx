@@ -29,6 +29,12 @@ export const useUrlNavigation = () => {
         }
     };
 
+    const setMap = (newMapId: string | null) => {
+        if (newMapId) {
+            navigate(`/${view}/${newMapId}`);
+        }
+    };
+
     const setRegion = (newRegion: string | null) => {
         if (!newRegion) {
             return;
@@ -44,6 +50,7 @@ export const useUrlNavigation = () => {
     return {
         getUrlParts,
         setView,
+        setMap,
         setRegion,
         setSubView,
         navigate,

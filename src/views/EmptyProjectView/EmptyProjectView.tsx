@@ -31,7 +31,7 @@ const EmptyProjectViewBase: React.FC<EmptyProjectViewProps> = ({ openUploadMapDi
                 Load example project
             </Button>
             <Box px={0.5} />
-            <Button variant="outlined" onClick={() => openUploadMapDialog()}>
+            <Button variant="outlined" onClick={() => openUploadMapDialog({ type: 'root' })}>
                 Add root map
             </Button>
         </Box>

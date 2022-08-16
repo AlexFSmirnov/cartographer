@@ -42,7 +42,7 @@ const SidebarBase: React.FC<SidebarProps> = ({
     openUploadMapDialog,
 }) => {
     const handleUploadRootMapButtonClick = () => {
-        openUploadMapDialog();
+        openUploadMapDialog({ type: 'root' });
         closeSidebar();
     };
 
