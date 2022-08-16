@@ -1,36 +1,92 @@
 import { useCallback, useMemo, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Box, Tab, Tabs, TextField, Typography } from '@mui/material';
-import { DescriptionBlockquote } from '../DescriptionBlockquote';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { getCurrentProjectMapIds, getCurrentProjectRegionsByMap } from '../../state';
+import ReactMarkdown from 'react-markdown';
+import { Box, Tab, Tabs, TextField, Typography } from '@mui/material';
+import {
+    getCurrentProjectMapIds,
+    getCurrentProjectRegionsByMap,
+    setRegionDescription,
+} from '../../state';
+import { DescriptionBlockquote } from '../DescriptionBlockquote';
 import { RegionLink } from '../RegionLink';
 
-interface OwnProps {
-    description: string;
+interface OwnPropsBase {
     isEditing?: boolean;
-    onChange: (description: string) => void;
+    doesRegionExist?: boolean;
+
+    description?: string;
+    onChange?: (description: string) => void;
+
+    regionId?: string;
+    activeMapId?: string;
 }
+
+interface OwnProps1 extends OwnPropsBase {
+    doesRegionExist: true;
+
+    description?: undefined;
+    onChange?: undefined;
+
+    regionId: string;
+    activeMapId: string;
+}
+
+interface OwnProps2 extends OwnPropsBase {
+    doesRegionExist: false;
+
+    description: string;
+    onChange: (description: string) => void;
+
+    regionId?: undefined;
+    activeMapId?: undefined;
+}
+
+type OwnProps = OwnProps1 | OwnProps2;
 
 interface StateProps {
     currentProjectMapIds: string[];
     currentProjectRegionsByMap: ReturnType<typeof getCurrentProjectRegionsByMap>;
 }
 
-type RegionDescriptionProps = OwnProps & StateProps;
+interface DispatchProps {
+    setRegionDescription: typeof setRegionDescription;
+}
+
+type RegionDescriptionProps = OwnProps & StateProps & DispatchProps;
 
 const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
+    doesRegionExist,
+    regionId,
+    activeMapId,
     description,
     isEditing,
     currentProjectMapIds,
     currentProjectRegionsByMap,
     onChange,
+    setRegionDescription,
 }) => {
     const [isPreviewing, setIsPreviewing] = useState(false);
 
+    const ownDescription = useMemo(() => {
+        if (doesRegionExist) {
+            const region = currentProjectRegionsByMap[activeMapId][regionId];
+            return region?.description || '';
+        } else {
+            return description;
+        }
+    }, [currentProjectRegionsByMap, activeMapId, regionId, description, doesRegionExist]);
+
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        onChange(e.target.value);
+        if (doesRegionExist) {
+            setRegionDescription({
+                regionId,
+                activeMapId,
+                description: e.target.value,
+            });
+        } else {
+            onChange(e.target.value);
+        }
     };
 
     const getDescriptionWithLinks = useCallback(
@@ -53,8 +109,8 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     );
 
     const descriptionWithLinks = useMemo(
-        () => getDescriptionWithLinks(description),
-        [description, getDescriptionWithLinks]
+        () => getDescriptionWithLinks(ownDescription),
+        [ownDescription, getDescriptionWithLinks]
     );
 
     const inputField = (
@@ -65,7 +121,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
             fullWidth
             autoFocus
             rows={15}
-            value={description}
+            value={ownDescription}
             onChange={handleDescriptionChange}
         />
     );
@@ -116,5 +172,8 @@ export const RegionDescription = connect(
     createStructuredSelector({
         currentProjectMapIds: getCurrentProjectMapIds,
         currentProjectRegionsByMap: getCurrentProjectRegionsByMap,
-    })
+    }),
+    {
+        setRegionDescription,
+    }
 )(RegionDescriptionBase);

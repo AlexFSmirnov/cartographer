@@ -123,6 +123,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
                 <Box
                     width="100%"
                     height="128px"
+                    minHeight="128px"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -156,6 +157,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
                 {isDescriptionEnabled ? (
                     <RegionDescription
                         isEditing
+                        doesRegionExist={false}
                         description={description}
                         onChange={handleDescriptionChange}
                     />

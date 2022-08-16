@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
@@ -39,6 +39,13 @@ const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({
     const canvasRect = useMemo(() => (canvas ? canvas.getBoundingClientRect() : null), [canvas]);
 
     const canvasRef = (ref: HTMLCanvasElement | null) => setCanvas(ref);
+
+    useEffect(() => {
+        const ctx = canvas?.getContext('2d');
+        if (ctx) {
+            ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
+        }
+    }, [activeMapRegions, canvasSize, canvas]);
 
     const getRegionFromMouseEvent = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const mousePos = getCanvasPointFromMouseEvent(e, canvasRect);

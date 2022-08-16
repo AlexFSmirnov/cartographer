@@ -41,10 +41,25 @@ export const currentProjectSlice = createSlice({
         setActiveMapId: (state, action: PayloadAction<string | null>) => {
             state.activeMapId = action.payload;
         },
+        setRegionDescription: (
+            state,
+            action: PayloadAction<{ regionId: string; activeMapId: string; description: string }>
+        ) => {
+            const { regionId, activeMapId, description } = action.payload;
+
+            if (state.regions?.[activeMapId]?.[regionId]) {
+                state.regions[activeMapId][regionId].description = description;
+            }
+        },
+        deleteRegion: (state, action: PayloadAction<{ regionId: string; activeMapId: string }>) => {
+            const { regionId, activeMapId } = action.payload;
+            delete state.regions[activeMapId][regionId];
+        },
     },
 });
 
-export const { addMap, addRegion, setActiveMapId } = currentProjectSlice.actions;
+export const { addMap, addRegion, setActiveMapId, setRegionDescription, deleteRegion } =
+    currentProjectSlice.actions;
 
 export const getCurrentProjectState = (state: State) => state.currentProject;
 

@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTheme } from '@mui/material';
-import { Rect } from '../../types';
-import { getImageCoverRect } from '../../utils';
-import { RegionPreviewContainer } from './style';
-import { getCurrentProjectRegionsByMap, getImagesSlice } from '../../state';
+import { useEffect, useMemo, useRef } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { useTheme } from '@mui/material';
+import { Rect } from '../../types';
+import { getCurrentProjectRegionsByMap, getImagesSlice } from '../../state';
 import { useImageFromDataUrl } from '../../hooks';
+import { RegionPreviewContainer } from './style';
 
 const REGION_PADDING = 8;
 
@@ -66,7 +65,7 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     const regionRect = useMemo(() => {
         let rect = null;
         if (doesRegionExist) {
-            rect = regionId ? regions[mapId][regionId].parentRect : null;
+            rect = regionId ? regions[mapId]?.[regionId]?.parentRect || null : null;
         } else {
             rect = regionRectProp;
         }
