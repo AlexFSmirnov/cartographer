@@ -28,12 +28,12 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
     maps,
 }) => {
     const { getUrlParts, navigate } = useUrlNavigation();
-    const { view } = getUrlParts();
+    const { view, subView } = getUrlParts();
     const { activeMap, region } = parseUrl(`/view_placeholder${relativeHref}`);
 
     const handleClick = (e: React.MouseEvent) => {
-        if (isClickable) {
-            navigate(`/${view}${relativeHref || ''}`);
+        if (isClickable && relativeHref) {
+            navigate(`/${view}${region ? `${relativeHref}/${subView}` : relativeHref}`);
         }
 
         e.preventDefault();
