@@ -5,4 +5,4 @@ export type StoreProps<Connect> = Connect extends InferableComponentEnhancerWith
     any
 >
     ? Props
-    : never;
+    : {};

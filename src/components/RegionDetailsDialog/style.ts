@@ -11,9 +11,9 @@ export const RegionDetailsDialogContent = styled(DialogContent)`
     display: flex;
     flex-direction: column;
     width: 600px;
-    maxwidth: 100%;
+    max-width: 100%;
     height: 630px;
-    maxheight: 100%;
+    max-height: 100%;
 `;
 
 export const RegionDetailsDialogRegionPreview = styled(Box)`

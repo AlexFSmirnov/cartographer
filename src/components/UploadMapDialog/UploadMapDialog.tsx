@@ -7,11 +7,11 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    DialogContentText,
     DialogTitle,
     InputAdornment,
     TextField,
     Tooltip,
-    Typography,
 } from '@mui/material';
 import { Info } from '@mui/icons-material';
 import { StoreProps } from '../../types';
@@ -27,8 +27,8 @@ import {
     saveImage,
     setActiveMapId,
 } from '../../state';
-import { Dropzone } from '../Dropzone';
-import { UploadMapDialogImagePreview } from './style';
+import { DropzoneWithPreview } from '../DropzoneWithPreview';
+import { UploadMapDialogDropzoneContainer } from './style';
 
 const connectUploadMapDialog = connect(
     createStructuredSelector({
@@ -63,7 +63,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     const [mapName, setMapName] = useState('');
 
     const [uploadedImage, setUploadedImage] = useState<File | null>(null);
-    const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
     const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMapId(event.target.value);
@@ -76,7 +75,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
         setMapId('');
         setMapName('');
         setUploadedImage(null);
-        setUploadedImageUrl(null);
     };
 
     const clearAndCloseDialog = () => {
@@ -122,27 +120,19 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
         reader.readAsDataURL(uploadedImage);
     };
 
-    const handleFileDrop = (files: File[]) => {
-        if (files.length === 1) {
-            setUploadedImage(files[0]);
-            setUploadedImageUrl(URL.createObjectURL(files[0]));
-        }
-    };
+    const handleFileDrop = (file: File) => setUploadedImage(file);
 
-    const isConfirmDisabled = !mapName || !uploadedImageUrl;
+    const isConfirmDisabled = !mapName || !uploadedImage;
 
     return (
         <Dialog onClose={clearAndCloseDialog} open={isUploadMapDialogOpen}>
-            <DialogTitle>Upload Root Map</DialogTitle>
+            <DialogTitle>Upload root map</DialogTitle>
             <DialogContent sx={{ width: '600px', maxWidth: '100%' }}>
-                <Typography variant="body1">Enter the details of the root map.</Typography>
-                <Typography variant="body2">
-                    <i>
-                        Note: if this map is a sub-region of another map, you should rather upload
-                        is by defining a region on the parent map. A root map is a map of the
-                        highest order - for example, a map of the contry/continent/planet.
-                    </i>
-                </Typography>
+                <DialogContentText>
+                    A root map is a map of the highest order - for example, a map of the
+                    contry/continent/planet. If this map is a sub-region of another map, you should
+                    rather upload is by defining a region on the parent map.
+                </DialogContentText>
                 <Box pt={1} pb={2} width="100%" display="flex" justifyContent="space-between">
                     <TextField
                         variant="filled"
@@ -171,19 +161,9 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                         onChange={handleTitleChange}
                     />
                 </Box>
-                <Box
-                    width="100%"
-                    height="256px"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    {uploadedImageUrl === null ? (
-                        <Dropzone onDrop={handleFileDrop} />
-                    ) : (
-                        <UploadMapDialogImagePreview src={uploadedImageUrl} />
-                    )}
-                </Box>
+                <UploadMapDialogDropzoneContainer>
+                    <DropzoneWithPreview onDrop={handleFileDrop} />
+                </UploadMapDialogDropzoneContainer>
             </DialogContent>
             <DialogActions>
                 <Button color="inherit" onClick={handleCancelClick}>

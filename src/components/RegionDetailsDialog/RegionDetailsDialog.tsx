@@ -20,7 +20,7 @@ import { useUrlNavigation } from '../../hooks';
 import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
-import { NotesPage, NotFoundPage } from './pages';
+import { MapsPage, NotesPage, NotFoundPage } from './pages';
 import {
     RegionDetailsDialogContent,
     RegionDetailsDialogRegionPreview,
@@ -120,7 +120,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                     <RegionDetailsDialogRegionPreview>
                         <RegionPreview doesRegionExist={true} regionId={id} mapId={activeMapId!} />
                     </RegionDetailsDialogRegionPreview>
-                    <Box width="100%" height="100%" display="flex" flexDirection="column">
+                    <Box width="100%" display="flex" flexDirection="column">
                         <Tabs value={tabValue} onChange={handleTabChange} variant="fullWidth">
                             {SUB_VIEW_ORDER.map((subView) => (
                                 <Tab key={subView} label={subView} />
@@ -133,6 +133,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                             doesRegionExist={true}
                         />
                     )}
+                    {subView === SubView.Maps && <MapsPage />}
                     {subView === SubView.Notes && <NotesPage />}
                 </RegionDetailsDialogContent>
             </>

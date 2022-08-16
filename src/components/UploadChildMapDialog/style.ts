@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const UploadMapDialogDropzoneContainer = styled.div`
+export const UploadChildMapDialogDropzoneContainer = styled.div`
     width: 100%;
     height: 256px;
     display: flex;

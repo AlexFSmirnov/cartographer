@@ -11,6 +11,7 @@ export const useUrlNavigation = () => {
 
     const activeMapId = useSelector(getActiveMapId);
 
+    // TODO: Change to view, activeMapId, regionId and subView
     const { view, activeMap, region, subView } = useMemo(
         () => parseUrl(location.pathname),
         [location.pathname]
