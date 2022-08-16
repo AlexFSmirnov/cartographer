@@ -20,7 +20,7 @@ import { useUrlNavigation } from '../../hooks';
 import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
-import { NotFoundPage } from './pages';
+import { NotesPage, NotFoundPage } from './pages';
 import {
     RegionDetailsDialogContent,
     RegionDetailsDialogRegionPreview,
@@ -131,10 +131,9 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                         <RegionDescription
                             isEditing={isEditingDescription}
                             doesRegionExist={true}
-                            regionId={id}
-                            activeMapId={activeMapId!}
                         />
                     )}
+                    {subView === SubView.Notes && <NotesPage />}
                 </RegionDetailsDialogContent>
             </>
         );

@@ -4,6 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import ReactMarkdown from 'react-markdown';
 import { Box, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { StoreProps } from '../../types';
+import { useUrlNavigation } from '../../hooks';
 import {
     getCurrentProjectMapIds,
     getCurrentProjectRegionsByMap,
@@ -38,9 +39,6 @@ interface OwnProps1 extends OwnPropsBase {
 
     description?: undefined;
     onChange?: undefined;
-
-    regionId: string;
-    activeMapId: string;
 }
 
 interface OwnProps2 extends OwnPropsBase {
@@ -48,9 +46,6 @@ interface OwnProps2 extends OwnPropsBase {
 
     description: string;
     onChange: (description: string) => void;
-
-    regionId?: undefined;
-    activeMapId?: undefined;
 }
 
 type OwnProps = OwnProps1 | OwnProps2;
@@ -59,8 +54,6 @@ type RegionDescriptionProps = OwnProps & StoreProps<typeof connectRegionDescript
 
 const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     doesRegionExist,
-    regionId,
-    activeMapId,
     description,
     isEditing,
     currentProjectMapIds,
@@ -68,12 +61,18 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     onChange,
     setRegionDescription,
 }) => {
+    const { getUrlParts } = useUrlNavigation();
+    const { region: regionId, activeMap: activeMapId } = getUrlParts();
+
     const [isPreviewing, setIsPreviewing] = useState(false);
 
     const ownDescription = useMemo(() => {
         if (doesRegionExist) {
-            const region = currentProjectRegionsByMap[activeMapId][regionId];
-            return region?.description || '';
+            if (regionId && activeMapId) {
+                const region = currentProjectRegionsByMap[activeMapId][regionId];
+                return region?.description || '';
+            }
+            return '';
         } else {
             return description;
         }
@@ -81,11 +80,13 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (doesRegionExist) {
-            setRegionDescription({
-                regionId,
-                activeMapId,
-                description: e.target.value,
-            });
+            if (regionId && activeMapId) {
+                setRegionDescription({
+                    regionId,
+                    activeMapId,
+                    description: e.target.value,
+                });
+            }
         } else {
             onChange(e.target.value);
         }
