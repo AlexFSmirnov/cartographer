@@ -1,1 +1,1 @@
-export const ACTIVE_MAP_PADDING = 50;
+export const ACTIVE_MAP_PADDING = 12;

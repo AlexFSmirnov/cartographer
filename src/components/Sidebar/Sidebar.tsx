@@ -53,10 +53,10 @@ const SidebarBase: React.FC<SidebarProps> = ({
             <SidebarItemsContainer>
                 <ProjectSelect />
                 <SidebarButton divider icon={<FileDownload />} onClick={() => {}}>
-                    Export configuration
+                    Export project data
                 </SidebarButton>
                 <SidebarButton divider icon={<FileUpload />} onClick={() => {}}>
-                    Import configuration
+                    Import project data
                 </SidebarButton>
                 <div style={{ height: '64px' }} />
                 <Divider />
