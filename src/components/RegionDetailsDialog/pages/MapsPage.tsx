@@ -4,12 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { Box, Button, Typography } from '@mui/material';
 import { StoreProps } from '../../../types';
 import { useUrlNavigation } from '../../../hooks';
-import {
-    getCurrentProjectMaps,
-    getIsEditModeEnabled,
-    openAlertDialog,
-    openUploadMapDialog,
-} from '../../../state';
+import { getCurrentProjectMaps, getIsEditModeEnabled, openUploadMapDialog } from '../../../state';
 import { MapCard } from './MapCard';
 
 const connectMapsPage = connect(
@@ -19,7 +14,6 @@ const connectMapsPage = connect(
     }),
     {
         openUploadMapDialog,
-        openAlertDialog,
     }
 );
 
@@ -29,15 +23,13 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
     maps,
     isEditModeEnabled,
     openUploadMapDialog,
-    openAlertDialog,
 }) => {
     const { getUrlParts } = useUrlNavigation();
     const { regionId } = getUrlParts();
 
-    const childMaps = useMemo(
-        () => Object.values(maps).filter((map) => map.parent && map.parent === regionId),
-        [regionId, maps]
-    );
+    const childMaps = useMemo(() => {
+        return Object.values(maps).filter((map) => map.parent && map.parent === regionId);
+    }, [regionId, maps]);
 
     const handleUploadClick = () => openUploadMapDialog({ type: 'child' });
 

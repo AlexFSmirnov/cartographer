@@ -20,7 +20,7 @@ import { useUrlNavigation } from '../../hooks';
 import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
-import { MapsPage, NotesPage, NotFoundPage } from './pages';
+import { MapsPage, NotesPage, NotFoundPage, ReferencesPage } from './pages';
 import {
     RegionDetailsDialogContent,
     RegionDetailsDialogRegionPreview,
@@ -85,7 +85,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     if (!region) {
         dialogContent = <NotFoundPage onClose={handleClose} />;
     } else {
-        const { id, name } = region;
+        const { id, name, description } = region;
 
         dialogContent = (
             <>
@@ -116,6 +116,9 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                     )}
                     {subView === SubView.Maps && <MapsPage />}
                     {subView === SubView.Notes && <NotesPage />}
+                    {subView === SubView.References && (
+                        <ReferencesPage regionId={id} description={description} />
+                    )}
                 </RegionDetailsDialogContent>
             </>
         );

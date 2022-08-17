@@ -24,8 +24,8 @@ import { RegionDescription, RegionPreview } from '../../../components';
 const connectNewRegionDialog = connect(
     createStructuredSelector({
         newRegionRect: getNewRegionRect,
-        currentProjectMaps: getCurrentProjectMaps,
-        currentProjectAllRegions: getCurrentProjectAllRegions,
+        maps: getCurrentProjectMaps,
+        allRegions: getCurrentProjectAllRegions,
     }),
     {
         closeNewRegionDialog,
@@ -41,8 +41,8 @@ interface NewRegionDialogProps extends StoreProps<typeof connectNewRegionDialog>
 const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     activeMapImage,
     newRegionRect,
-    currentProjectMaps,
-    currentProjectAllRegions,
+    maps,
+    allRegions,
     closeNewRegionDialog,
     openAlertDialog,
     addRegion,
@@ -84,8 +84,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
         }
 
         const existingRegion =
-            currentProjectMaps[regionId] ||
-            currentProjectAllRegions.find((region) => region.id === regionId);
+            maps[regionId] || allRegions.find((region) => region.id === regionId);
 
         if (existingRegion) {
             openAlertDialog(
