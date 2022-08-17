@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
 import { Rect, StoreProps } from '../../types';
-import { getCurrentProjectRegionsByMap, getImagesSlice } from '../../state';
-import { useImageFromDataUrl } from '../../utils';
+import { getCurrentProjectRegionsByMap } from '../../state';
+import { useImageFromContext } from '../../utils';
 import { RegionPreviewContainer } from './style';
 
 const REGION_PADDING = 8;
 
 const connectRegionPreview = connect(
     createStructuredSelector({
-        images: getImagesSlice,
         regions: getCurrentProjectRegionsByMap,
     })
 );
@@ -46,18 +45,13 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     regionRect: regionRectProp,
     mapId,
     regionId,
-    images,
     regions,
 }) => {
     const theme = useTheme();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const ownMapImageDataUrl = useMemo(
-        () => (doesRegionExist ? images[mapId] : null),
-        [images, mapId, doesRegionExist]
-    );
-    const ownMapImage = useImageFromDataUrl(ownMapImageDataUrl);
+    const ownMapImage = useImageFromContext(doesRegionExist ? mapId : null);
 
     const mapImage = useMemo(
         () => (doesRegionExist ? ownMapImage : mapImageProp),
@@ -112,8 +106,8 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
 
     return (
         <RegionPreviewContainer shadow={theme.shadows[2]}>
-            {!regionId && ownMapImageDataUrl ? (
-                <img src={ownMapImageDataUrl} alt="Region preview" />
+            {!regionId && ownMapImage ? (
+                <img src={ownMapImage.src} alt="Region preview" />
             ) : (
                 <canvas {...canvasSize} ref={canvasRef} />
             )}

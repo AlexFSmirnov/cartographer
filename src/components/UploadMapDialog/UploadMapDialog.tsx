@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Info } from '@mui/icons-material';
 import { StoreProps } from '../../types';
-import { useUrlNavigation } from '../../utils';
+import { useImagesContext, useUrlNavigation } from '../../utils';
 import {
     addMap,
     closeUploadMapDialog,
@@ -25,7 +25,6 @@ import {
     getIsUploadMapDialogOpen,
     getUploadMapDialogType,
     openAlertDialog,
-    saveImage,
     setActiveMapId,
 } from '../../state';
 import { DropzoneWithPreview } from '../DropzoneWithPreview';
@@ -42,7 +41,6 @@ const connectUploadMapDialog = connect(
     {
         openAlertDialog,
         closeUploadMapDialog,
-        saveImage,
         addMap,
         setActiveMapId,
     }
@@ -62,13 +60,14 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     allRegions,
     regionsByMap,
     closeUploadMapDialog,
-    saveImage,
     addMap,
     setActiveMapId,
     openAlertDialog,
 }) => {
     const { setMap, getUrlParts } = useUrlNavigation();
     const { regionId, activeMapId } = getUrlParts();
+
+    const { setImageDataUrl } = useImagesContext();
 
     const [newMapId, setNewMapId] = useState('');
     const [newMapName, setNewMapName] = useState('');
@@ -142,7 +141,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                 parent: uploadMapDialogType === 'child' ? regionId : null,
             });
 
-            saveImage({ id, imageDataUrl });
+            setImageDataUrl(id, imageDataUrl);
             closeUploadMapDialog();
 
             if (uploadMapDialogType === 'root') {

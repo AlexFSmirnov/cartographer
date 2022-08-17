@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { StoreProps } from '../../types';
-import { useImageFromDataUrl } from '../../utils';
-import { getActiveMapImageDataUrl, getIsEditModeEnabled } from '../../state';
+import { useImageFromContext, useUrlNavigation } from '../../utils';
+import { getIsEditModeEnabled } from '../../state';
 import {
     ActiveMapCanvas,
     AllRegionsCanvas,
@@ -16,17 +16,19 @@ import { MapViewContainer } from './style';
 const connectMapView = connect(
     createStructuredSelector({
         isEditModeEnabled: getIsEditModeEnabled,
-        activeMapImageDataUrl: getActiveMapImageDataUrl,
     })
 );
 
 type MapViewProps = StoreProps<typeof connectMapView>;
 
-const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled, activeMapImageDataUrl }) => {
+const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
-    const activeMapImage = useImageFromDataUrl(activeMapImageDataUrl);
+    const { getUrlParts } = useUrlNavigation();
+    const { activeMapId } = getUrlParts();
+
+    const activeMapImage = useImageFromContext(activeMapId);
 
     const updateCanvasSize = useCallback(() => {
         const { current: container } = containerRef;

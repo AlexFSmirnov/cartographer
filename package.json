@@ -9,6 +9,7 @@
         "codecheck": "yarn typescript && yarn prettier && yarn lint",
         "typescript": "tsc",
         "prettier": "prettier --check \"./src/**/*.{ts,tsx}\"",
+        "prettier:fix": "prettier --write \"./src/**/*.{ts,tsx}\"",
         "lint": "eslint \"./src/**/*.{ts,tsx}\"",
         "predeploy": "yarn codecheck && yarn build",
         "deploy": "yarn predeploy && gh-pages -d build"

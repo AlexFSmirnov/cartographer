@@ -18,16 +18,14 @@ import {
 import { Check, Close, Delete, Edit } from '@mui/icons-material';
 import { Map, StoreProps } from '../../../types';
 import {
-    deleteImage,
     deleteMap,
     getCurrentProjectMaps,
     getIsEditModeEnabled,
     openAlertDialog,
-    updateImageId,
     updateMap,
 } from '../../../state';
 import { RegionPreview } from '../../RegionPreview';
-import { useUrlNavigation } from '../../../utils';
+import { useImagesContext, useUrlNavigation } from '../../../utils';
 
 const connectMapCard = connect(
     createStructuredSelector({
@@ -36,9 +34,7 @@ const connectMapCard = connect(
     }),
     {
         updateMap,
-        updateImageId,
         deleteMap,
-        deleteImage,
         openAlertDialog,
     }
 );
@@ -55,13 +51,13 @@ const MapCardBase: React.FC<MapCardProps> = ({
     maps,
     isEditModeEnabled,
     updateMap,
-    updateImageId,
     deleteMap,
-    deleteImage,
     openAlertDialog,
 }) => {
     const { setMap, getHref, getUrlParts } = useUrlNavigation();
     const { view } = getUrlParts();
+
+    const { updateImageId, deleteImage } = useImagesContext();
 
     const [previewWidth, setPreviewWidth] = useState(MAP_CARD_PREVIEW_WIDTH);
 
@@ -84,7 +80,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
     const handleDeleteCancel = () => setIsDeleteDialogOpen(false);
     const handleDeleteConfirm = () => {
         deleteMap({ mapId: map.id });
-        deleteImage({ id: map.id });
+        deleteImage(map.id);
     };
 
     const handleEditButtonClick = (e: React.MouseEvent) => {
