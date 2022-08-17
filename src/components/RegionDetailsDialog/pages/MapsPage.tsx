@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Box, Button, IconButton, Paper, Tooltip, Typography } from '@mui/material';
-import { Map, StoreProps } from '../../../types';
+import { Box, Button, Typography } from '@mui/material';
+import { StoreProps } from '../../../types';
 import { useUrlNavigation } from '../../../hooks';
 import {
     getCurrentProjectMaps,
@@ -10,8 +10,6 @@ import {
     openAlertDialog,
     openUploadMapDialog,
 } from '../../../state';
-import { RegionPreview } from '../../RegionPreview';
-import { Delete, Edit } from '@mui/icons-material';
 import { MapCard } from './MapCard';
 
 const connectMapsPage = connect(
@@ -34,9 +32,7 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
     openAlertDialog,
 }) => {
     const { getUrlParts } = useUrlNavigation();
-    const { regionId, activeMapId } = getUrlParts();
-
-    const [editingMap, setEditingMap] = useState<Map | null>(null);
+    const { regionId } = getUrlParts();
 
     const childMaps = useMemo(
         () => Object.values(maps).filter((map) => map.parent && map.parent === regionId),
@@ -67,18 +63,6 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
             </Box>
         );
     }
-
-    console.log(childMaps);
-
-    const childMaps2 = [...childMaps, ...childMaps, ...childMaps, ...childMaps, ...childMaps];
-    const childMaps3 = [
-        ...childMaps,
-        {
-            id: 'ROOT',
-            name: 'Root Map',
-            parent: null,
-        },
-    ];
 
     return (
         <Box display="flex" flexDirection="column" height="100%" overflow="auto">

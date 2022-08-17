@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import { Info } from '@mui/icons-material';
 import { StoreProps } from '../../types';
-import { RouteName } from '../../enums';
 import { useUrlNavigation } from '../../hooks';
 import {
     addMap,

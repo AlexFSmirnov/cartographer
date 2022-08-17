@@ -1,4 +1,4 @@
-import { Check, Close, Delete, Edit } from '@mui/icons-material';
+import { Delete } from '@mui/icons-material';
 import {
     Button,
     Dialog,
@@ -85,7 +85,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     if (!region) {
         dialogContent = <NotFoundPage onClose={handleClose} />;
     } else {
-        const { id, name, description, notes, references, referencedBy } = region;
+        const { id, name } = region;
 
         dialogContent = (
             <>
