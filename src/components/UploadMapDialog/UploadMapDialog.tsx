@@ -127,6 +127,17 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
             return;
         }
 
+        if (
+            uploadMapDialogType === 'child' &&
+            Object.values(maps).find((map) => map.parent === regionId) &&
+            !newMapFloor
+        ) {
+            openAlertDialog(
+                'All child maps of a region with multiple maps must have a floor number.'
+            );
+            return;
+        }
+
         if (!uploadedImage) {
             openAlertDialog('Error while reading uploaded image.');
             return;

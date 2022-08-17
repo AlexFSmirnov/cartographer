@@ -14,10 +14,18 @@ export const imagesSlice = createSlice({
         saveImage: (state, action: PayloadAction<{ id: string; imageDataUrl: string }>) => {
             state[action.payload.id] = action.payload.imageDataUrl;
         },
+        updateImageId: (state, action: PayloadAction<{ oldId: string; newId: string }>) => {
+            state[action.payload.newId] = state[action.payload.oldId];
+            delete state[action.payload.oldId];
+            console.log(Object.keys(state));
+        },
+        deleteImage: (state, action: PayloadAction<{ id: string }>) => {
+            delete state[action.payload.id];
+        },
     },
 });
 
-export const { saveImage } = imagesSlice.actions;
+export const { saveImage, updateImageId, deleteImage } = imagesSlice.actions;
 
 export const getImagesSlice = (state: State) => state.images;
 

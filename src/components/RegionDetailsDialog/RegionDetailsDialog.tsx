@@ -49,9 +49,6 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     const { setView, setSubView, getUrlParts } = useUrlNavigation();
     const { view, activeMapId, regionId, subView } = getUrlParts();
 
-    const [isEditingDescription, setIsEditingDescription] = useState(false);
-    useEffect(() => setIsEditingDescription(isEditModeEnabled), [isEditModeEnabled, regionId]);
-
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     const [region, setRegion] = useState<Region | null>(null);
@@ -66,15 +63,11 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
 
     const handleClose = () => {
         setView(view);
-        setIsEditingDescription(false);
     };
 
     const handleTabChange = (_: unknown, value: number) => {
         setSubView(SUB_VIEW_ORDER[value]);
     };
-
-    const handleEditClick = () => setIsEditingDescription(true);
-    const handleFinishEditingClick = () => setIsEditingDescription(false);
 
     const handleDeleteClick = () => setIsDeleteDialogOpen(true);
     const handleDeleteCancel = () => setIsDeleteDialogOpen(false);
@@ -101,20 +94,11 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                         {id}. {name}
                     </div>
                     <Box flexGrow={1} />
-                    {!isEditModeEnabled &&
-                        subView === SubView.Description &&
-                        (isEditingDescription ? (
-                            <IconButton onClick={handleFinishEditingClick}>
-                                <Check />
-                            </IconButton>
-                        ) : (
-                            <IconButton onClick={handleEditClick}>
-                                <Edit />
-                            </IconButton>
-                        ))}
-                    <IconButton onClick={handleDeleteClick}>
-                        <Delete />
-                    </IconButton>
+                    {isEditModeEnabled && (
+                        <IconButton onClick={handleDeleteClick}>
+                            <Delete />
+                        </IconButton>
+                    )}
                 </RegionDetailsDialogTitle>
                 <RegionDetailsDialogContent>
                     <RegionDetailsDialogRegionPreview>
@@ -128,10 +112,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                         </Tabs>
                     </Box>
                     {subView === SubView.Description && (
-                        <RegionDescription
-                            isEditing={isEditingDescription}
-                            doesRegionExist={true}
-                        />
+                        <RegionDescription isEditing={isEditModeEnabled} doesRegionExist={true} />
                     )}
                     {subView === SubView.Maps && <MapsPage />}
                     {subView === SubView.Notes && <NotesPage />}
