@@ -1,4 +1,6 @@
-import { Cancel, Check, Close, Delete, Edit } from '@mui/icons-material';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import {
     Box,
     Button,
@@ -13,9 +15,8 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { useState } from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { Check, Close, Delete, Edit } from '@mui/icons-material';
+import { Map, StoreProps } from '../../../types';
 import {
     deleteImage,
     deleteMap,
@@ -25,8 +26,8 @@ import {
     updateImageId,
     updateMap,
 } from '../../../state';
-import { Map, StoreProps } from '../../../types';
 import { RegionPreview } from '../../RegionPreview';
+import { useUrlNavigation } from '../../../hooks';
 
 const connectMapCard = connect(
     createStructuredSelector({
@@ -59,6 +60,9 @@ const MapCardBase: React.FC<MapCardProps> = ({
     deleteImage,
     openAlertDialog,
 }) => {
+    const { setMap, getHref, getUrlParts } = useUrlNavigation();
+    const { view } = getUrlParts();
+
     const [previewWidth, setPreviewWidth] = useState(MAP_CARD_PREVIEW_WIDTH);
 
     const [editingMap, setEditingMap] = useState<Map | null>(null);
@@ -73,14 +77,20 @@ const MapCardBase: React.FC<MapCardProps> = ({
         });
     };
 
-    const handleDeleteButtonClick = () => setIsDeleteDialogOpen(true);
+    const handleDeleteButtonClick = (e: React.MouseEvent) => {
+        setIsDeleteDialogOpen(true);
+        e.stopPropagation();
+    };
     const handleDeleteCancel = () => setIsDeleteDialogOpen(false);
     const handleDeleteConfirm = () => {
         deleteMap({ mapId: map.id });
         deleteImage({ id: map.id });
     };
 
-    const handleEditButtonClick = () => setEditingMap(map);
+    const handleEditButtonClick = (e: React.MouseEvent) => {
+        setEditingMap(map);
+        e.stopPropagation();
+    };
     const handleEditCancel = () => setEditingMap(null);
 
     const handleEditConfirm = () => {
@@ -107,15 +117,34 @@ const MapCardBase: React.FC<MapCardProps> = ({
         }
     };
 
+    const handleCardClick = (e: React.MouseEvent) => {
+        if (!editingMap) {
+            setMap(map.id);
+        }
+
+        e.preventDefault();
+    };
+
     let content: React.ReactNode = null;
 
+    const cardHref = getHref({ view, activeMapId: map.id });
+
     if (editingMap) {
-        const { id, name, floorNumber } = editingMap;
+        const { id, name } = editingMap;
         const isConfirmDisabled = !id || !name;
 
         content = (
             <>
-                <Box display="flex" justifyContent="space-between">
+                <TextField
+                    variant="filled"
+                    size="small"
+                    label="Title"
+                    fullWidth
+                    value={name || ''}
+                    onChange={handleMapChange('name')}
+                />
+                <Box flexGrow={1} />
+                <Box display="flex" alignItems="center">
                     <TextField
                         variant="filled"
                         size="small"
@@ -124,53 +153,35 @@ const MapCardBase: React.FC<MapCardProps> = ({
                         value={id || ''}
                         onChange={handleMapChange('id')}
                     />
-                    <TextField
-                        variant="filled"
-                        size="small"
-                        sx={{ width: '73%' }}
-                        label="Title"
-                        value={name || ''}
-                        onChange={handleMapChange('name')}
-                    />
-                </Box>
-                <Box flexGrow={1} />
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <TextField
-                        variant="filled"
-                        size="small"
-                        sx={{ width: '50%' }}
-                        label="Floor"
-                        value={floorNumber || ''}
-                        onChange={handleMapChange('floorNumber')}
-                    />
                     <Box flexGrow={1} />
-                    <Box height="40px">
-                        <IconButton onClick={handleEditCancel}>
-                            <Close />
-                        </IconButton>
-                        <IconButton onClick={handleEditConfirm} disabled={isConfirmDisabled}>
-                            <Check />
-                        </IconButton>
-                    </Box>
+                    <IconButton onClick={handleEditCancel}>
+                        <Close />
+                    </IconButton>
+                    <IconButton onClick={handleEditConfirm} disabled={isConfirmDisabled}>
+                        <Check />
+                    </IconButton>
                 </Box>
             </>
         );
     } else {
-        const { id, name, floorNumber } = map;
+        const { id, name } = map;
         content = (
             <>
-                <Tooltip title={`${id}. ${name}`}>
+                <a
+                    href={cardHref}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    onClick={handleCardClick}
+                >
                     <Typography variant="h5" noWrap>
-                        {id}. {name}
+                        {id}.
                     </Typography>
-                </Tooltip>
-                <Box pt={1} />
-                {floorNumber !== null && (
-                    <Typography variant="body1" fontStyle="italic">
-                        Floor {floorNumber}
-                    </Typography>
-                )}
-                <Box flexGrow={1} />
+                    <Tooltip title={name}>
+                        <Typography variant="h5" noWrap>
+                            {name}
+                        </Typography>
+                    </Tooltip>
+                    <Box flexGrow={1} />
+                </a>
                 {isEditModeEnabled && (
                     <Box display="flex" justifyContent="flex-end">
                         <IconButton onClick={handleEditButtonClick}>
@@ -196,14 +207,16 @@ const MapCardBase: React.FC<MapCardProps> = ({
                 }}
                 elevation={4}
             >
-                <Box
-                    height="100%"
-                    maxWidth={MAP_CARD_PREVIEW_WIDTH}
-                    padding="8px"
-                    ref={previewContainerRef}
-                >
-                    <RegionPreview doesRegionExist mapId={map.id} regionId={null} />
-                </Box>
+                <a href={cardHref} onClick={handleCardClick}>
+                    <Box
+                        height="100%"
+                        maxWidth={MAP_CARD_PREVIEW_WIDTH}
+                        padding="8px"
+                        ref={previewContainerRef}
+                    >
+                        <RegionPreview doesRegionExist mapId={map.id} regionId={null} />
+                    </Box>
+                </a>
                 <Box
                     display="flex"
                     flexDirection="column"

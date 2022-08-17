@@ -43,17 +43,7 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
         [regionId, maps]
     );
 
-    const handleUploadClick = () => {
-        if (childMaps.find((map) => map.floorNumber === null)) {
-            openAlertDialog(
-                'All child maps of a region with multiple maps must have a floor number. Add a floor number to all existing child maps before adding a new one.'
-            );
-            return;
-        }
-
-        openUploadMapDialog({ type: 'child' });
-    };
-    const handleEditButtonClick = (map: Map) => () => setEditingMap(map);
+    const handleUploadClick = () => openUploadMapDialog({ type: 'child' });
 
     if (childMaps.length === 0) {
         return (
@@ -86,7 +76,6 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
         {
             id: 'ROOT',
             name: 'Root Map',
-            floorNumber: null,
             parent: null,
         },
     ];

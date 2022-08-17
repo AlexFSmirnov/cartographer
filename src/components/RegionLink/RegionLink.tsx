@@ -57,7 +57,7 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
                 alignItems="center"
                 justifyContent="space-around"
             >
-                <Typography noWrap fontWeight={500}>
+                <Typography sx={{ maxWidth: '100%' }} noWrap fontWeight={500}>
                     {regionOrMapId}. {regionName}
                 </Typography>
                 <Box width="250px" height="100px">

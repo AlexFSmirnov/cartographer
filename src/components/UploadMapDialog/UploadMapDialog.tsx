@@ -73,7 +73,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 
     const [newMapId, setNewMapId] = useState('');
     const [newMapName, setNewMapName] = useState('');
-    const [newMapFloor, setNewMapFloor] = useState('');
 
     const [uploadedImage, setUploadedImage] = useState<File | null>(null);
 
@@ -97,7 +96,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 
         setNewMapId(uploadMapDialogType === 'child' ? computedMapId : '');
         setNewMapName(uploadMapDialogType === 'child' ? computedMapName : '');
-        setNewMapFloor('');
         setUploadedImage(null);
     }, [isUploadMapDialogOpen, uploadMapDialogType, activeMapId, regionId, regionsByMap]);
 
@@ -106,9 +104,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     };
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewMapName(event.target.value);
-    };
-    const handleFloorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewMapFloor(event.target.value);
     };
 
     const handleConfirmClick = () => {
@@ -123,17 +118,6 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
         if (existingRegion && uploadMapDialogType === 'root') {
             openAlertDialog(
                 `Region with code "${newMapId}" (${existingRegion.name}) already exists.`
-            );
-            return;
-        }
-
-        if (
-            uploadMapDialogType === 'child' &&
-            Object.values(maps).find((map) => map.parent === regionId) &&
-            !newMapFloor
-        ) {
-            openAlertDialog(
-                'All child maps of a region with multiple maps must have a floor number.'
             );
             return;
         }
@@ -156,15 +140,16 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
             addMap({
                 id,
                 name: newMapName,
-                floorNumber: newMapFloor || null,
                 parent: uploadMapDialogType === 'child' ? regionId : null,
             });
 
             saveImage({ id, imageDataUrl });
-            setActiveMapId(id);
-
-            setMap(id);
             closeUploadMapDialog();
+
+            if (uploadMapDialogType === 'root') {
+                setActiveMapId(id);
+                setMap(id);
+            }
         };
         reader.readAsDataURL(uploadedImage);
     };
@@ -186,7 +171,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                     <TextField
                         variant="filled"
                         size="small"
-                        sx={{ width: uploadMapDialogType === 'root' ? '23%' : '22%' }}
+                        sx={{ width: '23%' }}
                         label="Code"
                         value={newMapId}
                         onChange={handleCodeChange}
@@ -197,7 +182,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                                         title={
                                             uploadMapDialogType === 'root'
                                                 ? 'A unique short identifier of the map'
-                                                : 'A short identifier of the map, usually the same as the code of its parent region.'
+                                                : 'A short identifier of the map, usually in the form of the parent region code followed by a floor number.'
                                         }
                                     >
                                         <Info fontSize="small" />
@@ -209,31 +194,12 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                     <TextField
                         variant="filled"
                         size="small"
-                        sx={{ width: uploadMapDialogType === 'root' ? '73%' : '52%' }}
+                        sx={{ width: '73%' }}
                         label="Title"
                         required
                         value={newMapName}
                         onChange={handleTitleChange}
                     />
-                    {uploadMapDialogType === 'child' && (
-                        <TextField
-                            variant="filled"
-                            size="small"
-                            sx={{ width: '22%' }}
-                            label="Floor"
-                            value={newMapFloor}
-                            onChange={handleFloorChange}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Tooltip title="One region can have multiple maps, usually distinguished by their floor number.">
-                                            <Info fontSize="small" />
-                                        </Tooltip>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    )}
                 </Box>
                 <UploadMapDialogDropzoneContainer>
                     <DropzoneWithPreview onDrop={handleFileDrop} />

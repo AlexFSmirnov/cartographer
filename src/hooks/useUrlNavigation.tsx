@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { URL_BASENAME } from '../constants';
 import { RouteName, SubView } from '../enums';
 import { getActiveMapId } from '../state';
+import { UrlParts } from '../types';
 import { parseUrl } from '../utils';
 
 export const useUrlNavigation = () => {
@@ -46,12 +48,31 @@ export const useUrlNavigation = () => {
         navigate(`/${view}/${activeMapId}/${regionId}/${newSubView || SubView.Description}`);
     };
 
+    const getHref = (parts: Partial<UrlParts>) => {
+        let href = `${window.location.origin}${URL_BASENAME}`;
+
+        if (parts.view) {
+            href = `${href}/${parts.view}`;
+
+            if (parts.activeMapId) {
+                href = `${href}/${parts.activeMapId}`;
+
+                if (parts.regionId) {
+                    href = `${href}/${parts.regionId}/${parts.subView || SubView.Description}`;
+                }
+            }
+        }
+
+        return href;
+    };
+
     return {
         getUrlParts,
         setView,
         setMap,
         setRegion,
         setSubView,
+        getHref,
         navigate,
         location,
     };

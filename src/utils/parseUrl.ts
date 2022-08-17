@@ -1,13 +1,7 @@
 import { RouteName, SubView } from '../enums';
+import { UrlParts } from '../types';
 
-interface ParseUrlResult {
-    view: RouteName | null;
-    activeMapId: string | null;
-    regionId: string | null;
-    subView: SubView;
-}
-
-export const parseUrl = (url: string): ParseUrlResult => {
+export const parseUrl = (url: string): UrlParts => {
     const parts = url.split('/');
 
     if (parts.length <= 1) {
