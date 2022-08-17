@@ -1,10 +1,10 @@
-import { Rect } from '../../types';
+import { Rect, Size } from '../../types';
 import { getImageCoverRect } from './getImageCoverRect';
 
 interface GetCanvasRectFromImageRectArgs {
     imageRect: Rect;
-    canvasSize: { width: number; height: number };
-    imageSize: { width: number; height: number };
+    canvasSize: Size;
+    imageSize: Size;
     imagePadding: number;
 }
 

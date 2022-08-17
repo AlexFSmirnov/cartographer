@@ -1,11 +1,11 @@
-import { Point, Region } from '../../types';
+import { Point, Region, Size } from '../../types';
 import { getImageRectFromCanvasRect } from './getImageRectFromCanvasRect';
 
 interface GetRegionIdFromCanvasPointArgs {
     canvasPoint: Point;
     regions: Record<string, Region>;
-    canvasSize: { width: number; height: number };
-    imageSize: { width: number; height: number };
+    canvasSize: Size;
+    imageSize: Size;
     imagePadding: number;
 }
 

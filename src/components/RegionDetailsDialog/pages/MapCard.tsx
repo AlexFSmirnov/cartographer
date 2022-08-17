@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -43,7 +43,7 @@ interface MapCardProps extends StoreProps<typeof connectMapCard> {
     map: Map;
 }
 
-const MAP_CARD_HEIGHT = 125;
+const MAP_CARD_HEIGHT = 120;
 const MAP_CARD_PREVIEW_WIDTH = 160;
 
 const MapCardBase: React.FC<MapCardProps> = ({
@@ -64,13 +64,13 @@ const MapCardBase: React.FC<MapCardProps> = ({
     const [editingMap, setEditingMap] = useState<Map | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    const previewContainerRef = (container: HTMLDivElement | null) => {
-        window.requestAnimationFrame(() => {
-            if (container) {
-                const { width } = container.getBoundingClientRect();
-                setPreviewWidth(width);
-            }
-        });
+    const previewContainerRef = useRef<HTMLDivElement>(null);
+    const handlePreviewLoad = () => {
+        const { current: container } = previewContainerRef;
+        if (container) {
+            const { width } = container.getBoundingClientRect();
+            setPreviewWidth(width);
+        }
     };
 
     const handleDeleteButtonClick = (e: React.MouseEvent) => {
@@ -210,7 +210,12 @@ const MapCardBase: React.FC<MapCardProps> = ({
                         padding="8px"
                         ref={previewContainerRef}
                     >
-                        <RegionPreview doesRegionExist mapId={map.id} regionId={null} />
+                        <RegionPreview
+                            doesRegionExist
+                            mapId={map.id}
+                            regionId={null}
+                            onImageLoad={handlePreviewLoad}
+                        />
                     </Box>
                 </a>
                 <Box

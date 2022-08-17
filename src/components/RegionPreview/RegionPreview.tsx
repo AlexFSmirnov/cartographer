@@ -17,6 +17,8 @@ const connectRegionPreview = connect(
 
 interface BaseOwnProps {
     doesRegionExist: boolean;
+    onImageLoad?: () => void;
+
     mapId?: string;
     regionId?: string | null;
     mapImage?: HTMLImageElement | null;
@@ -41,6 +43,7 @@ type RegionPreviewProps = OwnProps & StoreProps<typeof connectRegionPreview>;
 
 const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     doesRegionExist,
+    onImageLoad,
     mapImage: mapImageProp,
     regionRect: regionRectProp,
     mapId,
@@ -58,10 +61,25 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
         [doesRegionExist, mapImageProp, ownMapImage]
     );
 
+    useEffect(() => {
+        if (mapImage && onImageLoad) {
+            onImageLoad();
+        }
+    }, [mapImage, onImageLoad]);
+
     const regionRect = useMemo(() => {
         let rect = null;
         if (doesRegionExist) {
-            rect = regionId ? regions[mapId]?.[regionId]?.parentRect || null : null;
+            if (regionId) {
+                rect = regions[mapId]?.[regionId]?.parentRect || null;
+            } else if (mapImage) {
+                rect = {
+                    x: 0,
+                    y: 0,
+                    width: mapImage.width,
+                    height: mapImage.height,
+                };
+            }
         } else {
             rect = regionRectProp;
         }
@@ -74,7 +92,7 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
             width: rect.width + REGION_PADDING * 2,
             height: rect.height + REGION_PADDING * 2,
         };
-    }, [doesRegionExist, regionId, regions, mapId, regionRectProp]);
+    }, [doesRegionExist, regionId, regions, mapId, mapImage, regionRectProp]);
 
     const canvasSize = useMemo(
         () => ({
@@ -106,11 +124,7 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
 
     return (
         <RegionPreviewContainer shadow={theme.shadows[2]}>
-            {!regionId && ownMapImage ? (
-                <img src={ownMapImage.src} alt="Region preview" />
-            ) : (
-                <canvas {...canvasSize} ref={canvasRef} />
-            )}
+            <canvas {...canvasSize} ref={canvasRef} />
         </RegionPreviewContainer>
     );
 };

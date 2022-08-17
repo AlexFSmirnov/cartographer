@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { Size } from '../../../types';
 import { getImageCoverRect } from '../../../utils';
 import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
 
 interface ActiveMapCanvasProps {
-    canvasSize: { width: number; height: number };
+    canvasSize: Size;
     activeMapImage: HTMLImageElement | null;
 }
 

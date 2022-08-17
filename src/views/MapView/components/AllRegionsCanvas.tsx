@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
-import { StoreProps } from '../../../types';
+import { Size, StoreProps } from '../../../types';
 import { getActiveMapRegions } from '../../../state';
 import { drawRichRect, getCanvasRectFromImageRect } from '../../../utils';
 import { ACTIVE_MAP_PADDING } from '../constants';
@@ -15,8 +15,8 @@ const connectAllRegionsCanvas = connect(
 );
 
 interface AllRegionsCanvasProps extends StoreProps<typeof connectAllRegionsCanvas> {
-    canvasSize: { width: number; height: number };
-    activeMapImageSize: { width: number; height: number };
+    canvasSize: Size;
+    activeMapImageSize: Size;
 }
 
 const AllRegionsCanvasBase: React.FC<AllRegionsCanvasProps> = ({

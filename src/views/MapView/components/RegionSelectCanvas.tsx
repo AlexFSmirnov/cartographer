@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
-import { StoreProps } from '../../../types';
+import { Size, StoreProps } from '../../../types';
 import { getActiveMapRegions } from '../../../state';
 import {
     drawRichRect,
@@ -21,8 +21,8 @@ const connectRegionSelectCanvas = connect(
 );
 
 interface RegionSelectCanvasProps extends StoreProps<typeof connectRegionSelectCanvas> {
-    canvasSize: { width: number; height: number };
-    activeMapImageSize: { width: number; height: number };
+    canvasSize: Size;
+    activeMapImageSize: Size;
 }
 
 const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({

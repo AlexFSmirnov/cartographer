@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
-import { Point, StoreProps } from '../../../types';
+import { Point, Size, StoreProps } from '../../../types';
 import {
     drawRichRect,
     getCanvasPointFromMouseEvent,
@@ -25,8 +25,8 @@ const connectNewRegionCanvas = connect(
 );
 
 interface NewRegionCanvasProps extends StoreProps<typeof connectNewRegionCanvas> {
-    canvasSize: { width: number; height: number };
-    activeMapImageSize: { width: number; height: number };
+    canvasSize: Size;
+    activeMapImageSize: Size;
 }
 
 const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
