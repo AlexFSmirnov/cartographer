@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
-import localforage from 'localforage';
+// import localforage from 'localforage';
+import storage from 'redux-persist/lib/storage';
 import currentProjectReducer from './slices/currentProjectSlice';
 import savedProjectsReducer from './slices/savedProjectsSlice';
 import imagesReducer from './slices/imagesSlice';
@@ -9,7 +10,8 @@ import preferencesReducer from './slices/preferencesSlice';
 
 const persistConfig = {
     key: 'root',
-    storage: localforage,
+    // storage: localforage,
+    storage,
     blacklist: ['ui'],
 };
 

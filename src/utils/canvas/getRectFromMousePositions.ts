@@ -1,4 +1,4 @@
-import { Point } from '../types';
+import { Point } from '../../types';
 
 export const getRectFromMousePositions = (pos1: Point, pos2: Point) => {
     const x = Math.min(pos1.x, pos2.x);

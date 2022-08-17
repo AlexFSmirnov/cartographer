@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
 import { Rect, StoreProps } from '../../types';
 import { getCurrentProjectRegionsByMap, getImagesSlice } from '../../state';
-import { useImageFromDataUrl } from '../../hooks';
+import { useImageFromDataUrl } from '../../utils';
 import { RegionPreviewContainer } from './style';
 
 const REGION_PADDING = 8;

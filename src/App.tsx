@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Outlet } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
-import { StoreProps } from './types';
-import { RouteName } from './enums';
-import { useUrlNavigation } from './hooks';
+import { StoreProps, RouteName } from './types';
+import { useUrlNavigation } from './utils';
 import { darkTheme, lightTheme } from './themes';
 import {
     getActiveMapId,

@@ -1,11 +1,24 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { URL_BASENAME } from '../constants';
-import { RouteName, SubView } from '../enums';
-import { getActiveMapId } from '../state';
-import { UrlParts } from '../types';
-import { parseUrl } from '../utils';
+import { URL_BASENAME } from '../../constants';
+import { RouteName, SubView, UrlParts } from '../../types';
+import { getActiveMapId } from '../../state';
+
+const parseUrl = (url: string): UrlParts => {
+    const parts = url.split('/');
+
+    if (parts.length <= 1) {
+        return { view: null, activeMapId: null, regionId: null, subView: SubView.Description };
+    }
+
+    const view = (parts[1] as RouteName) || null;
+    const activeMapId = parts[2] || null;
+    const regionId = parts[3] || null;
+    const subView = (parts[4] as SubView) || SubView.Description;
+
+    return { view, activeMapId, regionId, subView };
+};
 
 export const useUrlNavigation = () => {
     const navigate = useNavigate();
@@ -73,6 +86,7 @@ export const useUrlNavigation = () => {
         setRegion,
         setSubView,
         getHref,
+        parseUrl,
         navigate,
         location,
     };

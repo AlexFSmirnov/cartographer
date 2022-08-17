@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Button, Typography } from '@mui/material';
 import { StoreProps } from '../../../types';
-import { useUrlNavigation } from '../../../hooks';
+import { useUrlNavigation } from '../../../utils';
 import { getCurrentProjectMaps, getIsEditModeEnabled, openUploadMapDialog } from '../../../state';
 import { MapCard } from './MapCard';
 

@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { TextField } from '@mui/material';
 import { StoreProps } from '../../../types';
 import { getCurrentProjectRegionsByMap, setRegionNotes } from '../../../state';
-import { useUrlNavigation } from '../../../hooks';
+import { useUrlNavigation } from '../../../utils';
 
 const connectNotesPage = connect(
     createStructuredSelector({

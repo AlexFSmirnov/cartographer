@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Info } from '@mui/icons-material';
 import { StoreProps } from '../../types';
-import { useUrlNavigation } from '../../hooks';
+import { useUrlNavigation } from '../../utils';
 import {
     addMap,
     closeUploadMapDialog,

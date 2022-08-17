@@ -1,4 +1,4 @@
-import { Point, Region } from '../types';
+import { Point, Region } from '../../types';
 
 interface GetRegionIdFromImagePointArgs {
     imagePoint: Point;

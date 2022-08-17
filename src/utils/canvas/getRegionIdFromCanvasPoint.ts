@@ -1,4 +1,4 @@
-import { Point, Region } from '../types';
+import { Point, Region } from '../../types';
 import { getImageRectFromCanvasRect } from './getImageRectFromCanvasRect';
 
 interface GetRegionIdFromCanvasPointArgs {

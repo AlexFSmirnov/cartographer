@@ -27,7 +27,7 @@ import {
     updateMap,
 } from '../../../state';
 import { RegionPreview } from '../../RegionPreview';
-import { useUrlNavigation } from '../../../hooks';
+import { useUrlNavigation } from '../../../utils';
 
 const connectMapCard = connect(
     createStructuredSelector({

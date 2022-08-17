@@ -1,4 +1,4 @@
-import { Rect } from '../types';
+import { Rect } from '../../types';
 import { getImageCoverRect } from './getImageCoverRect';
 
 interface GetCanvasRectFromImageRectArgs {

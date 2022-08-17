@@ -9,8 +9,8 @@ import {
     getCanvasPointFromMouseEvent,
     getCanvasRectFromImageRect,
     getRegionIdFromCanvasPoint,
+    useUrlNavigation,
 } from '../../../utils';
-import { useUrlNavigation } from '../../../hooks';
 import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
 

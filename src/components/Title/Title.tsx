@@ -2,9 +2,8 @@ import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Typography } from '@mui/material';
-import { StoreProps } from '../../types';
-import { RouteName } from '../../enums';
-import { useUrlNavigation } from '../../hooks';
+import { StoreProps, RouteName } from '../../types';
+import { useUrlNavigation } from '../../utils';
 import { getCurrentProjectMaps } from '../../state';
 
 const connectTitle = connect(

@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import ReactMarkdown from 'react-markdown';
 import { Box, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { StoreProps } from '../../types';
-import { useUrlNavigation } from '../../hooks';
+import { useUrlNavigation } from '../../utils';
 import {
     getCurrentProjectMapIds,
     getCurrentProjectRegionsByMap,

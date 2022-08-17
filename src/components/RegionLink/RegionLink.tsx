@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { StoreProps } from '../../types';
 import { URL_BASENAME } from '../../constants';
-import { useUrlNavigation } from '../../hooks';
 import { getCurrentProjectMaps, getCurrentProjectRegionsByMap } from '../../state';
-import { parseUrl } from '../../utils';
+import { useUrlNavigation } from '../../utils';
 import { RegionPreview } from '../RegionPreview';
 
 const connectRegionLink = connect(
@@ -28,7 +27,7 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
     regions,
     maps,
 }) => {
-    const { getUrlParts, navigate } = useUrlNavigation();
+    const { getUrlParts, navigate, parseUrl } = useUrlNavigation();
     const { view, subView } = getUrlParts();
     const { activeMapId, regionId } = parseUrl(`/view_placeholder${relativeHref}`);
 
