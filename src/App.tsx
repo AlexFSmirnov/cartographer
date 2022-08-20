@@ -126,7 +126,7 @@ const ThemedApp: React.FC<AppProps> = (props) => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <GlobalStyle />
+            <GlobalStyle colorScheme={isDarkModeEnabled ? 'dark' : 'light'} />
             <AppBase {...props} />
         </ThemeProvider>
     );

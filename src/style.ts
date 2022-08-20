@@ -1,10 +1,11 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
-export const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle<{ colorScheme: 'dark' | 'light' }>`
     * {
         margin: 0;
         padding: 0;
         outline: none;
+        color-scheme: ${(props) => props.colorScheme};
     }
     html {
         position: relative;
