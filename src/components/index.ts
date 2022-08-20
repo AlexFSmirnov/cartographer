@@ -7,3 +7,4 @@ export * from './RegionDetailsDialog';
 export * from './RegionPreview';
 export * from './RegionDescription';
 export * from './AlertDialog';
+export * from './FlexBox';
