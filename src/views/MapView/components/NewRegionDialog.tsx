@@ -14,6 +14,7 @@ import { Rect, StoreProps } from '../../../types';
 import {
     addRegion,
     closeNewRegionDialog,
+    getActiveMapId,
     getCurrentProjectAllRegions,
     getCurrentProjectMaps,
     getNewRegionRect,
@@ -26,6 +27,7 @@ const connectNewRegionDialog = connect(
         newRegionRect: getNewRegionRect,
         maps: getCurrentProjectMaps,
         allRegions: getCurrentProjectAllRegions,
+        activeMapId: getActiveMapId,
     }),
     {
         closeNewRegionDialog,
@@ -43,6 +45,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     newRegionRect,
     maps,
     allRegions,
+    activeMapId,
     closeNewRegionDialog,
     openAlertDialog,
     addRegion,
@@ -93,8 +96,14 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
             return;
         }
 
+        if (!activeMapId) {
+            openAlertDialog('Can only create a new region as a child of an existing map.');
+            return;
+        }
+
         addRegion({
             id: regionId,
+            parentMapId: activeMapId,
             name: regionName,
             description,
             notes: '',

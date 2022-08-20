@@ -33,46 +33,30 @@ export const useUrlNavigation = () => {
 
     const getUrlParts = () => ({ view, activeMapId, regionId, subView });
 
-    const setView = (newView: RouteName | null) => {
-        const finalView = newView === null ? RouteName.Map : newView;
+    const setUrlParts = (newParts: Partial<UrlParts>) => {
+        const newView = newParts.view || view;
+        const newActiveMapId = newParts.activeMapId || activeMapId || stateActiveMapId;
+        const newRegionId = newParts.regionId || regionId;
+        const newSubView = newParts.subView || subView || SubView.Description;
 
-        if (stateActiveMapId) {
-            navigate(`/${finalView}/${stateActiveMapId}`);
+        if (newParts.regionId === null || !newRegionId) {
+            navigate(`/${newView}/${newActiveMapId}`);
         } else {
-            navigate(`/${finalView}`);
+            navigate(`/${newView}/${newActiveMapId}/${newRegionId}/${newSubView}`);
         }
-    };
-
-    const setMap = (newMapId: string | null) => {
-        if (newMapId) {
-            navigate(`/${view}/${newMapId}`);
-        }
-    };
-
-    const setRegion = (newRegionId: string | null) => {
-        if (!newRegionId) {
-            return;
-        }
-
-        navigate(`/${view}/${activeMapId}/${newRegionId}/${subView || SubView.Description}`);
-    };
-
-    const setSubView = (newSubView?: SubView | null) => {
-        navigate(`/${view}/${activeMapId}/${regionId}/${newSubView || SubView.Description}`);
     };
 
     const getHref = (parts: Partial<UrlParts>) => {
-        let href = `${window.location.origin}${URL_BASENAME}`;
+        const urlView = parts.view || view || RouteName.Map;
+        const urlSubView = parts.subView || subView || SubView.Description;
 
-        if (parts.view) {
-            href = `${href}/${parts.view}`;
+        let href = `${window.location.origin}${URL_BASENAME}/${urlView}`;
 
-            if (parts.activeMapId) {
-                href = `${href}/${parts.activeMapId}`;
+        if (parts.activeMapId) {
+            href = `${href}/${parts.activeMapId}`;
 
-                if (parts.regionId) {
-                    href = `${href}/${parts.regionId}/${parts.subView || SubView.Description}`;
-                }
+            if (parts.regionId) {
+                href = `${href}/${parts.regionId}/${urlSubView}`;
             }
         }
 
@@ -81,10 +65,7 @@ export const useUrlNavigation = () => {
 
     return {
         getUrlParts,
-        setView,
-        setMap,
-        setRegion,
-        setSubView,
+        setUrlParts,
         getHref,
         parseUrl,
         navigate,

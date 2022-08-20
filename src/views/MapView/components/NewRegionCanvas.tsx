@@ -38,7 +38,7 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     const theme = useTheme();
     const strokeColor = theme.palette.primary.main;
 
-    const { setRegion } = useUrlNavigation();
+    const { setUrlParts } = useUrlNavigation();
 
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
     const canvasRect = useMemo(() => (canvas ? canvas.getBoundingClientRect() : null), [canvas]);
@@ -79,7 +79,7 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
                 imagePadding: ACTIVE_MAP_PADDING,
             });
 
-            setRegion(clickedRegionId);
+            setUrlParts({ regionId: clickedRegionId });
             setMouseDownPos(null);
         }
 

@@ -34,7 +34,7 @@ const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({
     const strokeColor = theme.palette.primary.main;
     const contrastColor = theme.palette.primary.contrastText;
 
-    const { setRegion } = useUrlNavigation();
+    const { setUrlParts } = useUrlNavigation();
 
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
     const canvasRect = useMemo(() => (canvas ? canvas.getBoundingClientRect() : null), [canvas]);
@@ -99,7 +99,7 @@ const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({
         const selectedRegion = getRegionFromMouseEvent(e);
 
         if (selectedRegion) {
-            setRegion(selectedRegion.id);
+            setUrlParts({ regionId: selectedRegion.id });
         }
     };
 

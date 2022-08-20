@@ -1,6 +1,7 @@
 import { Box, Paper, Typography } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
-import { Region } from '../../../types';
+import { Region, SubView } from '../../../types';
+import { useUrlNavigation } from '../../../utils';
 import { RegionPreview } from '../../RegionPreview';
 
 const SNAPSHOT_LENGTH = 25;
@@ -12,6 +13,8 @@ interface ReferenceCardProps {
 }
 
 export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, region }) => {
+    const { getHref, setUrlParts } = useUrlNavigation();
+
     const [previewWidth, setPreviewWidth] = useState(MAP_CARD_PREVIEW_WIDTH);
 
     const previewContainerRef = useRef<HTMLDivElement>(null);
@@ -61,52 +64,80 @@ export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, regi
         });
     }, [region, referencedId]);
 
+    const handleCardClick = (e: React.MouseEvent) => {
+        setUrlParts({
+            activeMapId: region.parentMapId,
+            regionId: region.id,
+            subView: SubView.Description,
+        });
+        e.preventDefault();
+    };
+
+    const cardHref = getHref({
+        activeMapId: region.parentMapId,
+        regionId: region.id,
+        subView: SubView.Description,
+    });
+
     return (
-        <Paper
-            sx={{
-                margin: '8px',
-                padding: '8px',
-                display: 'flex',
-            }}
-            elevation={4}
+        <a
+            href={cardHref}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+            onClick={handleCardClick}
         >
-            <Box
-                height="100%"
-                maxWidth={MAP_CARD_PREVIEW_WIDTH}
-                padding="8px"
-                ref={previewContainerRef}
+            <Paper
+                sx={{
+                    margin: '8px',
+                    padding: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
+                elevation={4}
             >
-                <RegionPreview
-                    doesRegionExist
-                    mapId={'r'}
-                    regionId={region.id}
-                    onImageLoad={handlePreviewLoad}
-                />
-            </Box>
-            <Box
-                display="flex"
-                flexDirection="column"
-                pl={1}
-                width={`calc(100% - ${previewWidth}px)`}
-            >
-                <Typography variant="h5">
-                    {region.id}. {region.name}
-                </Typography>
-                {descriptionSnapshots.map(
-                    (snapshot, index) =>
-                        snapshot !== null && (
-                            <Box key={snapshot.snapshotPrefix + snapshot.snapshotSuffix + index}>
-                                <Typography variant="body2" noWrap>
-                                    {snapshot.snapshotPrefix}{' '}
-                                    <Typography variant="body2" component="span" color="primary">
-                                        [{referencedId}]
-                                    </Typography>{' '}
-                                    {snapshot.snapshotSuffix}
-                                </Typography>
-                            </Box>
-                        )
-                )}
-            </Box>
-        </Paper>
+                <Box
+                    height="100%"
+                    maxWidth={MAP_CARD_PREVIEW_WIDTH}
+                    padding="8px"
+                    ref={previewContainerRef}
+                >
+                    <RegionPreview
+                        doesRegionExist
+                        mapId={region.parentMapId}
+                        regionId={region.id}
+                        onImageLoad={handlePreviewLoad}
+                    />
+                </Box>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    pl={1}
+                    width={`calc(100% - ${previewWidth}px)`}
+                >
+                    <Typography variant="h5">
+                        {region.id}. {region.name}
+                    </Typography>
+                    {descriptionSnapshots.map(
+                        (snapshot, index) =>
+                            snapshot !== null && (
+                                <Box
+                                    key={snapshot.snapshotPrefix + snapshot.snapshotSuffix + index}
+                                >
+                                    <Typography variant="body2" noWrap>
+                                        {snapshot.snapshotPrefix}{' '}
+                                        <Typography
+                                            variant="body2"
+                                            component="span"
+                                            color="primary"
+                                        >
+                                            [{referencedId}]
+                                        </Typography>{' '}
+                                        {snapshot.snapshotSuffix}
+                                    </Typography>
+                                </Box>
+                            )
+                    )}
+                </Box>
+            </Paper>
+        </a>
     );
 };

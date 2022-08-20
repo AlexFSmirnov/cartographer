@@ -9,20 +9,20 @@ export const BottomMenu = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { getUrlParts, setView } = useUrlNavigation();
+    const { getUrlParts, setUrlParts } = useUrlNavigation();
     const { view } = getUrlParts();
 
     const handleNavigationActionClick = (viewIndex: number) => () => {
         switch (viewIndex) {
             case 1:
-                setView(RouteName.Notes);
+                setUrlParts({ view: RouteName.Notes });
                 break;
             case 2:
-                setView(RouteName.Regions);
+                setUrlParts({ view: RouteName.Regions });
                 break;
             case 0:
             default:
-                setView(RouteName.Map);
+                setUrlParts({ view: RouteName.Map });
                 break;
         }
     };

@@ -45,8 +45,8 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     regionsByMap,
     deleteRegion,
 }) => {
-    const { setView, setSubView, getUrlParts } = useUrlNavigation();
-    const { view, activeMapId, regionId, subView } = getUrlParts();
+    const { getUrlParts, setUrlParts } = useUrlNavigation();
+    const { activeMapId, regionId, subView } = getUrlParts();
 
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -61,11 +61,11 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     const tabValue = useMemo(() => SUB_VIEW_ORDER.indexOf(subView), [subView]);
 
     const handleClose = () => {
-        setView(view);
+        setUrlParts({ regionId: null });
     };
 
     const handleTabChange = (_: unknown, value: number) => {
-        setSubView(SUB_VIEW_ORDER[value]);
+        setUrlParts({ subView: SUB_VIEW_ORDER[value] });
     };
 
     const handleDeleteClick = () => setIsDeleteDialogOpen(true);

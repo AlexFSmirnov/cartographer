@@ -64,7 +64,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
     setActiveMapId,
     openAlertDialog,
 }) => {
-    const { setMap, getUrlParts } = useUrlNavigation();
+    const { getUrlParts, setUrlParts } = useUrlNavigation();
     const { regionId, activeMapId } = getUrlParts();
 
     const { setImageDataUrl } = useImagesContext();
@@ -146,7 +146,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
 
             if (uploadMapDialogType === 'root') {
                 setActiveMapId(id);
-                setMap(id);
+                setUrlParts({ activeMapId: id, regionId: null });
             }
         };
         reader.readAsDataURL(uploadedImage);

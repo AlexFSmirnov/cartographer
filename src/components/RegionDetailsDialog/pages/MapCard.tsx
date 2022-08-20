@@ -54,8 +54,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
     deleteMap,
     openAlertDialog,
 }) => {
-    const { setMap, getHref, getUrlParts } = useUrlNavigation();
-    const { view } = getUrlParts();
+    const { getHref, setUrlParts } = useUrlNavigation();
 
     const { updateImageId, deleteImage } = useImagesContext();
 
@@ -115,7 +114,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
 
     const handleCardClick = (e: React.MouseEvent) => {
         if (!editingMap) {
-            setMap(map.id);
+            setUrlParts({ activeMapId: map.id, regionId: null });
         }
 
         e.preventDefault();
@@ -123,7 +122,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
 
     let content: React.ReactNode = null;
 
-    const cardHref = getHref({ view, activeMapId: map.id });
+    const cardHref = getHref({ activeMapId: map.id });
 
     if (editingMap) {
         const { id, name } = editingMap;
