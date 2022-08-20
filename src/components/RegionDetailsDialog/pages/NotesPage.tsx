@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { getCurrentProjectRegionsByMap, setRegionNotes } from '../../../state';
 import { StoreProps } from '../../../types';
 import { useUrlNavigation } from '../../../utils';
@@ -39,16 +39,18 @@ const NotesPageBase: React.FC<NotesPageProps> = ({ regionsByMap, setRegionNotes 
     };
 
     return (
-        <TextField
-            label="Notes"
-            variant="filled"
-            multiline
-            fullWidth
-            autoFocus
-            rows={17}
-            value={notes}
-            onChange={handleChange}
-        />
+        <Box pt={1} height="100%">
+            <TextField
+                label="Notes"
+                variant="filled"
+                multiline
+                fullWidth
+                autoFocus
+                rows={17}
+                value={notes}
+                onChange={handleChange}
+            />
+        </Box>
     );
 };
 
