@@ -12,6 +12,7 @@ import {
 } from '../../state';
 import { DescriptionBlockquote } from '../DescriptionBlockquote';
 import { RegionLink } from '../RegionLink';
+import { FlexBox } from '../FlexBox';
 
 const connectRegionDescription = connect(
     createStructuredSelector({
@@ -132,7 +133,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     const previewHeight = isEditing ? '378px' : '426px';
 
     const preview = (
-        <Box p={1} width="100%" height={previewHeight} maxHeight={previewHeight} overflow="auto">
+        <Box p={1} height={previewHeight} overflow="auto">
             <ReactMarkdown
                 components={{
                     h1: ({ children }) => <Typography variant="h2">{children}</Typography>,
@@ -155,7 +156,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     );
 
     return (
-        <Box width="100%" height="100%" display="flex" flexDirection="column">
+        <FlexBox fullHeight column>
             {isEditing && (
                 <Tabs
                     value={isPreviewing ? 1 : 0}
@@ -167,7 +168,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
                 </Tabs>
             )}
             {isPreviewing || !isEditing ? preview : inputField}
-        </Box>
+        </FlexBox>
     );
 };
 

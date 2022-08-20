@@ -6,6 +6,7 @@ import { URL_BASENAME } from '../../constants';
 import { getCurrentProjectMaps, getCurrentProjectRegionsByMap } from '../../state';
 import { useUrlNavigation } from '../../utils';
 import { RegionPreview } from '../RegionPreview';
+import { FlexBox } from '../FlexBox';
 
 const connectRegionLink = connect(
     createStructuredSelector({
@@ -48,21 +49,14 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
         const { name: regionName } = regionId ? regions[activeMapId][regionId] : maps[activeMapId];
 
         tooltipTitleElement = (
-            <Box
-                width="250px"
-                height="150px"
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="space-around"
-            >
+            <FlexBox width="250px" height="150px" column alignX="center" alignY="space-around">
                 <Typography sx={{ maxWidth: '100%' }} noWrap fontWeight={500}>
                     {regionOrMapId}. {regionName}
                 </Typography>
                 <Box width="250px" height="100px">
                     <RegionPreview doesRegionExist mapId={activeMapId} regionId={regionId} />
                 </Box>
-            </Box>
+            </FlexBox>
         );
     }
 

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
-    Box,
     Button,
     Dialog,
     DialogActions,
@@ -27,8 +26,8 @@ import {
     openAlertDialog,
     setActiveMapId,
 } from '../../state';
+import { FlexBox } from '../FlexBox';
 import { DropzoneWithPreview } from '../DropzoneWithPreview';
-import { UploadMapDialogDropzoneContainer } from './style';
 
 const connectUploadMapDialog = connect(
     createStructuredSelector({
@@ -165,7 +164,7 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
             <DialogTitle>{title}</DialogTitle>
             <DialogContent sx={{ width: '575px', maxWidth: '100%' }}>
                 <DialogContentText>{description}</DialogContentText>
-                <Box pt={1} pb={2} width="100%" display="flex" justifyContent="space-between">
+                <FlexBox pt={1} pb={2} fullWidth alignX="space-between">
                     <TextField
                         variant="filled"
                         size="small"
@@ -198,10 +197,10 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
                         value={newMapName}
                         onChange={handleTitleChange}
                     />
-                </Box>
-                <UploadMapDialogDropzoneContainer>
+                </FlexBox>
+                <FlexBox fullWidth height="256px" center>
                     <DropzoneWithPreview onDrop={handleFileDrop} />
-                </UploadMapDialogDropzoneContainer>
+                </FlexBox>
             </DialogContent>
             <DialogActions>
                 <Button color="inherit" onClick={closeUploadMapDialog}>

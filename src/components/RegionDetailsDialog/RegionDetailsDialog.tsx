@@ -19,12 +19,9 @@ import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } fro
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
 import { SmallTabs } from '../SmallTabs';
+import { FlexBox } from '../FlexBox';
 import { MapsPage, NotesPage, NotFoundPage, ReferencesPage } from './pages';
-import {
-    RegionDetailsDialogContent,
-    RegionDetailsDialogRegionPreview,
-    RegionDetailsDialogTitle,
-} from './style';
+import { RegionDetailsDialogContent, RegionDetailsDialogTitle } from './style';
 
 const connectRegionDetailsDialog = connect(
     createStructuredSelector({
@@ -100,16 +97,14 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                     )}
                 </RegionDetailsDialogTitle>
                 <RegionDetailsDialogContent>
-                    <RegionDetailsDialogRegionPreview>
+                    <FlexBox center height="128px" pb={1}>
                         <RegionPreview doesRegionExist={true} regionId={id} mapId={activeMapId!} />
-                    </RegionDetailsDialogRegionPreview>
-                    <Box width="100%" display="flex" flexDirection="column">
-                        <SmallTabs value={tabValue} onChange={handleTabChange} variant="fullWidth">
-                            {SUB_VIEW_ORDER.map((subView) => (
-                                <Tab key={subView} label={subView} />
-                            ))}
-                        </SmallTabs>
-                    </Box>
+                    </FlexBox>
+                    <SmallTabs value={tabValue} onChange={handleTabChange} variant="fullWidth">
+                        {SUB_VIEW_ORDER.map((subView) => (
+                            <Tab key={subView} label={subView} />
+                        ))}
+                    </SmallTabs>
                     {subView === SubView.Description && (
                         <RegionDescription isEditing={isEditModeEnabled} doesRegionExist={true} />
                     )}

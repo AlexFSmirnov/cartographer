@@ -5,6 +5,7 @@ import { Box, Typography } from '@mui/material';
 import { StoreProps, RouteName } from '../../types';
 import { useUrlNavigation } from '../../utils';
 import { getCurrentProjectMaps } from '../../state';
+import { FlexBox } from '../FlexBox';
 
 const connectTitle = connect(
     createStructuredSelector({
@@ -45,9 +46,9 @@ const TitleBase: React.FC<TitleProps> = ({ currentProjectMaps }) => {
     }
 
     return (
-        <Box width="100%" height="64px" display="flex" justifyContent="center" alignItems="center">
+        <FlexBox fullWidth center height="64px">
             {content}
-        </Box>
+        </FlexBox>
     );
 };
 

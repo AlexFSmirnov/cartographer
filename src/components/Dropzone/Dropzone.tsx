@@ -1,5 +1,6 @@
 import { useDropzone } from 'react-dropzone';
-import { Box, Divider, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Divider, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { FlexBox } from '../FlexBox';
 import { DropzoneContainer } from './style';
 
 interface DropzoneProps {
@@ -27,16 +28,11 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onDrop }) => {
             {!isMobile && (
                 <>
                     <Typography>Drag&Drop a file into this area</Typography>
-                    <Box
-                        display="flex"
-                        width="30%"
-                        justifyContent="space-between"
-                        alignItems="center"
-                    >
+                    <FlexBox width="30%" alignX="space-between" alignY="center">
                         <Divider sx={{ width: '35%' }} />
                         <Typography>or</Typography>
                         <Divider sx={{ width: '35%' }} />
-                    </Box>
+                    </FlexBox>
                 </>
             )}
             <Typography>Click to select a file</Typography>

@@ -1,5 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { Box, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
+import { FlexBox } from '../../FlexBox';
 
 interface NotFoundPageProps {
     onClose: () => void;
@@ -21,7 +22,7 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({ onClose }) => {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-                <Box display="flex" flexDirection="column" alignItems="center">
+                <FlexBox column alignX="center">
                     <img
                         src={`${process.env.PUBLIC_URL}/404.png`}
                         alt="404"
@@ -29,7 +30,7 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({ onClose }) => {
                     />
                     <Box mt={2} />
                     <DialogContentText>Here lie uncharted lands, stranger.</DialogContentText>
-                </Box>
+                </FlexBox>
             </DialogContent>
         </>
     );

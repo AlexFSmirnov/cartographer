@@ -8,6 +8,9 @@ interface FlexBoxProps extends BoxProps {
     center?: boolean;
     alignX?: BoxProps['justifyContent'];
     alignY?: BoxProps['justifyContent'];
+
+    fullWidth?: boolean;
+    fullHeight?: boolean;
 }
 
 export const FlexBox: React.FC<FlexBoxProps> = ({
@@ -15,8 +18,10 @@ export const FlexBox: React.FC<FlexBoxProps> = ({
     row,
     column,
     center,
-    alignX = 'flex-start',
-    alignY = 'flex-start',
+    alignX,
+    alignY,
+    fullWidth,
+    fullHeight,
     children,
     ...props
 }) => {
@@ -36,6 +41,9 @@ export const FlexBox: React.FC<FlexBoxProps> = ({
         alignItems = 'center';
     }
 
+    const width = fullWidth ? '100%' : props.width;
+    const height = fullHeight ? '100%' : props.height;
+
     return (
         <Box
             {...props}
@@ -43,6 +51,8 @@ export const FlexBox: React.FC<FlexBoxProps> = ({
             flexDirection={finalDirection}
             justifyContent={justifyContent}
             alignItems={alignItems}
+            width={width}
+            height={height}
         >
             {children}
         </Box>

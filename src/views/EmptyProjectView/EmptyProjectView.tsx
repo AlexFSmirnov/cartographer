@@ -2,31 +2,24 @@ import { connect } from 'react-redux';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import { StoreProps } from '../../types';
 import { openUploadMapDialog } from '../../state';
-import { EmptyProjectViewContainer } from './style';
+import { FlexBox } from '../../components';
 
 const connectEmptyProjectView = connect(null, { openUploadMapDialog });
 
 type EmptyProjectViewProps = StoreProps<typeof connectEmptyProjectView>;
 
 const EmptyProjectViewBase: React.FC<EmptyProjectViewProps> = ({ openUploadMapDialog }) => (
-    <EmptyProjectViewContainer>
+    <FlexBox fullWidth fullHeight column center>
         <Typography variant="body1">
             You can start working on this project by adding a map
         </Typography>
-        <Box width="200px" display="flex" justifyContent="space-between" alignItems="center">
+        <FlexBox width="200px" alignX="space-between" alignY="center">
             <Divider sx={{ width: '35%' }} />
             <Typography variant="body1">or</Typography>
             <Divider sx={{ width: '35%' }} />
-        </Box>
+        </FlexBox>
         <Typography variant="body1">load an example project for a tutorial</Typography>
-        <Box
-            mt={4}
-            width="360px"
-            maxWidth="90%"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-        >
+        <FlexBox mt={4} width="360px" maxWidth="90%" center>
             <Button color="inherit" variant="outlined" disabled>
                 Load example project
             </Button>
@@ -34,8 +27,8 @@ const EmptyProjectViewBase: React.FC<EmptyProjectViewProps> = ({ openUploadMapDi
             <Button variant="outlined" onClick={() => openUploadMapDialog({ type: 'root' })}>
                 Add root map
             </Button>
-        </Box>
-    </EmptyProjectViewContainer>
+        </FlexBox>
+    </FlexBox>
 );
 
 export const EmptyProjectView = connectEmptyProjectView(EmptyProjectViewBase);

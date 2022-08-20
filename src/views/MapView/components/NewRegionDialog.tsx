@@ -20,7 +20,7 @@ import {
     getNewRegionRect,
     openAlertDialog,
 } from '../../../state';
-import { RegionDescription, RegionPreview } from '../../../components';
+import { FlexBox, RegionDescription, RegionPreview } from '../../../components';
 
 const connectNewRegionDialog = connect(
     createStructuredSelector({
@@ -127,21 +127,14 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
                     maxHeight: '100%',
                 }}
             >
-                <Box
-                    width="100%"
-                    height="128px"
-                    minHeight="128px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                >
+                <FlexBox fullWidth height="128px" center>
                     <RegionPreview
                         doesRegionExist={false}
                         mapImage={activeMapImage}
                         regionRect={previewRect}
                     />
-                </Box>
-                <Box pt={3} pb={2} width="100%" display="flex" justifyContent="space-between">
+                </FlexBox>
+                <FlexBox pt={3} pb={2} fullWidth alignX="space-between">
                     <TextField
                         variant="filled"
                         size="small"
@@ -160,7 +153,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
                         value={regionName}
                         onChange={handleTitleChange}
                     />
-                </Box>
+                </FlexBox>
                 {isDescriptionEnabled ? (
                     <RegionDescription
                         isEditing

@@ -5,6 +5,7 @@ import { Box, Button, Typography } from '@mui/material';
 import { StoreProps } from '../../../types';
 import { useUrlNavigation } from '../../../utils';
 import { getCurrentProjectMaps, getIsEditModeEnabled, openUploadMapDialog } from '../../../state';
+import { FlexBox } from '../../FlexBox';
 import { MapCard } from './MapCard';
 
 const connectMapsPage = connect(
@@ -35,14 +36,7 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
 
     if (childMaps.length === 0) {
         return (
-            <Box
-                width="100%"
-                height="100%"
-                display="flex"
-                alignItems="center"
-                flexDirection="column"
-            >
-                <Box pt={4} />
+            <FlexBox pt={4} column alignX="center">
                 <Typography variant="body1">
                     This region has no child maps assigned to it.
                 </Typography>
@@ -52,21 +46,21 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
                         Add child map
                     </Button>
                 )}
-            </Box>
+            </FlexBox>
         );
     }
 
     return (
-        <Box display="flex" flexDirection="column" height="100%" overflow="auto">
+        <Box overflow="auto" mt={1}>
             {childMaps.map((map) => (
                 <MapCard key={map.id} map={map} />
             ))}
             {isEditModeEnabled && (
-                <Box display="flex" justifyContent="center" mt={1} mb={4}>
+                <FlexBox alignX="center" mt={1} mb={4}>
                     <Button variant="outlined" onClick={handleUploadClick}>
                         Add child map
                     </Button>
-                </Box>
+                </FlexBox>
             )}
         </Box>
     );

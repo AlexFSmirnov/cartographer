@@ -24,8 +24,9 @@ import {
     openAlertDialog,
     updateMap,
 } from '../../../state';
-import { RegionPreview } from '../../RegionPreview';
 import { useImagesContext, useUrlNavigation } from '../../../utils';
+import { RegionPreview } from '../../RegionPreview';
+import { FlexBox } from '../../FlexBox';
 
 const connectMapCard = connect(
     createStructuredSelector({
@@ -128,7 +129,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
                     onChange={handleMapChange('name')}
                 />
                 <Box flexGrow={1} />
-                <Box display="flex" alignItems="center">
+                <FlexBox alignY="center">
                     <TextField
                         variant="filled"
                         size="small"
@@ -144,7 +145,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
                     <IconButton onClick={handleEditConfirm} disabled={isConfirmDisabled}>
                         <Check />
                     </IconButton>
-                </Box>
+                </FlexBox>
             </>
         );
     } else {
@@ -167,14 +168,14 @@ const MapCardBase: React.FC<MapCardProps> = ({
                     <Box flexGrow={1} />
                 </a>
                 {isEditModeEnabled && (
-                    <Box display="flex" justifyContent="flex-end">
+                    <FlexBox alignX="flex-end">
                         <IconButton onClick={handleEditButtonClick}>
                             <Edit />
                         </IconButton>
                         <IconButton onClick={handleDeleteButtonClick}>
                             <Delete />
                         </IconButton>
-                    </Box>
+                    </FlexBox>
                 )}
             </>
         );
@@ -189,21 +190,16 @@ const MapCardBase: React.FC<MapCardProps> = ({
                     margin: '8px',
                     display: 'flex',
                 }}
-                elevation={4}
+                elevation={2}
             >
                 <a href={cardHref} onClick={handleCardClick}>
                     <Box height="100%" width={PREVIEW_WIDTH} padding="8px">
                         <RegionPreview doesRegionExist mapId={map.id} regionId={null} />
                     </Box>
                 </a>
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    padding="8px"
-                    width={`calc(100% - ${PREVIEW_WIDTH}px)`}
-                >
+                <FlexBox column p={1} width={`calc(100% - ${PREVIEW_WIDTH}px)`}>
                     {content}
-                </Box>
+                </FlexBox>
             </Paper>
             <Dialog open={isDeleteDialogOpen} onClose={handleDeleteCancel}>
                 <DialogTitle>Delete map</DialogTitle>

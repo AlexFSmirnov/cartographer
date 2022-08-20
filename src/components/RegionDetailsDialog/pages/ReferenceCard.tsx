@@ -1,10 +1,9 @@
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Region, SubView } from '../../../types';
 import { useUrlNavigation } from '../../../utils';
 import { RegionPreview } from '../../RegionPreview';
 
-const SNAPSHOT_LENGTH = 25;
 const CARD_MIN_HEIGHT = 80;
 const PREVIEW_WIDTH = 120;
 
@@ -14,6 +13,10 @@ interface ReferenceCardProps {
 }
 
 export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, region }) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const snapshotLength = isMobile ? 10 : 25;
+
     const { getHref, setUrlParts } = useUrlNavigation();
 
     const [cardHeight, setCardHeight] = useState(CARD_MIN_HEIGHT);
@@ -42,7 +45,7 @@ export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, regi
 
             const condencedDescription = description.replaceAll('\n', ' ');
 
-            const snapshotStart = index - SNAPSHOT_LENGTH;
+            const snapshotStart = index - snapshotLength;
             let snapshotPrefix = condencedDescription
                 .slice(Math.max(0, snapshotStart), index)
                 .trim();
@@ -50,7 +53,7 @@ export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, regi
                 snapshotPrefix = `...${snapshotPrefix}`;
             }
 
-            const snapshotEnd = index + regionTagLength + SNAPSHOT_LENGTH;
+            const snapshotEnd = index + regionTagLength + snapshotLength;
             let snapshotSuffix = condencedDescription
                 .slice(index + regionTagLength, Math.min(snapshotEnd, condencedDescription.length))
                 .trim();
@@ -94,7 +97,7 @@ export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, regi
                     alignItems: 'center',
                     height: cardHeight,
                 }}
-                elevation={4}
+                elevation={2}
             >
                 <Box height="100%" width={PREVIEW_WIDTH} padding="8px">
                     <RegionPreview
@@ -110,7 +113,7 @@ export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, regi
                     width={`calc(100% - ${PREVIEW_WIDTH}px)`}
                     ref={textContainerRef}
                 >
-                    <Typography variant="h5">
+                    <Typography variant="h6">
                         {region.id}. {region.name}
                     </Typography>
                     {descriptionSnapshots.map(

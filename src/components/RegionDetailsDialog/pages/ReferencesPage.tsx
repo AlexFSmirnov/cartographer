@@ -5,6 +5,7 @@ import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { getCurrentProjectAllRegions } from '../../../state';
 import { Region, StoreProps } from '../../../types';
 import { ReferenceCard } from './ReferenceCard';
+import { FlexBox } from '../../FlexBox';
 
 const connectReferencesPage = connect(
     createStructuredSelector({
@@ -24,14 +25,14 @@ const ReferencesPageBase: React.FC<ReferencesPageProps> = ({ region, allRegions 
 
     if (referencedBy.length === 0) {
         return (
-            <Box width="100%" textAlign="center" pt={5}>
+            <FlexBox pt={5} center>
                 <Typography>The region is not referenced by any other regions.</Typography>
-            </Box>
+            </FlexBox>
         );
     }
 
     return (
-        <Box display="flex" flexDirection="column" height="100%" overflow="auto">
+        <Box overflow="auto" mt={1}>
             {referencedBy.map((r) => (
                 <ReferenceCard key={r.id} region={r} referencedId={region.id} />
             ))}
