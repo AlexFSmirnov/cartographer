@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { useTheme } from '@mui/material';
+import { CircularProgress, useTheme } from '@mui/material';
 import { Rect, StoreProps } from '../../types';
 import { getCurrentProjectRegionsByMap } from '../../state';
 import { useImageFromContext } from '../../utils';
-import { RegionPreviewContainer } from './style';
+import { RegionPreviewContainer, RegionPreviewLoaderContainer } from './style';
 
 const REGION_PADDING = 8;
 
@@ -49,6 +49,8 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     regions,
 }) => {
     const theme = useTheme();
+
+    const [isImageDrawn, setIsImageDrawn] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -101,6 +103,7 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
             return;
         }
 
+        setIsImageDrawn(false);
         ctx.drawImage(
             mapImage,
             regionRect.x,
@@ -112,11 +115,25 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
             canvas.width,
             canvas.height
         );
+        setIsImageDrawn(true);
     }, [canvasSize, regionRect, mapImage]);
+
+    const canvasProps = {
+        ...canvasSize,
+        ref: canvasRef,
+        style: {
+            opacity: isImageDrawn ? 1 : 0,
+        },
+    };
 
     return (
         <RegionPreviewContainer shadow={theme.shadows[2]}>
-            <canvas {...canvasSize} ref={canvasRef} />
+            {!isImageDrawn && (
+                <RegionPreviewLoaderContainer>
+                    <CircularProgress />
+                </RegionPreviewLoaderContainer>
+            )}
+            <canvas {...canvasProps} />
         </RegionPreviewContainer>
     );
 };
