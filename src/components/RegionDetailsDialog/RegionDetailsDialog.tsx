@@ -1,5 +1,9 @@
+import { useEffect, useMemo, useState } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { Delete } from '@mui/icons-material';
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
@@ -8,17 +12,13 @@ import {
     DialogTitle,
     IconButton,
     Tab,
-    Tabs,
 } from '@mui/material';
-import { Box } from '@mui/system';
-import { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Region, SubView, StoreProps } from '../../types';
 import { useUrlNavigation } from '../../utils';
 import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
+import { SmallTabs } from '../SmallTabs';
 import { MapsPage, NotesPage, NotFoundPage, ReferencesPage } from './pages';
 import {
     RegionDetailsDialogContent,
@@ -104,20 +104,18 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                         <RegionPreview doesRegionExist={true} regionId={id} mapId={activeMapId!} />
                     </RegionDetailsDialogRegionPreview>
                     <Box width="100%" display="flex" flexDirection="column">
-                        <Tabs value={tabValue} onChange={handleTabChange} variant="fullWidth">
+                        <SmallTabs value={tabValue} onChange={handleTabChange} variant="fullWidth">
                             {SUB_VIEW_ORDER.map((subView) => (
                                 <Tab key={subView} label={subView} />
                             ))}
-                        </Tabs>
+                        </SmallTabs>
                     </Box>
                     {subView === SubView.Description && (
                         <RegionDescription isEditing={isEditModeEnabled} doesRegionExist={true} />
                     )}
                     {subView === SubView.Maps && <MapsPage />}
                     {subView === SubView.Notes && <NotesPage />}
-                    {subView === SubView.References && (
-                        <ReferencesPage regionId={id} description={description} />
-                    )}
+                    {subView === SubView.References && <ReferencesPage region={region} />}
                 </RegionDetailsDialogContent>
             </>
         );

@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { getCurrentProjectAllRegions } from '../../../state';
-import { StoreProps } from '../../../types';
+import { Region, StoreProps } from '../../../types';
+import { ReferenceCard } from './ReferenceCard';
 
 const connectReferencesPage = connect(
     createStructuredSelector({
@@ -11,36 +13,29 @@ const connectReferencesPage = connect(
 );
 
 interface ReferencesPageProps extends StoreProps<typeof connectReferencesPage> {
-    regionId: string;
-    description: string;
+    region: Region;
 }
 
-const ReferencesPageBase: React.FC<ReferencesPageProps> = ({
-    regionId,
-    description,
-    allRegions,
-}) => {
-    const references = useMemo(() => {
-        const matches = description.matchAll(/\[(.+?)\]/g);
-        const regionIds = Array.from(matches).map((match) => match[1]);
+const ReferencesPageBase: React.FC<ReferencesPageProps> = ({ region, allRegions }) => {
+    const referencedBy = useMemo(
+        () => Object.values(allRegions).filter((r) => r.description.includes(`[${region.id}]`)),
+        [region, allRegions]
+    );
 
-        return regionIds.filter((id) => allRegions.find((region) => region.id === id));
-    }, [description, allRegions]);
-
-    const referencedBy = useMemo(() => {
-        const referencedRegions = Object.values(allRegions).filter((region) => {
-            return region.description.includes(`${regionId}`);
-        });
-
-        return referencedRegions.map((region) => region.id);
-    }, [regionId, allRegions]);
+    if (referencedBy.length === 0) {
+        return (
+            <Box width="100%" textAlign="center" pt={5}>
+                <Typography>The region is not referenced by any other regions.</Typography>
+            </Box>
+        );
+    }
 
     return (
-        <>
-            <p>{references.join(' ')}</p>
-            <p>---</p>
-            <p>{referencedBy.join(' ')}</p>
-        </>
+        <Box display="flex" flexDirection="column" height="100%" overflow="auto">
+            {referencedBy.map((r) => (
+                <ReferenceCard key={r.id} region={r} referencedId={region.id} />
+            ))}
+        </Box>
     );
 };
 

@@ -114,7 +114,7 @@ export const getCurrentProjectRegionsByMap = createSelector(
 
 export const getCurrentProjectAllRegions = createSelector(
     getCurrentProjectRegionsByMap,
-    (regionsByMap) => Object.values(regionsByMap).map(Object.values).flat()
+    (regionsByMap) => Object.values(regionsByMap).map(Object.values).flat() as Region[]
 );
 
 export const getCurrentProjectRegionIds = createSelector(
