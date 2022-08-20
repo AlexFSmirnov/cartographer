@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -44,7 +44,7 @@ interface MapCardProps extends StoreProps<typeof connectMapCard> {
 }
 
 const MAP_CARD_HEIGHT = 120;
-const MAP_CARD_PREVIEW_WIDTH = 160;
+const PREVIEW_WIDTH = 160;
 
 const MapCardBase: React.FC<MapCardProps> = ({
     map,
@@ -58,19 +58,8 @@ const MapCardBase: React.FC<MapCardProps> = ({
 
     const { updateImageId, deleteImage } = useImagesContext();
 
-    const [previewWidth, setPreviewWidth] = useState(MAP_CARD_PREVIEW_WIDTH);
-
     const [editingMap, setEditingMap] = useState<Map | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-    const previewContainerRef = useRef<HTMLDivElement>(null);
-    const handlePreviewLoad = () => {
-        const { current: container } = previewContainerRef;
-        if (container) {
-            const { width } = container.getBoundingClientRect();
-            setPreviewWidth(width);
-        }
-    };
 
     const handleDeleteButtonClick = (e: React.MouseEvent) => {
         setIsDeleteDialogOpen(true);
@@ -203,25 +192,15 @@ const MapCardBase: React.FC<MapCardProps> = ({
                 elevation={4}
             >
                 <a href={cardHref} onClick={handleCardClick}>
-                    <Box
-                        height="100%"
-                        maxWidth={MAP_CARD_PREVIEW_WIDTH}
-                        padding="8px"
-                        ref={previewContainerRef}
-                    >
-                        <RegionPreview
-                            doesRegionExist
-                            mapId={map.id}
-                            regionId={null}
-                            onImageLoad={handlePreviewLoad}
-                        />
+                    <Box height="100%" width={PREVIEW_WIDTH} padding="8px">
+                        <RegionPreview doesRegionExist mapId={map.id} regionId={null} />
                     </Box>
                 </a>
                 <Box
                     display="flex"
                     flexDirection="column"
                     padding="8px"
-                    width={`calc(100% - ${previewWidth}px)`}
+                    width={`calc(100% - ${PREVIEW_WIDTH}px)`}
                 >
                     {content}
                 </Box>

@@ -1,11 +1,12 @@
 import { Box, Paper, Typography } from '@mui/material';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Region, SubView } from '../../../types';
 import { useUrlNavigation } from '../../../utils';
 import { RegionPreview } from '../../RegionPreview';
 
 const SNAPSHOT_LENGTH = 25;
-const MAP_CARD_PREVIEW_WIDTH = 120;
+const CARD_MIN_HEIGHT = 80;
+const PREVIEW_WIDTH = 120;
 
 interface ReferenceCardProps {
     referencedId: string;
@@ -15,15 +16,15 @@ interface ReferenceCardProps {
 export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, region }) => {
     const { getHref, setUrlParts } = useUrlNavigation();
 
-    const [previewWidth, setPreviewWidth] = useState(MAP_CARD_PREVIEW_WIDTH);
+    const [cardHeight, setCardHeight] = useState(CARD_MIN_HEIGHT);
 
-    const previewContainerRef = useRef<HTMLDivElement>(null);
-    const handlePreviewLoad = () => {
-        const { current: container } = previewContainerRef;
-        if (container) {
-            const { width } = container.getBoundingClientRect();
-            setPreviewWidth(width);
+    const textContainerRef = (textContainer: HTMLDivElement | null) => {
+        if (!textContainer) {
+            return;
         }
+
+        const { height } = textContainer.getBoundingClientRect();
+        setCardHeight(Math.max(height + 16, CARD_MIN_HEIGHT));
     };
 
     const descriptionSnapshots = useMemo(() => {
@@ -91,27 +92,23 @@ export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, regi
                     padding: '8px',
                     display: 'flex',
                     alignItems: 'center',
+                    height: cardHeight,
                 }}
                 elevation={4}
             >
-                <Box
-                    height="100%"
-                    maxWidth={MAP_CARD_PREVIEW_WIDTH}
-                    padding="8px"
-                    ref={previewContainerRef}
-                >
+                <Box height="100%" width={PREVIEW_WIDTH} padding="8px">
                     <RegionPreview
                         doesRegionExist
                         mapId={region.parentMapId}
                         regionId={region.id}
-                        onImageLoad={handlePreviewLoad}
                     />
                 </Box>
                 <Box
                     display="flex"
                     flexDirection="column"
                     pl={1}
-                    width={`calc(100% - ${previewWidth}px)`}
+                    width={`calc(100% - ${PREVIEW_WIDTH}px)`}
+                    ref={textContainerRef}
                 >
                     <Typography variant="h5">
                         {region.id}. {region.name}

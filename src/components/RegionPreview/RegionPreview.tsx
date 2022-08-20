@@ -17,7 +17,6 @@ const connectRegionPreview = connect(
 
 interface BaseOwnProps {
     doesRegionExist: boolean;
-    onImageLoad?: () => void;
 
     mapId?: string;
     regionId?: string | null;
@@ -43,7 +42,6 @@ type RegionPreviewProps = OwnProps & StoreProps<typeof connectRegionPreview>;
 
 const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     doesRegionExist,
-    onImageLoad,
     mapImage: mapImageProp,
     regionRect: regionRectProp,
     mapId,
@@ -60,12 +58,6 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
         () => (doesRegionExist ? ownMapImage : mapImageProp),
         [doesRegionExist, mapImageProp, ownMapImage]
     );
-
-    useEffect(() => {
-        if (mapImage && onImageLoad) {
-            onImageLoad();
-        }
-    }, [mapImage, onImageLoad]);
 
     const regionRect = useMemo(() => {
         let rect = null;
