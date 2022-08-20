@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { Box, Button, Divider, Typography } from '@mui/material';
-import { StoreProps } from '../../types';
-import { openUploadMapDialog } from '../../state';
 import { FlexBox } from '../../components';
+import { openUploadMapDialog } from '../../state';
+import { StoreProps } from '../../types';
 
 const connectEmptyProjectView = connect(null, { openUploadMapDialog });
 

@@ -1,18 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Outlet } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
 import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
-import { StoreProps, RouteName } from './types';
-import { useUrlNavigation } from './utils';
-import { darkTheme, lightTheme } from './themes';
-import {
-    getActiveMapId,
-    getCurrentProjectMapIds,
-    getCurrentProjectRootMapId,
-    getIsDarkModeEnabled,
-    setActiveMapId,
-} from './state';
 import {
     AlertDialog,
     BottomMenu,
@@ -22,8 +12,18 @@ import {
     TopMenuButton,
     UploadMapDialog,
 } from './components';
-import { NotFound, EmptyProjectView } from './views';
+import {
+    getActiveMapId,
+    getCurrentProjectMapIds,
+    getCurrentProjectRootMapId,
+    getIsDarkModeEnabled,
+    setActiveMapId,
+} from './state';
 import { AppContainer, AppContent, GlobalStyle, ViewContainer } from './style';
+import { darkTheme, lightTheme } from './themes';
+import { StoreProps, RouteName } from './types';
+import { useUrlNavigation } from './utils';
+import { NotFound, EmptyProjectView } from './views';
 
 const connectApp = connect(
     createStructuredSelector({

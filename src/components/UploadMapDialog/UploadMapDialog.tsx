@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Info } from '@mui/icons-material';
 import {
     Button,
     Dialog,
@@ -12,9 +13,6 @@ import {
     TextField,
     Tooltip,
 } from '@mui/material';
-import { Info } from '@mui/icons-material';
-import { StoreProps } from '../../types';
-import { useImagesContext, useUrlNavigation } from '../../utils';
 import {
     addMap,
     closeUploadMapDialog,
@@ -26,8 +24,10 @@ import {
     openAlertDialog,
     setActiveMapId,
 } from '../../state';
-import { FlexBox } from '../FlexBox';
+import { StoreProps } from '../../types';
+import { useImagesContext, useUrlNavigation } from '../../utils';
 import { DropzoneWithPreview } from '../DropzoneWithPreview';
+import { FlexBox } from '../FlexBox';
 
 const connectUploadMapDialog = connect(
     createStructuredSelector({

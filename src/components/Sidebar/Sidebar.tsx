@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Divider, Drawer } from '@mui/material';
 import { Close, FileDownload, FileUpload, Map, UploadFile } from '@mui/icons-material';
-import { StoreProps } from '../../types';
+import { Divider, Drawer } from '@mui/material';
 import {
     closeSidebar,
     getIsDarkModeEnabled,
@@ -12,8 +11,9 @@ import {
     toggleDarkMode,
     toggleEditMode,
 } from '../../state';
-import { SidebarButton } from '../SidebarButton';
+import { StoreProps } from '../../types';
 import { ProjectSelect } from '../ProjectSelect';
+import { SidebarButton } from '../SidebarButton';
 import { SidebarItemsContainer } from './style';
 
 const connectSidebar = connect(

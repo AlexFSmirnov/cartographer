@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { getIsEditModeEnabled } from '../../state';
 import { StoreProps } from '../../types';
 import { useImageFromContext, useUrlNavigation } from '../../utils';
-import { getIsEditModeEnabled } from '../../state';
 import {
     ActiveMapCanvas,
     AllRegionsCanvas,

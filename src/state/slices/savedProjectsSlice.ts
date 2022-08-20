@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
+import { createSlice } from '@reduxjs/toolkit';
 import { Region } from '../../types';
 import type { State } from '../store';
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Check, Close, Delete, Edit } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -15,8 +16,6 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { Check, Close, Delete, Edit } from '@mui/icons-material';
-import { Map, StoreProps } from '../../../types';
 import {
     deleteMap,
     getCurrentProjectMaps,
@@ -24,9 +23,10 @@ import {
     openAlertDialog,
     updateMap,
 } from '../../../state';
+import { Map, StoreProps } from '../../../types';
 import { useImagesContext, useUrlNavigation } from '../../../utils';
-import { RegionPreview } from '../../RegionPreview';
 import { FlexBox } from '../../FlexBox';
+import { RegionPreview } from '../../RegionPreview';
 
 const connectMapCard = connect(
     createStructuredSelector({

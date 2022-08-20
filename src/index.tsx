@@ -3,12 +3,12 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
-import { persistor, store } from './state/store';
+import { App } from './App';
+import { URL_BASENAME } from './constants';
 import { register as registerServiceWorkers } from './serviceWorkerRegistration';
+import { persistor, store } from './state/store';
 import { RouteName } from './types';
 import { ImagesContextProvider } from './utils';
-import { URL_BASENAME } from './constants';
-import { App } from './App';
 import { MapView, NotesView, RegionsView, NotFound } from './views';
 
 const container = document.getElementById('root');

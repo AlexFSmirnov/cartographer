@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { ListItem, Popover, Typography } from '@mui/material';
 import { Add, ExpandMore } from '@mui/icons-material';
-import { StoreProps } from '../../types';
+import { ListItem, Popover, Typography } from '@mui/material';
 import { getCurrentProjectName, getSavedProjectsNamesAndIds } from '../../state';
+import { StoreProps } from '../../types';
 import {
     ProjectSelectContainer,
     ProjectSelectIconWrapper,

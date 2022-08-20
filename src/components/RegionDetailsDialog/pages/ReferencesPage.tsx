@@ -4,8 +4,8 @@ import { createStructuredSelector } from 'reselect';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { getCurrentProjectAllRegions } from '../../../state';
 import { Region, StoreProps } from '../../../types';
-import { ReferenceCard } from './ReferenceCard';
 import { FlexBox } from '../../FlexBox';
+import { ReferenceCard } from './ReferenceCard';
 
 const connectReferencesPage = connect(
     createStructuredSelector({

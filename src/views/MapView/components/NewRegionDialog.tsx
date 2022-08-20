@@ -10,7 +10,7 @@ import {
     DialogTitle,
     TextField,
 } from '@mui/material';
-import { Rect, StoreProps } from '../../../types';
+import { FlexBox, RegionDescription, RegionPreview } from '../../../components';
 import {
     addRegion,
     closeNewRegionDialog,
@@ -20,7 +20,7 @@ import {
     getNewRegionRect,
     openAlertDialog,
 } from '../../../state';
-import { FlexBox, RegionDescription, RegionPreview } from '../../../components';
+import { Rect, StoreProps } from '../../../types';
 
 const connectNewRegionDialog = connect(
     createStructuredSelector({

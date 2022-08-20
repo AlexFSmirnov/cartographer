@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
+import { getActiveMapRegions, openNewRegionDialog } from '../../../state';
 import { Point, Size, StoreProps } from '../../../types';
 import {
     drawRichRect,
@@ -11,7 +12,6 @@ import {
     getRegionIdFromCanvasPoint,
     useUrlNavigation,
 } from '../../../utils';
-import { getActiveMapRegions, openNewRegionDialog } from '../../../state';
 import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
 

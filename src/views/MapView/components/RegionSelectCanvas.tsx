@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
-import { Size, StoreProps } from '../../../types';
 import { getActiveMapRegions } from '../../../state';
+import { Size, StoreProps } from '../../../types';
 import {
     drawRichRect,
     getCanvasPointFromMouseEvent,

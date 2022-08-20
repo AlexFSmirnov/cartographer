@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Button, Typography } from '@mui/material';
+import { getCurrentProjectMaps, getIsEditModeEnabled, openUploadMapDialog } from '../../../state';
 import { StoreProps } from '../../../types';
 import { useUrlNavigation } from '../../../utils';
-import { getCurrentProjectMaps, getIsEditModeEnabled, openUploadMapDialog } from '../../../state';
 import { FlexBox } from '../../FlexBox';
 import { MapCard } from './MapCard';
 

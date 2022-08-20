@@ -1,5 +1,5 @@
-import { useTheme } from '@mui/material';
 import { useState } from 'react';
+import { useTheme } from '@mui/material';
 import { Dropzone } from '../Dropzone';
 import { DropzonePreview } from './style';
 

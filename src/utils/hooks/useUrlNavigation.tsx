@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { URL_BASENAME } from '../../constants';
-import { RouteName, SubView, UrlParts } from '../../types';
 import { getActiveMapId } from '../../state';
+import { RouteName, SubView, UrlParts } from '../../types';
 
 const parseUrl = (url: string): UrlParts => {
     const parts = url.split('/');

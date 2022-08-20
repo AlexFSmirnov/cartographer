@@ -1,18 +1,18 @@
 import { useCallback, useMemo, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import ReactMarkdown from 'react-markdown';
 import { Box, Tab, Tabs, TextField, Typography } from '@mui/material';
-import { StoreProps } from '../../types';
-import { useUrlNavigation } from '../../utils';
 import {
     getCurrentProjectMapIds,
     getCurrentProjectRegionsByMap,
     setRegionDescription,
 } from '../../state';
+import { StoreProps } from '../../types';
+import { useUrlNavigation } from '../../utils';
 import { DescriptionBlockquote } from '../DescriptionBlockquote';
-import { RegionLink } from '../RegionLink';
 import { FlexBox } from '../FlexBox';
+import { RegionLink } from '../RegionLink';
 
 const connectRegionDescription = connect(
     createStructuredSelector({

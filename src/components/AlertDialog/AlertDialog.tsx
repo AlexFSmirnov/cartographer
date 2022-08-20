@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -9,7 +10,6 @@ import {
     DialogTitle,
 } from '@mui/material';
 import { closeAlertDialog, getAlertDialogMessage } from '../../state';
-import { useEffect, useState } from 'react';
 import { StoreProps } from '../../types';
 
 const connectAlertDialog = connect(

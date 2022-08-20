@@ -13,13 +13,13 @@ import {
     IconButton,
     Tab,
 } from '@mui/material';
+import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
 import { Region, SubView, StoreProps } from '../../types';
 import { useUrlNavigation } from '../../utils';
-import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
+import { FlexBox } from '../FlexBox';
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
 import { SmallTabs } from '../SmallTabs';
-import { FlexBox } from '../FlexBox';
 import { MapsPage, NotesPage, NotFoundPage, ReferencesPage } from './pages';
 import { RegionDetailsDialogContent, RegionDetailsDialogTitle } from './style';
 

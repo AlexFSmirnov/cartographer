@@ -1,5 +1,5 @@
-import { Box, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useMemo, useState } from 'react';
+import { Box, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Region, SubView } from '../../../types';
 import { useUrlNavigation } from '../../../utils';
 import { RegionPreview } from '../../RegionPreview';

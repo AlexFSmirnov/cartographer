@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { CircularProgress, useTheme } from '@mui/material';
-import { Rect, StoreProps } from '../../types';
 import { getCurrentProjectRegionsByMap } from '../../state';
+import { Rect, StoreProps } from '../../types';
 import { useImageFromContext } from '../../utils';
 import { RegionPreviewContainer, RegionPreviewLoaderContainer } from './style';
 

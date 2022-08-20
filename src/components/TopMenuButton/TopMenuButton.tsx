@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
-import { IconButton } from '@mui/material';
 import { Menu } from '@mui/icons-material';
-import { StoreProps } from '../../types';
+import { IconButton } from '@mui/material';
 import { openSidebar } from '../../state';
+import { StoreProps } from '../../types';
 import { TopMenuButtonWrapper } from './style';
 
 const connectTopMenuButton = connect(null, { openSidebar });

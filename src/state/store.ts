@@ -1,10 +1,10 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import currentProjectReducer from './slices/currentProjectSlice';
+import preferencesReducer from './slices/preferencesSlice';
 import savedProjectsReducer from './slices/savedProjectsSlice';
 import uiReducer from './slices/uiSlice';
-import preferencesReducer from './slices/preferencesSlice';
 
 const persistConfig = {
     key: 'root',

@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { TextField } from '@mui/material';
-import { StoreProps } from '../../../types';
 import { getCurrentProjectRegionsByMap, setRegionNotes } from '../../../state';
+import { StoreProps } from '../../../types';
 import { useUrlNavigation } from '../../../utils';
 
 const connectNotesPage = connect(

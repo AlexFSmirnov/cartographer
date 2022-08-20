@@ -1,5 +1,5 @@
-import { BottomNavigation, BottomNavigationAction, useMediaQuery, useTheme } from '@mui/material';
 import { Map, TextSnippet, FormatListBulleted } from '@mui/icons-material';
+import { BottomNavigation, BottomNavigationAction, useMediaQuery, useTheme } from '@mui/material';
 import { RouteName } from '../../types';
 import { useUrlNavigation } from '../../utils';
 import { BottomMenuButton } from './BottomMenuButton';

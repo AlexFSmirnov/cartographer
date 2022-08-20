@@ -1,12 +1,12 @@
-import { Box, Link, Tooltip, Typography } from '@mui/material';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { StoreProps } from '../../types';
+import { Box, Link, Tooltip, Typography } from '@mui/material';
 import { URL_BASENAME } from '../../constants';
 import { getCurrentProjectMaps, getCurrentProjectRegionsByMap } from '../../state';
+import { StoreProps } from '../../types';
 import { useUrlNavigation } from '../../utils';
-import { RegionPreview } from '../RegionPreview';
 import { FlexBox } from '../FlexBox';
+import { RegionPreview } from '../RegionPreview';
 
 const connectRegionLink = connect(
     createStructuredSelector({
