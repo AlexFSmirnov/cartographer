@@ -48,10 +48,16 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     const [mouseDownPos, setMouseDownPos] = useState<Point | null>(null);
 
     const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        setMouseDownPos(getCanvasPointFromMouseEvent(e, canvasRect));
+        if (e.button === 0) {
+            setMouseDownPos(getCanvasPointFromMouseEvent(e, canvasRect));
+        }
     };
 
     const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        if (e.button !== 0) {
+            return;
+        }
+
         const mousePos = getCanvasPointFromMouseEvent(e, canvasRect);
 
         if (!mouseDownPos || !mousePos) {
