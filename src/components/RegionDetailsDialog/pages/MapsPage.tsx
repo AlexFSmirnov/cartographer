@@ -36,7 +36,7 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
 
     if (childMaps.length === 0) {
         return (
-            <FlexBox pt={4} column alignX="center">
+            <FlexBox fullHeight pt={4} column alignX="center">
                 <Typography variant="body1">
                     This region has no child maps assigned to it.
                 </Typography>

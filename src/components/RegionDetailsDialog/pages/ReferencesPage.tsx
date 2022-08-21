@@ -25,14 +25,14 @@ const ReferencesPageBase: React.FC<ReferencesPageProps> = ({ region, allRegions 
 
     if (referencedBy.length === 0) {
         return (
-            <FlexBox pt={5} center>
+            <FlexBox pt={5} center fullHeight>
                 <Typography>The region is not referenced by any other regions.</Typography>
             </FlexBox>
         );
     }
 
     return (
-        <Box overflow="auto" mt={1}>
+        <Box overflow="auto" mt={1} height="100%">
             {referencedBy.map((r) => (
                 <ReferenceCard key={r.id} region={r} referencedId={region.id} />
             ))}
