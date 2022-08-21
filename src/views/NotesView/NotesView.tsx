@@ -23,7 +23,7 @@ const NotesViewBase: React.FC<NotesViewProps> = ({ allRegions }) => {
 
     if (regionsWithNotes.length === 0) {
         return (
-            <FlexBox fullWidth alignX="center" pt={2}>
+            <FlexBox fullWidth center pt={2}>
                 <Typography variant="h5">You have no notes on any regions.</Typography>
             </FlexBox>
         );

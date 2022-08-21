@@ -17,6 +17,8 @@ const imageContextDefaultMethods: ImagesContextMethods = {
 
 const ImagesContext = createContext(imageContextDefaultMethods);
 
+// TODO: Prefix images with project id
+
 export const ImagesContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [rerender, setRerender] = useState(false);
 

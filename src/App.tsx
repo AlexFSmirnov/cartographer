@@ -98,6 +98,7 @@ const AppBase: React.FC<AppProps> = ({
         [urlActiveMapId, currentProjectMapIds, view]
     );
 
+    // TODO: Make it possible for views to overlap bottom navigation
     return (
         <AppContainer>
             <AppContent>

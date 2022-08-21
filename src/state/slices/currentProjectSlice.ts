@@ -99,6 +99,9 @@ export const getCurrentProjectMaps = createSelector(getCurrentProjectState, (sta
 export const getCurrentProjectMapIds = createSelector(getCurrentProjectMaps, (maps) =>
     Object.keys(maps)
 );
+export const getCurrentProjectRootMaps = createSelector(getCurrentProjectMaps, (maps) =>
+    Object.values(maps).filter((map) => !map.parentMapId)
+);
 export const getCurrentProjectRootMap = createSelector(getCurrentProjectMaps, (maps) =>
     Object.values(maps).find((map) => map.parentMapId === null)
 );

@@ -1,1 +1,1 @@
-export { default as RegionsView } from './RegionsView';
+export * from './RegionsView';

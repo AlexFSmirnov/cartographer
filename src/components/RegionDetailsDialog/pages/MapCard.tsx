@@ -68,6 +68,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
     };
     const handleDeleteCancel = () => setIsDeleteDialogOpen(false);
     const handleDeleteConfirm = () => {
+        // TODO: Recursively delete all child regions and maps
         deleteMap({ mapId: map.id });
         deleteImage(map.id);
     };
