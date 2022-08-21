@@ -8,3 +8,4 @@ export * from './RegionPreview';
 export * from './RegionDescription';
 export * from './AlertDialog';
 export * from './FlexBox';
+export * from './RegionPreviewTooltip';

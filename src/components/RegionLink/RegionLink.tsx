@@ -7,6 +7,7 @@ import { StoreProps } from '../../types';
 import { useUrlNavigation } from '../../utils';
 import { FlexBox } from '../FlexBox';
 import { RegionPreview } from '../RegionPreview';
+import { RegionPreviewTooltip } from '../RegionPreviewTooltip';
 
 const connectRegionLink = connect(
     createStructuredSelector({
@@ -45,18 +46,10 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
     let tooltipTitleElement: React.ReactNode = '';
 
     if (activeMapId) {
-        const regionOrMapId = regionId || activeMapId;
         const { name: regionName } = regionId ? regions[activeMapId][regionId] : maps[activeMapId];
 
         tooltipTitleElement = (
-            <FlexBox width="250px" height="150px" column alignX="center" alignY="space-around">
-                <Typography sx={{ maxWidth: '100%' }} noWrap fontWeight={500}>
-                    {regionOrMapId}. {regionName}
-                </Typography>
-                <Box width="250px" height="100px">
-                    <RegionPreview doesRegionExist mapId={activeMapId} regionId={regionId} />
-                </Box>
-            </FlexBox>
+            <RegionPreviewTooltip mapId={activeMapId} regionId={regionId} name={regionName} />
         );
     }
 

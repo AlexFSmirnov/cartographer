@@ -2,6 +2,7 @@ import { Box, Tooltip, Typography } from '@mui/material';
 import { useUrlNavigation } from '../../utils';
 import { FlexBox } from '../FlexBox';
 import { RegionPreview } from '../RegionPreview';
+import { RegionPreviewTooltip } from '../RegionPreviewTooltip';
 
 interface BreadcrumbProps {
     id: string;
@@ -29,21 +30,10 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ id, name, type, parentMa
             : getHref({ activeMapId: id, regionId: null });
 
     let tooltipElement: React.ReactNode = '';
-    if (type === 'map' || (type === 'region' && parentMapId)) {
-        tooltipElement = (
-            <FlexBox width="250px" height="150px" column alignX="center" alignY="space-around">
-                <Typography sx={{ maxWidth: '100%' }} noWrap fontWeight={500}>
-                    {id}. {name}
-                </Typography>
-                <Box width="250px" height="100px">
-                    {type === 'region' && parentMapId ? (
-                        <RegionPreview doesRegionExist mapId={parentMapId} regionId={id} />
-                    ) : (
-                        <RegionPreview doesRegionExist mapId={id} regionId={null} />
-                    )}
-                </Box>
-            </FlexBox>
-        );
+    if (type === 'map') {
+        tooltipElement = <RegionPreviewTooltip mapId={id} name={name} />;
+    } else if (parentMapId) {
+        tooltipElement = <RegionPreviewTooltip mapId={parentMapId} regionId={id} name={name} />;
     }
 
     return (

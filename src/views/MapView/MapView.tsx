@@ -11,6 +11,7 @@ import {
     NewRegionDialog,
     RegionSelectCanvas,
 } from './components';
+import { SiblingMapSelect } from './components/SiblingMapSelect';
 import { MapViewContainer } from './style';
 
 const connectMapView = connect(
@@ -72,6 +73,7 @@ const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled }) => {
                 {isEditModeEnabled && <AllRegionsCanvas {...regionCanvasBaseProps} />}
                 {isEditModeEnabled && <NewRegionCanvas {...regionCanvasBaseProps} />}
                 {!isEditModeEnabled && <RegionSelectCanvas {...regionCanvasBaseProps} />}
+                {!isEditModeEnabled && <SiblingMapSelect />}
             </MapViewContainer>
             <NewRegionDialog activeMapImage={activeMapImage} />
         </>
