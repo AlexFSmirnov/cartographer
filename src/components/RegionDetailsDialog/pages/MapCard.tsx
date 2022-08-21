@@ -157,11 +157,11 @@ const MapCardBase: React.FC<MapCardProps> = ({
                     style={{ textDecoration: 'none', color: 'inherit' }}
                     onClick={handleCardClick}
                 >
-                    <Typography variant="h5" noWrap>
+                    <Typography variant="h6" noWrap>
                         {id}.
                     </Typography>
                     <Tooltip title={name}>
-                        <Typography variant="h5" noWrap>
+                        <Typography variant="h6" noWrap>
                             {name}
                         </Typography>
                     </Tooltip>
