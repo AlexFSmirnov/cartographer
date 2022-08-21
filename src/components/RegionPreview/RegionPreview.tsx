@@ -7,7 +7,7 @@ import { Rect, StoreProps } from '../../types';
 import { useImageFromContext } from '../../utils';
 import { RegionPreviewContainer, RegionPreviewLoaderContainer } from './style';
 
-const REGION_PADDING = 8;
+const REGION_PADDING = 0.05;
 
 const connectRegionPreview = connect(
     createStructuredSelector({
@@ -80,11 +80,15 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
 
         if (!rect) return null;
 
+        if (doesRegionExist && !regionId) {
+            return rect;
+        }
+
         return {
-            x: rect.x - REGION_PADDING,
-            y: rect.y - REGION_PADDING,
-            width: rect.width + REGION_PADDING * 2,
-            height: rect.height + REGION_PADDING * 2,
+            x: rect.x - rect.width * REGION_PADDING,
+            y: rect.y - rect.width * REGION_PADDING,
+            width: rect.width + rect.width * REGION_PADDING * 2,
+            height: rect.height + rect.width * REGION_PADDING * 2,
         };
     }, [doesRegionExist, regionId, regions, mapId, mapImage, regionRectProp]);
 
