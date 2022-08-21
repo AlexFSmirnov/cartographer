@@ -45,5 +45,7 @@ export const AppContent = styled.div`
 
 export const ViewContainer = styled.div`
     width: 100%;
+    max-height: 100%;
     flex-grow: 1;
+    overflow: hidden;
 `;

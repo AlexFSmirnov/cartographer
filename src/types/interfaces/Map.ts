@@ -1,5 +1,6 @@
 export interface Map {
     id: string;
     name: string;
-    parent: string | null;
+    parentRegionId: string | null;
+    parentMapId: string | null;
 }

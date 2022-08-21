@@ -137,7 +137,8 @@ const UploadMapDialogBase: React.FC<UploadMapDialogProps> = ({
             addMap({
                 id,
                 name: newMapName,
-                parent: uploadMapDialogType === 'child' ? regionId : null,
+                parentMapId: uploadMapDialogType === 'child' ? activeMapId : null,
+                parentRegionId: uploadMapDialogType === 'child' ? regionId : null,
             });
 
             setImageDataUrl(id, imageDataUrl);

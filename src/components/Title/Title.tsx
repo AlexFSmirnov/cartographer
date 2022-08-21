@@ -46,7 +46,7 @@ const TitleBase: React.FC<TitleProps> = ({ currentProjectMaps }) => {
     }
 
     return (
-        <FlexBox fullWidth center height="64px">
+        <FlexBox fullWidth center height="64px" minHeight="64px">
             {content}
         </FlexBox>
     );

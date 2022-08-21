@@ -3,6 +3,7 @@ import { Paper } from '@mui/material';
 
 export const BottomMenuContainer = styled.div`
     height: 64px;
+    min-height: 64px;
     width: 100%;
 
     display: flex;

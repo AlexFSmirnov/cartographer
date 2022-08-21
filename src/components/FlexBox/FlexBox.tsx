@@ -1,3 +1,4 @@
+import { forwardRef, Ref } from 'react';
 import { Box, BoxProps } from '@mui/material';
 
 interface FlexBoxProps extends BoxProps {
@@ -11,9 +12,11 @@ interface FlexBoxProps extends BoxProps {
 
     fullWidth?: boolean;
     fullHeight?: boolean;
+
+    forwardedRef?: Ref<HTMLDivElement>;
 }
 
-export const FlexBox: React.FC<FlexBoxProps> = ({
+const FlexBoxBase: React.FC<FlexBoxProps> = ({
     direction = 'row',
     row,
     column,
@@ -23,6 +26,7 @@ export const FlexBox: React.FC<FlexBoxProps> = ({
     fullWidth,
     fullHeight,
     children,
+    forwardedRef,
     ...props
 }) => {
     let finalDirection = direction;
@@ -53,8 +57,13 @@ export const FlexBox: React.FC<FlexBoxProps> = ({
             alignItems={alignItems}
             width={width}
             height={height}
+            ref={forwardedRef}
         >
             {children}
         </Box>
     );
 };
+
+export const FlexBox = forwardRef<HTMLDivElement, FlexBoxProps>((props, ref) => (
+    <FlexBoxBase {...props} forwardedRef={ref} />
+));

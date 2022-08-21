@@ -29,7 +29,9 @@ const MapsPageBase: React.FC<MapsPageProps> = ({
     const { regionId } = getUrlParts();
 
     const childMaps = useMemo(() => {
-        return Object.values(maps).filter((map) => map.parent && map.parent === regionId);
+        return Object.values(maps).filter(
+            (map) => map.parentRegionId && map.parentRegionId === regionId
+        );
     }, [regionId, maps]);
 
     const handleUploadClick = () => openUploadMapDialog({ type: 'child' });
