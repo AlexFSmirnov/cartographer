@@ -74,9 +74,20 @@ const SiblingMapSelectBase: React.FC<SiblingMapSelectProps> = ({ maps }) => {
         <FlexBox
             alignX="flex-end"
             alignY="center"
-            sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+            sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                pointerEvents: 'none',
+            }}
         >
-            <VerticalTabs orientation="vertical" value={activeMapIndex}>
+            <VerticalTabs
+                orientation="vertical"
+                value={activeMapIndex}
+                sx={{ pointerEvents: 'all' }}
+            >
                 {siblingMaps.map(({ id, name }) => (
                     <Tooltip
                         key={id}
