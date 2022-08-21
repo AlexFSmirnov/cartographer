@@ -9,7 +9,9 @@ interface GetParentChainProps {
 
 interface Breadcrumb {
     id: string;
+    name: string;
     type: 'map' | 'region';
+    parentMapId?: string;
 }
 
 export const getParentChain = ({ region, map, maps, regionsByMap }: GetParentChainProps) => {
@@ -29,9 +31,11 @@ export const getParentChain = ({ region, map, maps, regionsByMap }: GetParentCha
                 break;
             }
 
-            const { id, parentMapId } = currentRegion;
+            const { id, parentMapId, name } = currentRegion;
             chain.push({
                 id,
+                parentMapId,
+                name,
                 type: 'region',
             });
 
@@ -46,9 +50,10 @@ export const getParentChain = ({ region, map, maps, regionsByMap }: GetParentCha
                 break;
             }
 
-            const { id, parentMapId, parentRegionId } = currentMap;
+            const { id, name, parentMapId, parentRegionId } = currentMap;
             chain.push({
                 id,
+                name,
                 type: 'map',
             });
 
