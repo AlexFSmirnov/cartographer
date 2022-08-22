@@ -1,8 +1,19 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Typography,
+} from '@mui/material';
 import { FlexBox } from '../../../components';
 import {
     deleteMapOrRegion,
@@ -43,6 +54,8 @@ const RegionAccordionBase: React.FC<RegionAccordionProps> = ({
     const { setUrlParts } = useUrlNavigation();
     const { deleteImage } = useImagesContext();
 
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
     const childrenIds = useMemo(() => {
         if (regionId) {
             return Object.values(maps)
@@ -64,10 +77,11 @@ const RegionAccordionBase: React.FC<RegionAccordionProps> = ({
     };
 
     const handleDeleteClick = (e: React.MouseEvent) => {
-        deleteMapOrRegion({ mapId, regionId, deleteImage });
-        // TODO: Delete the root map and all child maps and regions
+        setIsDeleteDialogOpen(true);
         e.stopPropagation();
     };
+    const handleDeleteCancel = () => setIsDeleteDialogOpen(false);
+    const handleDeleteConfirm = () => deleteMapOrRegion({ mapId, regionId, deleteImage });
 
     const { name } = regionId ? regionsByMap[mapId][regionId] : maps[mapId];
     let description = regionId ? regionsByMap[mapId][regionId].description : null;
@@ -75,36 +89,64 @@ const RegionAccordionBase: React.FC<RegionAccordionProps> = ({
         description = `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...`;
     }
 
-    // TODO: Should only be expandable if has children
+    const isExpandable = childrenIds.length > 0 && !expanded;
+    const accordionProps = {
+        expanded: expanded ? true : isExpandable ? undefined : false,
+        sx: {
+            boxShadow: 'none',
+        },
+    };
+
     return (
-        <Accordion expanded={expanded ? true : undefined} sx={{ boxShadow: 'none' }}>
-            <AccordionSummary expandIcon={!expanded ? <ExpandMore /> : undefined}>
-                <FlexBox fullWidth alignX="space-between" alignY="center">
-                    <FlexBox fullWidth column>
-                        <Typography variant="h6">
-                            {regionId || mapId}. {name}
-                        </Typography>
-                        {description && <Typography variant="body2">{description}</Typography>}
+        <>
+            <Accordion {...accordionProps}>
+                <AccordionSummary expandIcon={isExpandable ? <ExpandMore /> : undefined}>
+                    <FlexBox fullWidth alignX="space-between" alignY="center">
+                        <FlexBox fullWidth column>
+                            <Typography variant="h6">
+                                {regionId || mapId}. {name}
+                            </Typography>
+                            {description && <Typography variant="body2">{description}</Typography>}
+                        </FlexBox>
+                        <FlexBox fullHeight center>
+                            {root && (
+                                <Button color="error" onClick={handleDeleteClick}>
+                                    Delete
+                                </Button>
+                            )}
+                            <Button onClick={handleOpenClick}>Open</Button>
+                        </FlexBox>
                     </FlexBox>
-                    <FlexBox fullHeight center>
-                        {root && (
-                            <Button color="error" onClick={handleDeleteClick}>
-                                Delete
-                            </Button>
-                        )}
-                        <Button onClick={handleOpenClick}>Open</Button>
-                    </FlexBox>
-                </FlexBox>
-            </AccordionSummary>
-            <AccordionDetails>
-                {childrenIds.map((childRegion) => (
-                    <RegionAccordion
-                        key={`${childRegion.mapId}${childRegion.regionId || ''}`}
-                        {...childRegion}
-                    />
-                ))}
-            </AccordionDetails>
-        </Accordion>
+                </AccordionSummary>
+                <AccordionDetails>
+                    {childrenIds.map((childRegion) => (
+                        <RegionAccordion
+                            key={`${childRegion.mapId}${childRegion.regionId || ''}`}
+                            {...childRegion}
+                        />
+                    ))}
+                </AccordionDetails>
+            </Accordion>
+            <Dialog open={isDeleteDialogOpen} onClose={handleDeleteCancel}>
+                <DialogTitle>Delete map</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete {regionId || mapId} ({name})?
+                    </DialogContentText>
+                    <DialogContentText>
+                        This will delete all of its child regions and maps!
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="inherit" onClick={handleDeleteCancel}>
+                        Cancel
+                    </Button>
+                    <Button color="error" onClick={handleDeleteConfirm}>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
 
