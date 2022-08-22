@@ -236,7 +236,7 @@ export const exportProject =
     };
 
 interface ImportProjectArgs {
-    file: File;
+    file: File | Blob;
     setImageDataUrl: (imageId: string, dataUrl: string) => void;
 }
 
@@ -251,6 +251,7 @@ export const importProject =
         const reader = new FileReader();
         reader.onload = () => {
             const savedProjectString = reader.result as string;
+            console.log({ savedProjectString });
 
             const savedProject = JSON.parse(savedProjectString);
 
@@ -270,6 +271,16 @@ export const importProject =
             });
         };
         reader.readAsText(file);
+    };
+
+export const importTutorialProject =
+    (setImageDataUrl: (imageId: string, daraUrl: string) => void) => async (dispatch: Dispatch) => {
+        dispatch(openFullscreenLoader());
+
+        const response = await fetch(`${process.env.PUBLIC_URL}/tutorial.cgproj`);
+        const file = await response.blob();
+
+        dispatch(importProject({ file, setImageDataUrl }));
     };
 
 export const importDescriptions = (file: File) => (dispatch: Dispatch, getState: () => State) => {
