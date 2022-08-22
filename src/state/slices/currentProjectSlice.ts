@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Region, Map } from '../../types';
-import type { State } from '../store';
+import type { State, Dispatch } from '../store';
 
 interface CurrentProjectState {
     id: string | null;
@@ -36,9 +36,18 @@ export const currentProjectSlice = createSlice({
             }
 
             state.maps[map.id] = action.payload.map;
+
+            const newRegions = state.regions[oldId];
+            Object.values(state.regions[oldId]).forEach((region) => {
+                newRegions[region.id].parentMapId = map.id;
+            });
+
+            state.regions[map.id] = newRegions;
+            delete state.regions[oldId];
         },
         deleteMap(state, action: PayloadAction<{ mapId: string }>) {
             delete state.maps[action.payload.mapId];
+            delete state.regions[action.payload.mapId];
         },
         addRegion: (state, action: PayloadAction<Region>) => {
             const { activeMapId } = state;
@@ -75,6 +84,15 @@ export const currentProjectSlice = createSlice({
         },
         deleteRegion: (state, action: PayloadAction<{ regionId: string; activeMapId: string }>) => {
             const { regionId, activeMapId } = action.payload;
+
+            const maps = Object.values(state.maps);
+            maps.forEach((map) => {
+                if (map.parentRegionId === regionId) {
+                    delete state.maps[map.id];
+                    delete state.regions[map.id];
+                }
+            });
+
             delete state.regions[activeMapId][regionId];
         },
     },
@@ -132,5 +150,33 @@ export const getActiveMapRegions = createSelector(
     getActiveMapId,
     (regionsByMap, activeMapId) => (activeMapId ? regionsByMap[activeMapId] : {})
 );
+
+export const deleteMapOrRegion =
+    (args: { mapId: string; regionId?: string | null; deleteImage: (imageId: string) => void }) =>
+    (dispatch: Dispatch, getState: () => State) => {
+        const { mapId, regionId, deleteImage } = args;
+
+        const state = getState();
+
+        if (!regionId) {
+            const regionsByMap = getCurrentProjectRegionsByMap(state);
+            Object.values(regionsByMap[mapId]).forEach((region) => {
+                dispatch(deleteMapOrRegion({ mapId, regionId: region.id, deleteImage }));
+            });
+        } else {
+            const maps = getCurrentProjectMaps(state);
+            const childMaps = Object.values(maps).filter((map) => map.parentRegionId === regionId);
+            childMaps.forEach((map) => {
+                dispatch(deleteMapOrRegion({ mapId: map.id, regionId: null, deleteImage }));
+            });
+        }
+
+        if (regionId) {
+            dispatch(deleteRegion({ regionId, activeMapId: mapId }));
+        } else {
+            dispatch(deleteMap({ mapId }));
+            deleteImage(mapId);
+        }
+    };
 
 export default currentProjectSlice.reducer;

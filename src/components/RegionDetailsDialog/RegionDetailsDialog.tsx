@@ -13,9 +13,13 @@ import {
     IconButton,
     Tab,
 } from '@mui/material';
-import { deleteRegion, getCurrentProjectRegionsByMap, getIsEditModeEnabled } from '../../state';
+import {
+    deleteMapOrRegion,
+    getCurrentProjectRegionsByMap,
+    getIsEditModeEnabled,
+} from '../../state';
 import { Region, SubView, StoreProps } from '../../types';
-import { useUrlNavigation } from '../../utils';
+import { useImagesContext, useUrlNavigation } from '../../utils';
 import { FlexBox } from '../FlexBox';
 import { RegionDescription } from '../RegionDescription';
 import { RegionPreview } from '../RegionPreview';
@@ -29,7 +33,7 @@ const connectRegionDetailsDialog = connect(
         regionsByMap: getCurrentProjectRegionsByMap,
     }),
     {
-        deleteRegion,
+        deleteMapOrRegion,
     }
 );
 
@@ -40,10 +44,12 @@ const SUB_VIEW_ORDER = [SubView.Description, SubView.Maps, SubView.Notes, SubVie
 const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     isEditModeEnabled,
     regionsByMap,
-    deleteRegion,
+    deleteMapOrRegion,
 }) => {
     const { getUrlParts, setUrlParts } = useUrlNavigation();
     const { activeMapId, regionId, subView } = getUrlParts();
+
+    const { deleteImage } = useImagesContext();
 
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -72,7 +78,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
             setIsDeleteDialogOpen(false);
             handleClose();
             // TODO: Recursively delete all child regions and maps
-            deleteRegion({ regionId: region.id, activeMapId });
+            deleteMapOrRegion({ mapId: activeMapId, regionId: region.id, deleteImage });
         }
     };
 
@@ -82,7 +88,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
     if (!region) {
         dialogContent = <NotFoundPage onClose={handleClose} />;
     } else {
-        const { id, name, description } = region;
+        const { id, name } = region;
 
         dialogContent = (
             <>
@@ -127,6 +133,9 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
                 <DialogContent>
                     <DialogContentText>
                         Are you sure you want to delete {region?.id} ({region?.name})?
+                    </DialogContentText>
+                    <DialogContentText>
+                        This will delete all of its child maps and regions!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

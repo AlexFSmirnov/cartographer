@@ -17,7 +17,7 @@ import {
     Typography,
 } from '@mui/material';
 import {
-    deleteMap,
+    deleteMapOrRegion,
     getCurrentProjectMaps,
     getIsEditModeEnabled,
     openAlertDialog,
@@ -35,7 +35,7 @@ const connectMapCard = connect(
     }),
     {
         updateMap,
-        deleteMap,
+        deleteMapOrRegion,
         openAlertDialog,
     }
 );
@@ -52,7 +52,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
     maps,
     isEditModeEnabled,
     updateMap,
-    deleteMap,
+    deleteMapOrRegion,
     openAlertDialog,
 }) => {
     const { getHref, setUrlParts } = useUrlNavigation();
@@ -68,9 +68,7 @@ const MapCardBase: React.FC<MapCardProps> = ({
     };
     const handleDeleteCancel = () => setIsDeleteDialogOpen(false);
     const handleDeleteConfirm = () => {
-        // TODO: Recursively delete all child regions and maps
-        deleteMap({ mapId: map.id });
-        deleteImage(map.id);
+        deleteMapOrRegion({ mapId: map.id, regionId: null, deleteImage });
     };
 
     const handleEditButtonClick = (e: React.MouseEvent) => {
@@ -207,6 +205,9 @@ const MapCardBase: React.FC<MapCardProps> = ({
                 <DialogContent>
                     <DialogContentText>
                         Are you sure you want to delete {map.id} ({map.name})?
+                    </DialogContentText>
+                    <DialogContentText>
+                        This will delete all of its child regions and maps!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

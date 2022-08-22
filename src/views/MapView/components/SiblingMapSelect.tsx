@@ -66,7 +66,7 @@ const SiblingMapSelectBase: React.FC<SiblingMapSelectProps> = ({ maps }) => {
         setUrlParts({ activeMapId: mapId, regionId: null });
     };
 
-    if (siblingMaps.length === 0) {
+    if (siblingMaps.length <= 1) {
         return null;
     }
 
