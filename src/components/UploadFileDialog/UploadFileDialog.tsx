@@ -7,7 +7,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     IconButton,
     Paper,
@@ -25,8 +24,9 @@ const connectUploadFileDialog = connect(null, {
 interface UploadFileDialogProps extends StoreProps<typeof connectUploadFileDialog> {
     open: boolean;
     title: string;
-    contentText: string;
+    content: React.ReactNode;
     acceptFiletype?: string;
+    dropzoneHeight?: number;
     onClose: () => void;
     onUpload: (file: File) => void;
 }
@@ -34,8 +34,9 @@ interface UploadFileDialogProps extends StoreProps<typeof connectUploadFileDialo
 const UploadFileDialogBase = ({
     open,
     title,
-    contentText,
+    content,
     acceptFiletype,
+    dropzoneHeight = 256,
     onClose,
     onUpload,
     openAlertDialog,
@@ -68,15 +69,15 @@ const UploadFileDialogBase = ({
 
     const handleFileCancel = () => setImportedFile(null);
 
-    const accept = acceptFiletype ? { '*': [`.${acceptFiletype}`] } : undefined;
+    const accept = acceptFiletype ? { 'text/*': [`.${acceptFiletype}`] } : undefined;
 
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent sx={{ width: '575px', maxWidth: '100%' }}>
-                <DialogContentText>{contentText}</DialogContentText>
+                {content}
                 <Box pt={2} />
-                <FlexBox fullWidth height="256px" center>
+                <FlexBox fullWidth height={dropzoneHeight} center>
                     {importedFile === null ? (
                         <Dropzone accept={accept} onDrop={handleFileDrop} />
                     ) : (

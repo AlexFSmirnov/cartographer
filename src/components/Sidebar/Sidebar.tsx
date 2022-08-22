@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Close, FileDownload, FileUpload, Map, UploadFile } from '@mui/icons-material';
-import { Divider, Drawer } from '@mui/material';
+import { DialogContentText, Divider, Drawer, Paper } from '@mui/material';
 import { CONFIGURATION_FILETYPE } from '../../constants';
 import {
     closeSidebar,
@@ -10,6 +10,7 @@ import {
     getIsDarkModeEnabled,
     getIsEditModeEnabled,
     getIsSidebarOpen,
+    importDescriptions,
     importProject,
     openUploadMapDialog,
     toggleDarkMode,
@@ -35,6 +36,7 @@ const connectSidebar = connect(
         openUploadMapDialog,
         exportProject,
         importProject,
+        importDescriptions,
     }
 );
 
@@ -50,10 +52,12 @@ const SidebarBase: React.FC<SidebarProps> = ({
     openUploadMapDialog,
     exportProject,
     importProject,
+    importDescriptions,
 }) => {
     const { getImageDataUrl, setImageDataUrl } = useImagesContext();
 
     const [isImportConfigurationDialogOpen, setIsImportConfigurationDialogOpen] = useState(false);
+    const [isImportDescriptionsDialogOpen, setIsImportDescriptionsDialogOpen] = useState(false);
 
     const handleUploadRootMapButtonClick = () => {
         openUploadMapDialog({ type: 'root' });
@@ -76,6 +80,12 @@ const SidebarBase: React.FC<SidebarProps> = ({
     };
     const handleImportConfiguration = (file: File) => {
         importProject({ file, setImageDataUrl });
+    };
+
+    const handleImportDescriptionsClick = () => setIsImportDescriptionsDialogOpen(true);
+    const handleImportDescriptionsDialogClose = () => setIsImportDescriptionsDialogOpen(false);
+    const handleImportDescriptions = (file: File) => {
+        importDescriptions(file);
     };
 
     return (
@@ -112,7 +122,11 @@ const SidebarBase: React.FC<SidebarProps> = ({
                             >
                                 Upload root map
                             </SidebarButton>
-                            <SidebarButton divider icon={<UploadFile />} onClick={() => {}}>
+                            <SidebarButton
+                                divider
+                                icon={<UploadFile />}
+                                onClick={handleImportDescriptionsClick}
+                            >
                                 Import descriptions
                             </SidebarButton>
                         </>
@@ -134,11 +148,58 @@ const SidebarBase: React.FC<SidebarProps> = ({
             </Drawer>
             <UploadFileDialog
                 open={isImportConfigurationDialogOpen}
-                title="Import project data"
-                contentText="Select a project configuration to import. The regions, maps, images and notes in the configuration will overwrite the ones currently stored in this project!"
                 acceptFiletype={CONFIGURATION_FILETYPE}
                 onClose={handleImportConfigurationDialogClose}
                 onUpload={handleImportConfiguration}
+                title="Import project data"
+                content={
+                    <>
+                        <DialogContentText>
+                            Select a project configuration to import.
+                        </DialogContentText>
+                        <DialogContentText>
+                            The regions, maps, images and notes in the configuration will overwrite
+                            the ones currently stored in this project!
+                        </DialogContentText>
+                    </>
+                }
+            />
+            <UploadFileDialog
+                open={isImportDescriptionsDialogOpen}
+                acceptFiletype="md"
+                onClose={handleImportDescriptionsDialogClose}
+                onUpload={handleImportDescriptions}
+                dropzoneHeight={150}
+                title="Import descriptions"
+                content={
+                    <>
+                        <DialogContentText>
+                            Select a markdown file containing the bulk descriptions for your
+                            existing regions.
+                        </DialogContentText>
+                        <DialogContentText>
+                            Each description instance begins with a region code, prefixed by{' '}
+                            <code>!#</code> and folloed by a period. Then, the region name follows
+                            for on the same line. Description markdown follows on the next lines,
+                            terminated by three dashes.
+                        </DialogContentText>
+                        <DialogContentText>For example:</DialogContentText>
+                        <Paper elevation={2} sx={{ padding: 1 }}>
+                            <code>
+                                <p>!# R1. Region Number One </p>
+                                <p>This is the first region.</p>
+                                <p>{'>'} It can have quotes,</p>
+                                <p>## headers</p>
+                                <p>and **bold** text.</p>
+                                <br />
+                                <p>---</p>
+                                <br />
+                                <p>!# R2. Region Number Two</p>
+                                <p>This is the second region.</p>
+                            </code>
+                        </Paper>
+                    </>
+                }
             />
         </>
     );

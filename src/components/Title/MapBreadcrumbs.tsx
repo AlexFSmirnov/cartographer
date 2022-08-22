@@ -64,16 +64,15 @@ const MapBreadcrumbsBase: React.FC<MapBreadcrumbsProps> = ({ mapId, maps, region
             <FlexBox fullHeight fullWidth column center>
                 <FlexBox>
                     {breadcrumbs.map((breadcrumb) => (
-                        <>
-                            <Breadcrumb key={breadcrumb.id + '1'} {...breadcrumb} />
+                        <FlexBox key={breadcrumb.id}>
+                            <Breadcrumb {...breadcrumb} />
                             <Typography
-                                key={breadcrumb.id + '2'}
                                 variant="h5"
                                 sx={{ fontWeight: 300, padding: '0 8px', opacity: 0.7 }}
                             >
                                 /
                             </Typography>
-                        </>
+                        </FlexBox>
                     ))}
                     <FlexBox
                         center

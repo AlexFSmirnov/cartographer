@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CONFIGURATION_FILETYPE } from '../../constants';
 import { Region, Map } from '../../types';
-import { downloadFile } from '../../utils';
+import { downloadFile, parseDescriptionMarkdown } from '../../utils';
 import type { State, Dispatch } from '../store';
 import { closeFullscreenLoader, openFullscreenLoader } from './uiSlice';
 
@@ -71,6 +71,16 @@ export const currentProjectSlice = createSlice({
         setActiveMapId: (state, action: PayloadAction<string | null>) => {
             state.activeMapId = action.payload;
         },
+        setRegionName: (
+            state,
+            action: PayloadAction<{ regionId: string; activeMapId: string; name: string }>
+        ) => {
+            const { regionId, activeMapId, name } = action.payload;
+
+            if (state.regions?.[activeMapId]?.[regionId]) {
+                state.regions[activeMapId][regionId].name = name;
+            }
+        },
         setRegionDescription: (
             state,
             action: PayloadAction<{ regionId: string; activeMapId: string; description: string }>
@@ -116,6 +126,7 @@ export const {
     addRegion,
     setActiveMapId,
     setRegionDescription,
+    setRegionName,
     setRegionNotes,
     deleteRegion,
 } = currentProjectSlice.actions;
@@ -260,5 +271,33 @@ export const importProject =
         };
         reader.readAsText(file);
     };
+
+export const importDescriptions = (file: File) => (dispatch: Dispatch, getState: () => State) => {
+    dispatch(openFullscreenLoader());
+
+    const state = getState();
+    const allRegions = getCurrentProjectAllRegions(state);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+        const parsedRegions = parseDescriptionMarkdown(reader.result as string);
+
+        Object.values(allRegions).forEach((region) => {
+            const { id, parentMapId } = region;
+            const parsedRegion = parsedRegions[id];
+
+            if (parsedRegion) {
+                const { name, description } = parsedRegion;
+                dispatch(setRegionName({ regionId: id, activeMapId: parentMapId, name }));
+                dispatch(
+                    setRegionDescription({ regionId: id, activeMapId: parentMapId, description })
+                );
+            }
+        });
+
+        dispatch(closeFullscreenLoader());
+    };
+    reader.readAsText(file);
+};
 
 export default currentProjectSlice.reducer;
