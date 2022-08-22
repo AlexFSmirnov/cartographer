@@ -21,7 +21,7 @@ const EmptyProjectViewBase: React.FC<EmptyProjectViewProps> = ({ openUploadMapDi
         <Typography variant="body1">load an example project for a tutorial</Typography>
         <FlexBox mt={4} width="360px" maxWidth="90%" center>
             <Button color="inherit" variant="outlined" disabled>
-                Load example project
+                Load tutorial project
             </Button>
             <Box px={0.5} />
             <Button variant="outlined" onClick={() => openUploadMapDialog({ type: 'root' })}>
