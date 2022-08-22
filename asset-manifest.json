@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.js": "/cartographer/static/js/main.6548f281.js",
+    "service-worker.js": "/cartographer/service-worker.js",
+    "index.html": "/cartographer/index.html",
+    "main.6548f281.js.map": "/cartographer/static/js/main.6548f281.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.6548f281.js"
+  ]
+}
