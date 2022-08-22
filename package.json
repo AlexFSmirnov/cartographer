@@ -1,6 +1,6 @@
 {
-    "name": "dnd-map-helper",
-    "homepage": "https://alexfsmirnov.github.io/dnd-map-helper",
+    "name": "cartographer",
+    "homepage": "https://alexfsmirnov.github.io/cartographer",
     "version": "0.1.0",
     "private": true,
     "scripts": {

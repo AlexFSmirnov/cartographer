@@ -1,3 +1,3 @@
-export const URL_BASENAME = '/dnd-map-helper';
+export const URL_BASENAME = '/cartographer';
 
-export const CONFIGURATION_FILETYPE = 'dmhproj';
+export const CONFIGURATION_FILETYPE = 'cgproj';
