@@ -1,19 +1,20 @@
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, Accept } from 'react-dropzone';
 import { Divider, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { FlexBox } from '../FlexBox';
 import { DropzoneContainer } from './style';
 
 interface DropzoneProps {
     onDrop: (files: File[]) => void;
+    accept?: Accept;
 }
 
-export const Dropzone: React.FC<DropzoneProps> = ({ onDrop }) => {
+export const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: {
+        accept: accept || {
             'image/png': ['.png'],
             'image/jpeg': ['.jpeg'],
         },

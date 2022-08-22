@@ -13,7 +13,7 @@ export const DropzoneWithPreview: React.FC<DropzoneWithPreviewProps> = ({ onDrop
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
     const handleFileDrop = (files: File[]) => {
-        if (files.length === 1) {
+        if (files.length !== 1) {
             setUploadedImageUrl(URL.createObjectURL(files[0]));
             onDrop(files[0]);
         }

@@ -41,7 +41,11 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     const { setUrlParts } = useUrlNavigation();
 
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
-    const canvasRect = useMemo(() => (canvas ? canvas.getBoundingClientRect() : null), [canvas]);
+    const canvasRect = useMemo(
+        () => (canvas ? canvas.getBoundingClientRect() : null),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [canvas, setUrlParts]
+    );
 
     const canvasRef = (ref: HTMLCanvasElement | null) => setCanvas(ref);
 

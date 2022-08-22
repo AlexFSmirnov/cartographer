@@ -4,7 +4,7 @@ export const ProjectSelectContainer = styled.div<{ backgroundColor: string; colo
     width: 320px;
     height: 64px;
 
-    padding: 0 8px;
+    padding: 0 16px;
     background-color: ${(props) => props.backgroundColor};
     color: ${(props) => props.color};
 

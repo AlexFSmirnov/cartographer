@@ -224,4 +224,41 @@ export const exportProject =
         dispatch(closeFullscreenLoader());
     };
 
+interface ImportProjectArgs {
+    file: File;
+    setImageDataUrl: (imageId: string, dataUrl: string) => void;
+}
+
+export const importProject =
+    ({ file, setImageDataUrl }: ImportProjectArgs) =>
+    async (dispatch: Dispatch, getState: () => State) => {
+        dispatch(openFullscreenLoader());
+
+        const state = getState();
+        const currentProject = getCurrentProjectState(state);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const savedProjectString = reader.result as string;
+
+            const savedProject = JSON.parse(savedProjectString);
+
+            const { project, images } = savedProject;
+
+            project.id = currentProject.id;
+            project.name = currentProject.name;
+
+            dispatch(setCurrentProject(project));
+
+            const imagePromises = Object.entries(images).map(async ([imageId, dataUrl]) =>
+                setImageDataUrl(imageId, dataUrl as string)
+            );
+
+            Promise.all(imagePromises).then(() => {
+                dispatch(closeFullscreenLoader());
+            });
+        };
+        reader.readAsText(file);
+    };
+
 export default currentProjectSlice.reducer;
