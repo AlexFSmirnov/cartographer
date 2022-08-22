@@ -20,11 +20,9 @@ export const savedProjectsSlice = createSlice({
             state,
             action: PayloadAction<Partial<SavedProject> & { id: number; name: string }>
         ) => {
-            const { id, name } = action.payload;
-            state[id] = {
+            state[action.payload.id] = {
                 ...emptySavedProject,
-                id,
-                name,
+                ...action.payload,
             };
         },
         deleteProject: (state, action: PayloadAction<{ id: number }>) => {
@@ -66,7 +64,7 @@ export const openProject =
         dispatch(addProject(oldProject));
 
         dispatch(setCurrentProject(newProject));
-        dispatch(deleteProject(newProject));
+        dispatch(deleteProject({ id: newProject.id }));
     };
 
 export const createProject = (name: string) => (dispatch: Dispatch, getState: () => State) => {
