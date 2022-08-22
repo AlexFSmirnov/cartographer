@@ -15,7 +15,7 @@ interface ReferenceCardProps {
 export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, region }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const snapshotLength = isMobile ? 10 : 25;
+    const snapshotLength = useMemo(() => (isMobile ? 10 : 25), [isMobile]);
 
     const { getHref, setUrlParts } = useUrlNavigation();
 
@@ -66,7 +66,7 @@ export const ReferenceCard: React.FC<ReferenceCardProps> = ({ referencedId, regi
                 snapshotSuffix,
             };
         });
-    }, [region, referencedId]);
+    }, [region, referencedId, snapshotLength]);
 
     const handleCardClick = (e: React.MouseEvent) => {
         setUrlParts({

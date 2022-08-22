@@ -1,7 +1,5 @@
-import { Box, Tooltip, Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import { useUrlNavigation } from '../../utils';
-import { FlexBox } from '../FlexBox';
-import { RegionPreview } from '../RegionPreview';
 import { RegionPreviewTooltip } from '../RegionPreviewTooltip';
 
 interface BreadcrumbProps {

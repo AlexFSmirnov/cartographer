@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Box, DialogContent, DialogTitle } from '@mui/material';
+import { DialogContent, DialogTitle } from '@mui/material';
 
 export const RegionDetailsDialogTitle = styled(DialogTitle)`
     display: flex;

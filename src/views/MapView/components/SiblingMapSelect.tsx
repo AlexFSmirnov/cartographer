@@ -6,7 +6,7 @@ import Tabs, { TabsProps } from '@mui/material/Tabs';
 import { styled } from '@mui/material/styles';
 import { FlexBox, RegionPreviewTooltip } from '../../../components';
 import { getCurrentProjectMaps } from '../../../state';
-import { Map, StoreProps } from '../../../types';
+import { StoreProps } from '../../../types';
 import { getSiblingMaps, useUrlNavigation } from '../../../utils';
 
 const connectSiblingMapSelect = connect(

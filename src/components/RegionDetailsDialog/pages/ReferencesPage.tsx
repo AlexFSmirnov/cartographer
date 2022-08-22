@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { getCurrentProjectAllRegions } from '../../../state';
 import { Region, StoreProps } from '../../../types';
 import { FlexBox } from '../../FlexBox';

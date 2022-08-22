@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Paper, Typography } from '@mui/material';
-import { FlexBox, RegionPreview } from '../../../components';
+import { RegionPreview } from '../../../components';
 import { getCurrentProjectMaps, getCurrentProjectRegionsByMap } from '../../../state';
 import { Region, StoreProps, SubView } from '../../../types';
 import { getParentChain, useUrlNavigation } from '../../../utils';

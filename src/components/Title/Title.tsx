@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { getCurrentProjectMaps } from '../../state';
 import { StoreProps, RouteName } from '../../types';
 import { useUrlNavigation } from '../../utils';
