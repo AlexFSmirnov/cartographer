@@ -4,6 +4,7 @@ import { Close, FileDownload, FileUpload, Map, UploadFile } from '@mui/icons-mat
 import { Divider, Drawer } from '@mui/material';
 import {
     closeSidebar,
+    exportProject,
     getIsDarkModeEnabled,
     getIsEditModeEnabled,
     getIsSidebarOpen,
@@ -12,6 +13,7 @@ import {
     toggleEditMode,
 } from '../../state';
 import { StoreProps } from '../../types';
+import { useImagesContext } from '../../utils';
 import { ProjectSelect } from '../ProjectSelect';
 import { SidebarButton } from '../SidebarButton';
 import { SidebarItemsContainer } from './style';
@@ -27,6 +29,7 @@ const connectSidebar = connect(
         toggleEditMode,
         toggleDarkMode,
         openUploadMapDialog,
+        exportProject,
     }
 );
 
@@ -40,7 +43,10 @@ const SidebarBase: React.FC<SidebarProps> = ({
     toggleEditMode,
     toggleDarkMode,
     openUploadMapDialog,
+    exportProject,
 }) => {
+    const { getImageDataUrl } = useImagesContext();
+
     const handleUploadRootMapButtonClick = () => {
         openUploadMapDialog({ type: 'root' });
         closeSidebar();
@@ -50,11 +56,15 @@ const SidebarBase: React.FC<SidebarProps> = ({
     const handleEditModeClick = () => toggleEditMode();
     const handleDarkModeClick = () => toggleDarkMode();
 
+    const handleExportProjectClick = () => {
+        exportProject(getImageDataUrl);
+    };
+
     return (
         <Drawer anchor="left" open={isSidebarOpen} onClose={handleSidebarClose}>
             <SidebarItemsContainer>
                 <ProjectSelect />
-                <SidebarButton divider icon={<FileDownload />} onClick={() => {}}>
+                <SidebarButton divider icon={<FileDownload />} onClick={handleExportProjectClick}>
                     Export project data
                 </SidebarButton>
                 <SidebarButton divider icon={<FileUpload />} onClick={() => {}}>

@@ -80,7 +80,7 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     };
 
     const handleDialogKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'Enter' && regionId) {
+        if (e.key === 'Enter' && regionId && !isDescriptionEnabled) {
             handleConfirm();
         }
     };

@@ -10,6 +10,8 @@ interface UiState {
 
     alertDialogMessage: string | null;
 
+    isFullscreenLoaderOpen: boolean;
+
     newRegionRect: Rect | null;
 }
 
@@ -19,6 +21,7 @@ const initialState: UiState = {
     uploadMapDialogType: null,
     newRegionRect: null,
     alertDialogMessage: null,
+    isFullscreenLoaderOpen: false,
 };
 
 export const uiSlice = createSlice({
@@ -51,6 +54,12 @@ export const uiSlice = createSlice({
         closeAlertDialog: (state) => {
             state.alertDialogMessage = null;
         },
+        openFullscreenLoader: (state) => {
+            state.isFullscreenLoaderOpen = true;
+        },
+        closeFullscreenLoader: (state) => {
+            state.isFullscreenLoaderOpen = false;
+        },
     },
 });
 
@@ -63,6 +72,8 @@ export const {
     closeNewRegionDialog,
     openAlertDialog,
     closeAlertDialog,
+    openFullscreenLoader,
+    closeFullscreenLoader,
 } = uiSlice.actions;
 
 export const getUiState = (state: State) => state.ui;
@@ -83,6 +94,11 @@ export const getNewRegionRect = createSelector(getUiState, (state) => state.newR
 export const getAlertDialogMessage = createSelector(
     getUiState,
     (state) => state.alertDialogMessage
+);
+
+export const getIsFullscreenDialogOpen = createSelector(
+    getUiState,
+    (state) => state.isFullscreenLoaderOpen
 );
 
 export default uiSlice.reducer;

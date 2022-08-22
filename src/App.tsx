@@ -6,6 +6,7 @@ import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
 import {
     AlertDialog,
     BottomMenu,
+    FullscreenLoader,
     RegionDetailsDialog,
     Sidebar,
     Title,
@@ -123,6 +124,7 @@ const AppBase: React.FC<AppProps> = ({
             <RegionDetailsDialog />
             <UploadMapDialog />
             <AlertDialog />
+            <FullscreenLoader />
         </AppContainer>
     );
 };

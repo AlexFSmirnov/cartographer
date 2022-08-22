@@ -1,7 +1,10 @@
 import { createSelector } from 'reselect';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CONFIGURATION_FILETYPE } from '../../constants';
 import { Region, Map } from '../../types';
+import { downloadFile } from '../../utils';
 import type { State, Dispatch } from '../store';
+import { closeFullscreenLoader, openFullscreenLoader } from './uiSlice';
 
 export interface CurrentProjectState {
     id: number;
@@ -190,6 +193,35 @@ export const deleteMapOrRegion =
             dispatch(deleteMap({ mapId }));
             deleteImage(mapId);
         }
+    };
+
+export const exportProject =
+    (getImageDataUrl: (imageId: string) => Promise<string | null>) =>
+    async (dispatch: Dispatch, getState: () => State) => {
+        dispatch(openFullscreenLoader());
+
+        const state = getState();
+
+        const project = getCurrentProjectState(state);
+
+        const mapIds = getCurrentProjectMapIds(state);
+        const images: Record<string, string | null> = {};
+
+        const promises = mapIds.map(async (mapId) => {
+            const image = await getImageDataUrl(mapId);
+            images[mapId] = image;
+        });
+
+        await Promise.all(promises);
+
+        const filename = `${project.name}.${CONFIGURATION_FILETYPE}`;
+        const data = {
+            project,
+            images,
+        };
+        downloadFile(filename, JSON.stringify(data));
+
+        dispatch(closeFullscreenLoader());
     };
 
 export default currentProjectSlice.reducer;
