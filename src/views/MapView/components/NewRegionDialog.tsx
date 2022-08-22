@@ -79,6 +79,12 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
         setDescription(description);
     };
 
+    const handleDialogKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' && regionId) {
+            handleConfirm();
+        }
+    };
+
     const handleConfirm = () => {
         if (!newRegionRect) {
             openAlertDialog('Please select a region on the map first.');
@@ -115,7 +121,11 @@ const NewRegionDialogBase: React.FC<NewRegionDialogProps> = ({
     };
 
     return (
-        <Dialog open={newRegionRect !== null} onClose={closeNewRegionDialog}>
+        <Dialog
+            open={newRegionRect !== null}
+            onClose={closeNewRegionDialog}
+            onKeyUp={handleDialogKeyUp}
+        >
             <DialogTitle>New region</DialogTitle>
             <DialogContent
                 sx={{
