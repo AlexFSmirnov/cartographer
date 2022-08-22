@@ -44,7 +44,6 @@ const UploadFileDialogBase = ({
     const [importedFile, setImportedFile] = useState<File | null>(null);
 
     const handleFileDrop = (files: File[]) => {
-        console.log(files);
         if (files.length !== 1) {
             openAlertDialog('Please select a single file');
             return;

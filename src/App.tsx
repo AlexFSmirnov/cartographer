@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
-import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
     AlertDialog,
     BottomMenu,
@@ -49,9 +49,6 @@ const AppBase: React.FC<AppProps> = ({
     currentProjectId,
     setActiveMapId,
 }) => {
-    const theme = useTheme();
-    console.log(theme);
-
     const { getUrlParts, navigate } = useUrlNavigation();
     const { view, activeMapId: urlActiveMapId } = getUrlParts();
 

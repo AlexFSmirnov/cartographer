@@ -251,10 +251,8 @@ export const importProject =
         const reader = new FileReader();
         reader.onload = () => {
             const savedProjectString = reader.result as string;
-            console.log({ savedProjectString });
 
             const savedProject = JSON.parse(savedProjectString);
-
             const { project, images } = savedProject;
 
             project.id = currentProject.id;
