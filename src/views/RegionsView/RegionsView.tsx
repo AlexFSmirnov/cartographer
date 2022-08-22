@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { FlexBox } from '../../components';
 import { getCurrentProjectRootMaps } from '../../state';
 import { StoreProps } from '../../types';
@@ -32,6 +32,7 @@ const RegionsViewBase: React.FC<RegionsViewProps> = ({ rootMaps }) => {
                 {rootMaps.map(({ id }) => (
                     <RegionAccordion root expanded={rootMaps.length === 1} key={id} mapId={id} />
                 ))}
+                <Box minHeight={100} />
             </FlexBox>
         </FlexBox>
     );

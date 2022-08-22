@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Box } from '@mui/material';
+import { FlexBox } from '../../components';
 import { getIsEditModeEnabled } from '../../state';
 import { StoreProps } from '../../types';
 import { useImageFromContext, useUrlNavigation } from '../../utils';
@@ -68,13 +70,16 @@ const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled }) => {
 
     return (
         <>
-            <MapViewContainer ref={containerRef}>
-                <ActiveMapCanvas canvasSize={canvasSize} activeMapImage={activeMapImage} />
-                {isEditModeEnabled && <AllRegionsCanvas {...regionCanvasBaseProps} />}
-                {isEditModeEnabled && <NewRegionCanvas {...regionCanvasBaseProps} />}
-                {!isEditModeEnabled && <RegionSelectCanvas {...regionCanvasBaseProps} />}
-                {!isEditModeEnabled && <SiblingMapSelect />}
-            </MapViewContainer>
+            <FlexBox fullWidth fullHeight column>
+                <MapViewContainer ref={containerRef}>
+                    <ActiveMapCanvas canvasSize={canvasSize} activeMapImage={activeMapImage} />
+                    {isEditModeEnabled && <AllRegionsCanvas {...regionCanvasBaseProps} />}
+                    {isEditModeEnabled && <NewRegionCanvas {...regionCanvasBaseProps} />}
+                    {!isEditModeEnabled && <RegionSelectCanvas {...regionCanvasBaseProps} />}
+                    {!isEditModeEnabled && <SiblingMapSelect />}
+                </MapViewContainer>
+                <Box height="64px" />
+            </FlexBox>
             <NewRegionDialog activeMapImage={activeMapImage} />
         </>
     );

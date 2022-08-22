@@ -19,8 +19,6 @@ const imageContextDefaultMethods: ImagesContextMethods = {
 
 const ImagesContext = createContext(imageContextDefaultMethods);
 
-// TODO: Prefix images with project id
-
 const getImageKey = ({ imageId, projectId }: { imageId: string; projectId: string }) =>
     `${projectId}-${imageId}`;
 

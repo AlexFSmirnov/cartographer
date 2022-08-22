@@ -35,6 +35,7 @@ const NotesViewBase: React.FC<NotesViewProps> = ({ allRegions }) => {
                 {regionsWithNotes.map((region) => (
                     <NoteCard key={region.id} region={region} />
                 ))}
+                <Box minHeight={100} />
             </FlexBox>
         </FlexBox>
     );
