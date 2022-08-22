@@ -3,17 +3,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Region, Map } from '../../types';
 import type { State, Dispatch } from '../store';
 
-interface CurrentProjectState {
-    id: string | null;
-    name: string | null;
+export interface CurrentProjectState {
+    id: number;
+    name: string;
     activeMapId: string | null;
     maps: Record<string, Map>;
     regions: Record<string, Record<string, Region>>;
 }
 
-const initialState: CurrentProjectState = {
-    id: 'COS',
-    name: 'Curse of Strahd',
+export const initialState: CurrentProjectState = {
+    id: 0,
+    name: 'Untitled project',
     activeMapId: null,
     maps: {},
     regions: {},
@@ -23,6 +23,12 @@ export const currentProjectSlice = createSlice({
     name: 'currentProject',
     initialState,
     reducers: {
+        setCurrentProject: (state, action: PayloadAction<CurrentProjectState>) => {
+            return action.payload;
+        },
+        setCurrentProjectName: (state, action: PayloadAction<string>) => {
+            state.name = action.payload;
+        },
         addMap(state, action: PayloadAction<Map>) {
             const { id } = action.payload;
             state.maps[id] = action.payload;
@@ -99,6 +105,8 @@ export const currentProjectSlice = createSlice({
 });
 
 export const {
+    setCurrentProject,
+    setCurrentProjectName,
     addMap,
     updateMap,
     deleteMap,
@@ -108,6 +116,8 @@ export const {
     setRegionNotes,
     deleteRegion,
 } = currentProjectSlice.actions;
+
+// --------------------------------------------------------
 
 export const getCurrentProjectState = (state: State) => state.currentProject;
 
@@ -151,6 +161,8 @@ export const getActiveMapRegions = createSelector(
     getActiveMapId,
     (regionsByMap, activeMapId) => (activeMapId ? regionsByMap[activeMapId] : {})
 );
+
+// --------------------------------------------------------
 
 export const deleteMapOrRegion =
     (args: { mapId: string; regionId?: string | null; deleteImage: (imageId: string) => void }) =>

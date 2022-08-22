@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 import localforage from 'localforage';
 
 interface ImagesContextMethods {
-    setProjectId: (projectId: string | null) => void;
+    setProjectId: (projectId: number) => void;
     getImageDataUrl: (imageId: string) => Promise<string | null>;
     setImageDataUrl: (imageId: string, dataUrl: string) => Promise<string | null>;
     updateImageId: (props: { oldId: string; newId: string }) => Promise<void>;
@@ -64,8 +64,8 @@ export const ImagesContextProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     const setProjectId = useCallback(
-        (projectId: string | null) => {
-            setProjectIdState(projectId || '');
+        (projectId: number) => {
+            setProjectIdState(`${projectId}`);
         },
         [setProjectIdState]
     );
