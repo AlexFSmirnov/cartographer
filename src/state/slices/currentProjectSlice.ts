@@ -112,6 +112,7 @@ export const {
 export const getCurrentProjectState = (state: State) => state.currentProject;
 
 export const getCurrentProjectName = createSelector(getCurrentProjectState, (state) => state.name);
+export const getCurrentProjectId = createSelector(getCurrentProjectState, (state) => state.id);
 
 export const getCurrentProjectMaps = createSelector(getCurrentProjectState, (state) => state.maps);
 export const getCurrentProjectMapIds = createSelector(getCurrentProjectMaps, (maps) =>

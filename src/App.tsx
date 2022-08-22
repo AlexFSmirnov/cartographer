@@ -14,6 +14,7 @@ import {
 } from './components';
 import {
     getActiveMapId,
+    getCurrentProjectId,
     getCurrentProjectMapIds,
     getCurrentProjectRootMapId,
     getIsDarkModeEnabled,
@@ -22,7 +23,7 @@ import {
 import { AppContainer, AppContent, GlobalStyle, ViewContainer } from './style';
 import { darkTheme, lightTheme } from './themes';
 import { StoreProps, RouteName } from './types';
-import { useUrlNavigation } from './utils';
+import { useImagesContext, useUrlNavigation } from './utils';
 import { NotFound, EmptyProjectView } from './views';
 
 const connectApp = connect(
@@ -31,6 +32,7 @@ const connectApp = connect(
         stateActiveMapId: getActiveMapId,
         currentProjectMapIds: getCurrentProjectMapIds,
         currentProjectRootMapId: getCurrentProjectRootMapId,
+        currentProjectId: getCurrentProjectId,
     }),
     {
         setActiveMapId,
@@ -43,6 +45,7 @@ const AppBase: React.FC<AppProps> = ({
     stateActiveMapId,
     currentProjectMapIds,
     currentProjectRootMapId,
+    currentProjectId,
     setActiveMapId,
 }) => {
     const theme = useTheme();
@@ -50,6 +53,8 @@ const AppBase: React.FC<AppProps> = ({
 
     const { getUrlParts, navigate } = useUrlNavigation();
     const { view, activeMapId: urlActiveMapId } = getUrlParts();
+
+    const { setProjectId } = useImagesContext();
 
     useEffect(() => {
         let redirectUrl = `/${RouteName.Map}`;
@@ -90,6 +95,10 @@ const AppBase: React.FC<AppProps> = ({
         setActiveMapId,
     ]);
 
+    useEffect(() => {
+        setProjectId(currentProjectId);
+    }, [currentProjectId, setProjectId]);
+
     const isNotFound = useMemo(
         () =>
             view === RouteName.Map &&
@@ -98,7 +107,6 @@ const AppBase: React.FC<AppProps> = ({
         [urlActiveMapId, currentProjectMapIds, view]
     );
 
-    // TODO: Make it possible for views to overlap bottom navigation
     return (
         <AppContainer>
             <AppContent>

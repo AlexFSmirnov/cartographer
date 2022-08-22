@@ -77,7 +77,7 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
         if (region && activeMapId) {
             setIsDeleteDialogOpen(false);
             handleClose();
-            // TODO: Recursively delete all child regions and maps
+
             deleteMapOrRegion({ mapId: activeMapId, regionId: region.id, deleteImage });
         }
     };
