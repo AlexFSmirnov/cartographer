@@ -159,11 +159,9 @@ const MapCardBase: React.FC<MapCardProps> = ({
                     <Typography variant="h6" noWrap>
                         {id}.
                     </Typography>
-                    <Tooltip title={name}>
-                        <Typography variant="h6" noWrap>
-                            {name}
-                        </Typography>
-                    </Tooltip>
+                    <Typography variant="h6" noWrap>
+                        {name}
+                    </Typography>
                     <Box flexGrow={1} />
                 </a>
                 {isEditModeEnabled && (
