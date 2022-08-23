@@ -134,9 +134,9 @@ const ThemedApp: React.FC<AppProps> = (props) => {
     useEffect(() => {
         const favicon = document.getElementById('favicon') as HTMLLinkElement;
         if (isDarkModeEnabled) {
-            favicon.href = `${process.env.PUBLIC_URL}/favicon.ico`;
+            favicon.href = `${process.env.PUBLIC_URL}/favicon-white.svg`;
         } else {
-            favicon.href = `${process.env.PUBLIC_URL}/favicon-black.ico`;
+            favicon.href = `${process.env.PUBLIC_URL}/favicon-black.svg`;
         }
     }, [isDarkModeEnabled]);
 
