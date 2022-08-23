@@ -131,6 +131,15 @@ const ThemedApp: React.FC<AppProps> = (props) => {
 
     const theme = useMemo(() => (isDarkModeEnabled ? darkTheme : lightTheme), [isDarkModeEnabled]);
 
+    useEffect(() => {
+        const favicon = document.getElementById('favicon') as HTMLLinkElement;
+        if (isDarkModeEnabled) {
+            favicon.href = `${process.env.PUBLIC_URL}/favicon.ico`;
+        } else {
+            favicon.href = `${process.env.PUBLIC_URL}/favicon-black.ico`;
+        }
+    }, [isDarkModeEnabled]);
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
