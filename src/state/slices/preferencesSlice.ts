@@ -19,13 +19,16 @@ export const preferencesSlice = createSlice({
         toggleEditMode: (state) => {
             state.isEditModeEnabled = !state.isEditModeEnabled;
         },
+        disableEditMode: (state) => {
+            state.isEditModeEnabled = false;
+        },
         toggleDarkMode: (state) => {
             state.isDarkModeEnabled = !state.isDarkModeEnabled;
         },
     },
 });
 
-export const { toggleEditMode, toggleDarkMode } = preferencesSlice.actions;
+export const { toggleEditMode, disableEditMode, toggleDarkMode } = preferencesSlice.actions;
 
 export const getPreferencesState = (state: State) => state.preferences;
 

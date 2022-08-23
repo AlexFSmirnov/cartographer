@@ -13,6 +13,10 @@ export const DescriptionBlockquoteContainer = styled.div<DescriptionBlockquoteCo
 
     border-left: 2px solid ${(props) => props.borderColor};
     border-right: 2px solid ${(props) => props.borderColor};
+
+    & > p {
+        padding-bottom: 0;
+    }
 `;
 
 interface DescriptionBlockquoteCircleProps {

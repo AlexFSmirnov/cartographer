@@ -136,8 +136,12 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
         <Box p={1} height={previewHeight} overflow="auto">
             <ReactMarkdown
                 components={{
-                    h1: ({ children }) => <Typography variant="h2">{children}</Typography>,
-                    h2: ({ children }) => <Typography variant="h3">{children}</Typography>,
+                    h1: ({ children }) => <Typography variant="h3">{children}</Typography>,
+                    h2: ({ children }) => (
+                        <Typography variant="h2" sx={{ fontSize: '22pt' }}>
+                            {children}
+                        </Typography>
+                    ),
                     ul: ({ children }) => <ul style={{ paddingLeft: '1em' }}>{children}</ul>,
                     ol: ({ children }) => <ol style={{ paddingLeft: '1em' }}>{children}</ol>,
                     blockquote: ({ children }) => (
@@ -148,6 +152,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
                             {children}
                         </RegionLink>
                     ),
+                    p: ({ children }) => <Typography pb={2}>{children}</Typography>,
                 }}
             >
                 {descriptionWithLinks}

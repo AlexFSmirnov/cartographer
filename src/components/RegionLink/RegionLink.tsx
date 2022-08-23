@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link, Tooltip } from '@mui/material';
@@ -31,7 +32,19 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
     const { view, subView } = getUrlParts();
     const { activeMapId, regionId } = parseUrl(`/view_placeholder${relativeHref}`);
 
+    const href = useMemo(() => {
+        if (relativeHref?.startsWith('/')) {
+            return `${window.location.origin}${URL_BASENAME}/${view}${relativeHref || ''}`;
+        }
+
+        return relativeHref;
+    }, [view, relativeHref]);
+
     const handleClick = (e: React.MouseEvent) => {
+        if (!relativeHref?.startsWith('/')) {
+            return;
+        }
+
         if (isClickable && relativeHref) {
             navigate(`/${view}${regionId ? `${relativeHref}/${subView}` : relativeHref}`);
         }
@@ -39,16 +52,15 @@ const RegionLinkBase: React.FC<RegionLinkProps> = ({
         e.preventDefault();
     };
 
-    const href = `${window.location.origin}${URL_BASENAME}/${view}${relativeHref || ''}`;
-
     let tooltipTitleElement: React.ReactNode = '';
 
-    if (activeMapId) {
-        const { name: regionName } = regionId ? regions[activeMapId][regionId] : maps[activeMapId];
-
-        tooltipTitleElement = (
-            <RegionPreviewTooltip mapId={activeMapId} regionId={regionId} name={regionName} />
-        );
+    if (relativeHref?.startsWith('/') && activeMapId) {
+        const region = regionId ? regions[activeMapId][regionId] : maps[activeMapId];
+        if (region) {
+            tooltipTitleElement = (
+                <RegionPreviewTooltip mapId={activeMapId} regionId={regionId} name={region.name} />
+            );
+        }
     }
 
     return (

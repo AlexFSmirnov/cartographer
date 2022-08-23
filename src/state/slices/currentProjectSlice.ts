@@ -4,6 +4,7 @@ import { CONFIGURATION_FILETYPE } from '../../constants';
 import { Region, Map } from '../../types';
 import { downloadFile, parseDescriptionMarkdown } from '../../utils';
 import type { State, Dispatch } from '../store';
+import { disableEditMode } from './preferencesSlice';
 import { closeFullscreenLoader, openFullscreenLoader } from './uiSlice';
 
 export interface CurrentProjectState {
@@ -278,6 +279,7 @@ export const importTutorialProject =
         const response = await fetch(`${process.env.PUBLIC_URL}/tutorial.cgproj`);
         const file = await response.blob();
 
+        dispatch(disableEditMode());
         dispatch(importProject({ file, setImageDataUrl }));
     };
 

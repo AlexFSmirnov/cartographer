@@ -14,11 +14,11 @@ export const DescriptionBlockquote: React.FC<DescriptionBlockquoteProps> = ({ ch
 
     return (
         <DescriptionBlockquoteContainer backgroundColor={backgroundColor} borderColor={borderColor}>
-            {children}
             <DescriptionBlockquoteCircle color={borderColor} top left />
             <DescriptionBlockquoteCircle color={borderColor} left />
             <DescriptionBlockquoteCircle color={borderColor} top />
             <DescriptionBlockquoteCircle color={borderColor} />
+            {children}
         </DescriptionBlockquoteContainer>
     );
 };
