@@ -52,15 +52,15 @@ export const ImagesContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const updateImageId = useCallback(
         async ({ oldId, newId }: { oldId: string; newId: string }) => {
-            const dataUrl = await getImageDataUrl(getImageKey({ imageId: oldId, projectId }));
+            const dataUrl = await getImageDataUrl(oldId);
 
             if (dataUrl) {
-                await setImageDataUrl(getImageKey({ imageId: newId, projectId }), dataUrl);
+                await setImageDataUrl(newId, dataUrl);
             }
 
             await deleteImage(oldId);
         },
-        [deleteImage, getImageDataUrl, setImageDataUrl, projectId]
+        [deleteImage, getImageDataUrl, setImageDataUrl]
     );
 
     const setProjectId = useCallback(
