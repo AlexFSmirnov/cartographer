@@ -19,6 +19,7 @@ import {
     deleteMapOrRegion,
     getCurrentProjectMaps,
     getCurrentProjectRegionsByMap,
+    getIsEditModeEnabled,
 } from '../../../state';
 import { RouteName, StoreProps } from '../../../types';
 import { useImagesContext, useUrlNavigation } from '../../../utils';
@@ -27,6 +28,7 @@ const connectRegionAccordion = connect(
     createStructuredSelector({
         maps: getCurrentProjectMaps,
         regionsByMap: getCurrentProjectRegionsByMap,
+        isEditModeEnabled: getIsEditModeEnabled,
     }),
     {
         deleteMapOrRegion,
@@ -49,6 +51,7 @@ const RegionAccordionBase: React.FC<RegionAccordionProps> = ({
     regionsByMap,
     mapId,
     regionId,
+    isEditModeEnabled,
     deleteMapOrRegion,
 }) => {
     const { setUrlParts } = useUrlNavigation();
@@ -109,7 +112,7 @@ const RegionAccordionBase: React.FC<RegionAccordionProps> = ({
                             {description && <Typography variant="body2">{description}</Typography>}
                         </FlexBox>
                         <FlexBox fullHeight center>
-                            {root && (
+                            {root && isEditModeEnabled && (
                                 <Button color="error" onClick={handleDeleteClick}>
                                     Delete
                                 </Button>

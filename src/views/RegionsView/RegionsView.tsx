@@ -30,7 +30,7 @@ const RegionsViewBase: React.FC<RegionsViewProps> = ({ rootMaps }) => {
         <FlexBox fullWidth fullHeight alignX="center" overflow="auto">
             <FlexBox column fullWidth maxHeight="100%" maxWidth={isMobile ? '100%' : '800px'}>
                 {rootMaps.map(({ id }) => (
-                    <RegionAccordion root expanded={rootMaps.length === 1} key={id} mapId={id} />
+                    <RegionAccordion root expanded key={id} mapId={id} />
                 ))}
                 <Box minHeight={100} />
             </FlexBox>
