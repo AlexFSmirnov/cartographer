@@ -17,6 +17,8 @@ import {
     getActiveMapId,
     getCurrentProjectId,
     getCurrentProjectMapIds,
+    getCurrentProjectMaps,
+    getCurrentProjectRegionsByMap,
     getCurrentProjectRootMapId,
     getIsDarkModeEnabled,
     setActiveMapId,
@@ -34,6 +36,8 @@ const connectApp = connect(
         currentProjectMapIds: getCurrentProjectMapIds,
         currentProjectRootMapId: getCurrentProjectRootMapId,
         currentProjectId: getCurrentProjectId,
+        maps: getCurrentProjectMaps,
+        regionsByMap: getCurrentProjectRegionsByMap,
     }),
     {
         setActiveMapId,
@@ -47,12 +51,40 @@ const AppBase: React.FC<AppProps> = ({
     currentProjectMapIds,
     currentProjectRootMapId,
     currentProjectId,
+    maps,
+    regionsByMap,
     setActiveMapId,
 }) => {
     const { getUrlParts, navigate, location } = useUrlNavigation();
-    const { view, activeMapId: urlActiveMapId } = getUrlParts();
+    const { view, activeMapId: urlActiveMapId, regionId } = getUrlParts();
 
     const { setProjectId } = useImagesContext();
+
+    useEffect(() => {
+        let title;
+
+        if (regionId) {
+            if (urlActiveMapId && regionId) {
+                const region = regionsByMap?.[urlActiveMapId]?.[regionId];
+                if (region) {
+                    title = `${region.id}. ${region.name}`;
+                }
+            }
+        } else {
+            if (view === RouteName.Map) {
+                if (urlActiveMapId) {
+                    const map = maps?.[urlActiveMapId];
+                    if (map) {
+                        title = `${map.id}. ${map.name}`;
+                    }
+                }
+            } else if (view) {
+                title = view.charAt(0).toUpperCase() + view.slice(1);
+            }
+        }
+
+        document.title = title || 'Cartographer';
+    }, [view, urlActiveMapId, regionId, maps, regionsByMap]);
 
     useEffect(() => {
         let redirectUrl = `/${RouteName.Map}`;
@@ -90,6 +122,7 @@ const AppBase: React.FC<AppProps> = ({
         }
     }, [
         view,
+        location.hash,
         urlActiveMapId,
         stateActiveMapId,
         currentProjectMapIds,
