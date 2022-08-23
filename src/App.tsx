@@ -49,13 +49,18 @@ const AppBase: React.FC<AppProps> = ({
     currentProjectId,
     setActiveMapId,
 }) => {
-    const { getUrlParts, navigate } = useUrlNavigation();
+    const { getUrlParts, navigate, location } = useUrlNavigation();
     const { view, activeMapId: urlActiveMapId } = getUrlParts();
 
     const { setProjectId } = useImagesContext();
 
     useEffect(() => {
         let redirectUrl = `/${RouteName.Map}`;
+
+        if (location.hash) {
+            navigate(location.hash.slice(1), { replace: true });
+            return;
+        }
 
         if (view !== null && view !== RouteName.Map) {
             return;
