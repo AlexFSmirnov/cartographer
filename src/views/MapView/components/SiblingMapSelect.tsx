@@ -6,7 +6,7 @@ import Tabs, { TabsProps } from '@mui/material/Tabs';
 import { styled } from '@mui/material/styles';
 import { FlexBox, RegionPreviewTooltip } from '../../../components';
 import { getCurrentProjectMaps } from '../../../state';
-import { StoreProps } from '../../../types';
+import { Map, StoreProps } from '../../../types';
 import { getSiblingMaps, useUrlNavigation } from '../../../utils';
 
 const connectSiblingMapSelect = connect(
@@ -42,6 +42,24 @@ const VerticalTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
     },
 }));
 
+const getFloorNumberFromId = (id: string) => {
+    const parts = id.split('_');
+    const floorNumber = parseInt(parts[parts.length - 1]);
+
+    return isNaN(floorNumber) ? null : floorNumber;
+};
+
+const compareMaps = (a: Map, b: Map) => {
+    const firstFloorNumber = getFloorNumberFromId(a.id);
+    const secondFloorNumber = getFloorNumberFromId(b.id);
+
+    if (firstFloorNumber !== null && secondFloorNumber !== null) {
+        return firstFloorNumber < secondFloorNumber ? 1 : -1;
+    }
+
+    return a.id < b.id ? 1 : -1;
+};
+
 const SiblingMapSelectBase: React.FC<SiblingMapSelectProps> = ({ maps }) => {
     const { getUrlParts, setUrlParts } = useUrlNavigation();
     const { activeMapId } = getUrlParts();
@@ -52,9 +70,7 @@ const SiblingMapSelectBase: React.FC<SiblingMapSelectProps> = ({ maps }) => {
         }
 
         const map = maps[activeMapId];
-        return [map, ...getSiblingMaps({ map: maps[activeMapId], maps })].sort((a, b) =>
-            a.id < b.id ? -1 : 1
-        );
+        return [map, ...getSiblingMaps({ map: maps[activeMapId], maps })].sort(compareMaps);
     }, [activeMapId, maps]);
 
     const activeMapIndex = useMemo(
