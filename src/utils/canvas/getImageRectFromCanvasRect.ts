@@ -1,11 +1,14 @@
-import { Rect, Size } from '../../types';
+import { Point, Rect, Size } from '../../types';
 import { getImageCoverRect } from './getImageCoverRect';
+import { transformRect } from './transformRect';
 
 interface GetImageRectFromCanvasRectArgs {
     canvasRect: Rect;
     canvasSize: Size;
     imageSize: Size;
     imagePadding: number;
+    scale?: number;
+    offset?: Point;
 }
 
 export const getImageRectFromCanvasRect = ({
@@ -13,7 +16,16 @@ export const getImageRectFromCanvasRect = ({
     canvasSize,
     imageSize,
     imagePadding,
+    scale = 1,
+    offset = { x: 0, y: 0 },
 }: GetImageRectFromCanvasRectArgs) => {
+    const transformedCanvasRect = transformRect({
+        rect: canvasRect,
+        containerSize: canvasSize,
+        scale: 1 / scale,
+        offset: { x: -offset.x / scale, y: -offset.y / scale },
+    });
+
     const imageCoverRect = getImageCoverRect({
         imageWidth: imageSize.width,
         imageHeight: imageSize.height,
@@ -22,12 +34,12 @@ export const getImageRectFromCanvasRect = ({
         padding: imagePadding,
     });
 
-    const scale = imageSize.width / imageCoverRect.width;
+    const imageScale = imageSize.width / imageCoverRect.width;
 
-    const x = (canvasRect.x - imageCoverRect.x) * scale;
-    const y = (canvasRect.y - imageCoverRect.y) * scale;
-    const width = canvasRect.width * scale;
-    const height = canvasRect.height * scale;
+    const x = (transformedCanvasRect.x - imageCoverRect.x) * imageScale;
+    const y = (transformedCanvasRect.y - imageCoverRect.y) * imageScale;
+    const width = transformedCanvasRect.width * imageScale;
+    const height = transformedCanvasRect.height * imageScale;
 
     return { x, y, width, height };
 };

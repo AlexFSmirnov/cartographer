@@ -7,6 +7,8 @@ interface GetRegionIdFromCanvasPointArgs {
     canvasSize: Size;
     imageSize: Size;
     imagePadding: number;
+    scale?: number;
+    offset?: Point;
 }
 
 export const getRegionIdFromCanvasPoint = ({
@@ -15,12 +17,16 @@ export const getRegionIdFromCanvasPoint = ({
     canvasSize,
     imageSize,
     imagePadding,
+    scale = 1,
+    offset = { x: 0, y: 0 },
 }: GetRegionIdFromCanvasPointArgs) => {
     const imagePoint = getImageRectFromCanvasRect({
         canvasRect: { ...canvasPoint, width: 1, height: 1 },
         canvasSize,
         imageSize,
         imagePadding,
+        scale,
+        offset,
     });
 
     const matchingRegions = Object.values(regions).filter(

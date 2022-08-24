@@ -6,3 +6,4 @@ export * from './getImageRectFromCanvasRect';
 export * from './getCanvasRectFromImageRect';
 export * from './getRegionIdFromCanvasPoint';
 export * from './getRegionIdFromImagePoint';
+export * from './transformRect';

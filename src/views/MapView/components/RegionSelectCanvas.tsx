@@ -1,18 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useTheme } from '@mui/material';
 import { getActiveMapRegions } from '../../../state';
-import { Size, StoreProps } from '../../../types';
+import { Point, Size, StoreProps } from '../../../types';
 import {
     drawRichRect,
     getCanvasPointFromMouseEvent,
     getCanvasRectFromImageRect,
     getRegionIdFromCanvasPoint,
+    transformRect,
     useUrlNavigation,
 } from '../../../utils';
 import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
+import { CanvasBaseProps } from './types';
 
 const connectRegionSelectCanvas = connect(
     createStructuredSelector({
@@ -20,7 +22,9 @@ const connectRegionSelectCanvas = connect(
     })
 );
 
-interface RegionSelectCanvasProps extends StoreProps<typeof connectRegionSelectCanvas> {
+interface RegionSelectCanvasProps
+    extends StoreProps<typeof connectRegionSelectCanvas>,
+        CanvasBaseProps {
     canvasSize: Size;
     activeMapImageSize: Size;
 }
@@ -29,12 +33,14 @@ const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({
     canvasSize,
     activeMapImageSize,
     activeMapRegions,
+    scale,
+    offset,
 }) => {
     const theme = useTheme();
-    const strokeColor = theme.palette.primary.main;
-    const contrastColor = theme.palette.primary.contrastText;
 
     const { setUrlParts } = useUrlNavigation();
+
+    const [mousePos, setMousePos] = useState<Point | null>(null);
 
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
     const canvasRect = useMemo(
@@ -50,27 +56,30 @@ const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({
         if (ctx) {
             ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
         }
-    }, [activeMapRegions, canvasSize, canvas]);
+    }, [activeMapRegions, canvasSize, canvas, scale, offset]);
 
-    const getRegionFromMouseEvent = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        const mousePos = getCanvasPointFromMouseEvent(e, canvasRect);
+    const getRegionFromMousePos = useCallback(
+        (mousePos: Point | null) => {
+            if (!mousePos) {
+                return null;
+            }
 
-        if (!mousePos) {
-            return null;
-        }
+            const selectedRegionId = getRegionIdFromCanvasPoint({
+                canvasPoint: mousePos,
+                regions: activeMapRegions,
+                canvasSize,
+                imageSize: activeMapImageSize,
+                imagePadding: ACTIVE_MAP_PADDING,
+                scale,
+                offset,
+            });
 
-        const selectedRegionId = getRegionIdFromCanvasPoint({
-            canvasPoint: mousePos,
-            regions: activeMapRegions,
-            canvasSize,
-            imageSize: activeMapImageSize,
-            imagePadding: ACTIVE_MAP_PADDING,
-        });
+            return selectedRegionId ? activeMapRegions[selectedRegionId] : null;
+        },
+        [activeMapRegions, canvasSize, activeMapImageSize, scale, offset]
+    );
 
-        return selectedRegionId ? activeMapRegions[selectedRegionId] : null;
-    };
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    useEffect(() => {
         const ctx = canvas?.getContext('2d');
         if (!canvas || !ctx) {
             return;
@@ -78,7 +87,7 @@ const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const selectedRegion = getRegionFromMouseEvent(e);
+        const selectedRegion = getRegionFromMousePos(mousePos);
         if (selectedRegion) {
             const { parentRect, id, name } = selectedRegion;
 
@@ -89,18 +98,40 @@ const RegionSelectCanvasBase: React.FC<RegionSelectCanvasProps> = ({
                 imagePadding: ACTIVE_MAP_PADDING,
             });
 
+            const rect = transformRect({
+                rect: regionCanvasRect,
+                containerSize: canvasSize,
+                scale,
+                offset,
+            });
+
             drawRichRect({
                 ctx,
-                rect: regionCanvasRect,
+                rect,
                 subtitle: `${id}. ${name}`,
-                strokeColor,
-                contrastColor,
+                strokeColor: theme.palette.primary.main,
+                contrastColor: theme.palette.primary.contrastText,
             });
         }
+    }, [
+        mousePos,
+        canvas,
+        canvasSize,
+        activeMapImageSize,
+        scale,
+        offset,
+        theme,
+        getRegionFromMousePos,
+    ]);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        const mousePos = getCanvasPointFromMouseEvent(e, canvasRect);
+        setMousePos(mousePos);
     };
 
     const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        const selectedRegion = getRegionFromMouseEvent(e);
+        const mousePos = getCanvasPointFromMouseEvent(e, canvasRect);
+        const selectedRegion = getRegionFromMousePos(mousePos);
 
         if (selectedRegion) {
             setUrlParts({ regionId: selectedRegion.id });

@@ -14,6 +14,7 @@ import {
 } from '../../../utils';
 import { ACTIVE_MAP_PADDING } from '../constants';
 import { MapViewCanvas } from '../style';
+import { CanvasBaseProps } from './types';
 
 const connectNewRegionCanvas = connect(
     createStructuredSelector({
@@ -24,7 +25,7 @@ const connectNewRegionCanvas = connect(
     }
 );
 
-interface NewRegionCanvasProps extends StoreProps<typeof connectNewRegionCanvas> {
+interface NewRegionCanvasProps extends StoreProps<typeof connectNewRegionCanvas>, CanvasBaseProps {
     canvasSize: Size;
     activeMapImageSize: Size;
 }
@@ -34,6 +35,8 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
     activeMapImageSize,
     activeMapRegions,
     openNewRegionDialog,
+    scale,
+    offset,
 }) => {
     const theme = useTheme();
     const strokeColor = theme.palette.primary.main;
@@ -76,6 +79,8 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
                 canvasSize,
                 imageSize: activeMapImageSize,
                 imagePadding: ACTIVE_MAP_PADDING,
+                scale,
+                offset,
             });
 
             openNewRegionDialog(imageRect);
@@ -87,6 +92,8 @@ const NewRegionCanvasBase: React.FC<NewRegionCanvasProps> = ({
                 canvasSize,
                 imageSize: activeMapImageSize,
                 imagePadding: ACTIVE_MAP_PADDING,
+                scale,
+                offset,
             });
 
             setUrlParts({ regionId: clickedRegionId });
