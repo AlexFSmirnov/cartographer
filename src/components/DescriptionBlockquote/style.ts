@@ -10,11 +10,12 @@ export const DescriptionBlockquoteContainer = styled.div<DescriptionBlockquoteCo
     background-color: ${(props) => props.backgroundColor};
     padding: 12px;
     margin: 12px 0;
+    margin-bottom: 28px;
 
     border-left: 2px solid ${(props) => props.borderColor};
     border-right: 2px solid ${(props) => props.borderColor};
 
-    & > p {
+    & > div {
         padding-bottom: 0;
     }
 `;

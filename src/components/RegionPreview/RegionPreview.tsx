@@ -85,11 +85,13 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
             return rect;
         }
 
+        const padding = Math.max(rect.width, rect.height) * REGION_PADDING;
+
         return {
-            x: rect.x - rect.width * REGION_PADDING,
-            y: rect.y - rect.width * REGION_PADDING,
-            width: rect.width + rect.width * REGION_PADDING * 2,
-            height: rect.height + rect.width * REGION_PADDING * 2,
+            x: rect.x - padding,
+            y: rect.y - padding,
+            width: rect.width + padding * 2,
+            height: rect.height + padding * 2,
         };
     }, [doesRegionExist, regionId, regions, mapId, mapImage, regionRectProp]);
 
