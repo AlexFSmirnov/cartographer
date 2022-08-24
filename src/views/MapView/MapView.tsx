@@ -105,6 +105,7 @@ const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled }) => {
             const scaleMultiplier = e.deltaY > 0 ? 0.9 : 1.1;
 
             // Yeah, not proud of this, but it works 😅
+            let newOffset = { ...canvasOffset };
             const { current: container } = containerRef;
             if (container) {
                 const { top, left } = container.getBoundingClientRect();
@@ -134,14 +135,13 @@ const MapViewBase: React.FC<MapViewProps> = ({ isEditModeEnabled }) => {
                 };
 
                 // We want to align the actual and scaled mouse positions, relative to the whole canvas.
-                const newOffset = getClampedOffset({
+                newOffset = {
                     x: canvasOffset.x + globalCanvasMousePos.x - scaledViewportCanvasMousePos.x,
                     y: canvasOffset.y + globalCanvasMousePos.y - scaledViewportCanvasMousePos.y,
-                });
-
-                setCanvasOffset(newOffset);
+                };
             }
             setCanvasScale(Math.max(1, canvasScale * scaleMultiplier));
+            setCanvasOffset(getClampedOffset(newOffset));
         }
     };
 
