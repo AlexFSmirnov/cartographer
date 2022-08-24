@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/cartographer/static/js/main.d03f1906.js",
+    "main.js": "/cartographer/static/js/main.cc88e672.js",
     "service-worker.js": "/cartographer/service-worker.js",
     "index.html": "/cartographer/index.html",
-    "main.d03f1906.js.map": "/cartographer/static/js/main.d03f1906.js.map"
+    "main.cc88e672.js.map": "/cartographer/static/js/main.cc88e672.js.map"
   },
   "entrypoints": [
-    "static/js/main.d03f1906.js"
+    "static/js/main.cc88e672.js"
   ]
 }
