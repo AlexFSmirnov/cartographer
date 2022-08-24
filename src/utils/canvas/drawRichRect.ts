@@ -28,20 +28,19 @@ export const drawRichRect = ({
     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
 
     if (centerTitle) {
-        const fontSize = Math.max(10, Math.min(rect.width, rect.height) / 5);
-        const fontWeight = fontSize > 15 ? 1000 : 400;
+        const fontSize = Math.max(16, Math.min(30, Math.min(rect.width, rect.height) / 5));
 
-        ctx.font = `${fontWeight} ${fontSize}px sans-serif`;
+        ctx.font = `1000 ${fontSize}px sans-serif`;
 
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = fontSize > 15 ? 1.2 : 0.5;
+        ctx.lineWidth = 4;
         ctx.fillStyle = strokeColor;
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        ctx.fillText(centerTitle, rect.x + rect.width / 2, rect.y + rect.height / 2, rect.width);
         ctx.strokeText(centerTitle, rect.x + rect.width / 2, rect.y + rect.height / 2, rect.width);
+        ctx.fillText(centerTitle, rect.x + rect.width / 2, rect.y + rect.height / 2, rect.width);
     }
 
     if (subtitle) {
