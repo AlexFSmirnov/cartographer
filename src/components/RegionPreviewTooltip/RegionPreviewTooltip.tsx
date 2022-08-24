@@ -18,7 +18,12 @@ export const RegionPreviewTooltip: React.FC<RegionPreviewTooltipProps> = ({
             {regionId || mapId}. {name}
         </Typography>
         <Box width="250px" height="100px">
-            <RegionPreview doesRegionExist mapId={mapId} regionId={regionId || null} />
+            <RegionPreview
+                doesRegionExist
+                mapId={mapId}
+                regionId={regionId || null}
+                containerSize={{ width: 250, height: 100 }}
+            />
         </Box>
     </FlexBox>
 );

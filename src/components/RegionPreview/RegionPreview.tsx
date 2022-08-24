@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { CircularProgress, useTheme } from '@mui/material';
 import { getCurrentProjectRegionsByMap } from '../../state';
-import { Rect, StoreProps } from '../../types';
+import { Rect, Size, StoreProps } from '../../types';
 import { getImageCoverRect, useImageFromContext } from '../../utils';
 import { RegionPreviewContainer, RegionPreviewLoaderContainer } from './style';
 
@@ -17,6 +17,7 @@ const connectRegionPreview = connect(
 
 interface BaseOwnProps {
     doesRegionExist: boolean;
+    containerSize?: Size;
 
     mapId?: string;
     regionId?: string | null;
@@ -42,6 +43,7 @@ type RegionPreviewProps = OwnProps & StoreProps<typeof connectRegionPreview>;
 
 const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     doesRegionExist,
+    containerSize,
     mapImage: mapImageProp,
     regionRect: regionRectProp,
     mapId,
@@ -102,22 +104,24 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
             return { width: 0, height: 0 };
         }
 
-        if (!container) {
+        if (!container || !containerSize) {
             return regionRect;
         }
 
-        const containerRect = container.getBoundingClientRect();
+        const { width: containerWidth, height: containerHeight } = containerSize
+            ? containerSize
+            : container.getBoundingClientRect();
 
         const { width, height } = getImageCoverRect({
             imageWidth: regionRect.width,
             imageHeight: regionRect.height,
-            containerWidth: containerRect.width,
-            containerHeight: containerRect.height,
+            containerWidth,
+            containerHeight,
             padding: 0,
         });
 
         return { width, height };
-    }, [regionRect, containerRef]);
+    }, [regionRect, containerRef, containerSize]);
 
     useEffect(() => {
         const { current: canvas } = canvasRef;
