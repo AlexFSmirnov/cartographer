@@ -125,7 +125,13 @@ const RegionDetailsDialogBase: React.FC<RegionDetailsDialogProps> = ({
 
     return (
         <>
-            <Dialog open={isOpen} onClose={handleClose}>
+            <Dialog
+                open={isOpen}
+                onClose={handleClose}
+                fullWidth
+                maxWidth="md"
+                sx={{ height: '100%' }}
+            >
                 {dialogContent}
             </Dialog>
             <Dialog open={isDeleteDialogOpen} onClose={handleDeleteCancel}>

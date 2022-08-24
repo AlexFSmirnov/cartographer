@@ -10,8 +10,7 @@ export const RegionDetailsDialogTitle = styled(DialogTitle)`
 export const RegionDetailsDialogContent = styled(DialogContent)`
     display: flex;
     flex-direction: column;
-    width: 600px;
     max-width: 100%;
-    height: 630px;
+    height: 780px;
     max-height: 100%;
 `;

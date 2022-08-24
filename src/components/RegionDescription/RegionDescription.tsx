@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -53,6 +53,9 @@ type OwnProps = OwnProps1 | OwnProps2;
 
 type RegionDescriptionProps = OwnProps & StoreProps<typeof connectRegionDescription>;
 
+const TAB_HEIGHT = 48;
+const BASE_LINE_HEIGHT = 24;
+
 const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     doesRegionExist,
     description,
@@ -65,7 +68,55 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     const { getUrlParts } = useUrlNavigation();
     const { regionId, activeMapId } = getUrlParts();
 
+    const inputFieldRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const [isPreviewing, setIsPreviewing] = useState(false);
+    const [inputRows, setInputRows] = useState(1);
+    const [previewHeight, setPreviewHeight] = useState(0);
+
+    useEffect(() => {
+        const { current: container } = containerRef;
+        if (!container) {
+            return;
+        }
+
+        const resizeObserver = new ResizeObserver(updateSize);
+        resizeObserver.observe(container);
+
+        return () => resizeObserver.unobserve(container);
+    });
+
+    const updateSize = useCallback(() => {
+        const { current: container } = containerRef;
+        if (!container) {
+            return;
+        }
+
+        const { height } = container.getBoundingClientRect();
+
+        if (!isEditing) {
+            setPreviewHeight(height);
+            return;
+        }
+
+        let lineHeight = BASE_LINE_HEIGHT;
+        const { current: inputField } = inputFieldRef;
+        if (inputField) {
+            const { lineHeight: styleLineHeight } = window.getComputedStyle(inputField);
+
+            if (styleLineHeight && parseInt(styleLineHeight)) {
+                lineHeight = parseInt(styleLineHeight);
+            }
+        }
+
+        const inputFieldPadding = lineHeight * 1.5;
+        const availableHeight = height - TAB_HEIGHT - inputFieldPadding;
+        const rows = Math.floor(availableHeight / (lineHeight - 1));
+
+        setInputRows(rows);
+        setPreviewHeight(rows * (lineHeight - 1) + inputFieldPadding);
+    }, [isEditing]);
 
     const ownDescription = useMemo(() => {
         if (doesRegionExist) {
@@ -124,13 +175,12 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
             multiline
             fullWidth
             autoFocus
-            rows={15}
+            rows={inputRows}
             value={ownDescription}
             onChange={handleDescriptionChange}
+            ref={inputFieldRef}
         />
     );
-
-    const previewHeight = isEditing ? '378px' : '426px';
 
     const preview = (
         <Box p={1} height={previewHeight} overflow="auto">
@@ -152,8 +202,16 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
                             {children}
                         </RegionLink>
                     ),
-                    p: ({ children }) => <Typography pb={2}>{children}</Typography>,
-                    img: (props) => <img alt="" {...props} style={{ maxWidth: '100%' }} />,
+                    p: ({ children }) => <Box pb={2}>{children}</Box>,
+                    img: (props) => (
+                        <FlexBox fullWidth maxHeight={300} center>
+                            <img
+                                alt=""
+                                {...props}
+                                style={{ maxWidth: '100%', maxHeight: '300px' }}
+                            />
+                        </FlexBox>
+                    ),
                 }}
             >
                 {descriptionWithLinks}
@@ -162,7 +220,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
     );
 
     return (
-        <FlexBox fullHeight column>
+        <FlexBox column flexGrow={1} ref={containerRef}>
             {isEditing && (
                 <Tabs
                     value={isPreviewing ? 1 : 0}
