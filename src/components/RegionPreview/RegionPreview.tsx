@@ -4,10 +4,10 @@ import { createStructuredSelector } from 'reselect';
 import { CircularProgress, useTheme } from '@mui/material';
 import { getCurrentProjectRegionsByMap } from '../../state';
 import { Rect, StoreProps } from '../../types';
-import { useImageFromContext } from '../../utils';
+import { getImageCoverRect, useImageFromContext } from '../../utils';
 import { RegionPreviewContainer, RegionPreviewLoaderContainer } from './style';
 
-const REGION_PADDING = 0.05;
+const REGION_PADDING = 0.1;
 
 const connectRegionPreview = connect(
     createStructuredSelector({
@@ -53,6 +53,7 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     const [isImageDrawn, setIsImageDrawn] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const ownMapImage = useImageFromContext(doesRegionExist ? mapId : null);
 
@@ -92,13 +93,29 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
         };
     }, [doesRegionExist, regionId, regions, mapId, mapImage, regionRectProp]);
 
-    const canvasSize = useMemo(
-        () => ({
-            width: regionRect?.width || 0,
-            height: regionRect?.height || 0,
-        }),
-        [regionRect]
-    );
+    const canvasSize = useMemo(() => {
+        const { current: container } = containerRef;
+
+        if (!regionRect) {
+            return { width: 0, height: 0 };
+        }
+
+        if (!container) {
+            return regionRect;
+        }
+
+        const containerRect = container.getBoundingClientRect();
+
+        const { width, height } = getImageCoverRect({
+            imageWidth: regionRect.width,
+            imageHeight: regionRect.height,
+            containerWidth: containerRect.width,
+            containerHeight: containerRect.height,
+            padding: 0,
+        });
+
+        return { width, height };
+    }, [regionRect, containerRef]);
 
     useEffect(() => {
         const { current: canvas } = canvasRef;
@@ -131,7 +148,7 @@ const RegionPreviewBase: React.FC<RegionPreviewProps> = ({
     };
 
     return (
-        <RegionPreviewContainer shadow={theme.shadows[2]}>
+        <RegionPreviewContainer shadow={theme.shadows[2]} ref={containerRef}>
             {!isImageDrawn && (
                 <RegionPreviewLoaderContainer>
                     <CircularProgress />
