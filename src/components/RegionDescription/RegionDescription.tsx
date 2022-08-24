@@ -153,6 +153,7 @@ const RegionDescriptionBase: React.FC<RegionDescriptionProps> = ({
                         </RegionLink>
                     ),
                     p: ({ children }) => <Typography pb={2}>{children}</Typography>,
+                    img: (props) => <img alt="" {...props} style={{ maxWidth: '100%' }} />,
                 }}
             >
                 {descriptionWithLinks}
